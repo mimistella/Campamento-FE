@@ -1,12 +1,18 @@
-function App() {
+import React from 'react'
+import { Header } from './components/Header'
+import { Hero } from './components/Hero'
+import { About } from './components/About'
+import { Location } from './components/Location'
+import { Footer } from './components/Footer'
+export function App() {
   return (
-    <div style={{ padding: '2rem', fontFamily: 'Arial, sans-serif' }}>
-      <h1>¡Bienvenidos al Campamento Mestizo!</h1>
-      <p>Esta es la web inicial.</p>
-      <p>Pronto será más bonita</p>
-
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-amber-100">
+      <Header />
+      <main>
+        <Hero />
+        <About />
+        <Location />
+      </main>
+      <Footer />
     </div>
-  );
-}
-
-export default App;  
+  )}
