@@ -4,7 +4,6 @@ import {
   PhoneIcon,
   MailIcon,
   TreePineIcon,
-  ShieldIcon,
 } from 'lucide-react'
 export function Location() {
   return (

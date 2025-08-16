@@ -1,5 +1,5 @@
 import React from 'react'
-import { ShieldIcon, SwordIcon, BookOpenIcon, UsersIcon } from 'lucide-react'
+import { LandmarkIcon, SwordIcon, BookOpenIcon, UsersIcon } from 'lucide-react'
 export function About() {
   return (
     <section id="about" className="py-16 bg-white">
@@ -65,7 +65,7 @@ export function About() {
           </div>
           <div className="p-6 bg-gradient-to-b from-amber-100 to-amber-50 rounded-lg">
             <div className="mx-auto w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mb-4">
-              <ShieldIcon size={32} className="text-white" />
+              <LandmarkIcon size={32} className="text-white" />
             </div>
             <h4 className="text-xl font-bold mb-2 font-serif text-amber-800">
               Sistema de cabañas:
