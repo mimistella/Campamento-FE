@@ -2,6 +2,7 @@ import React from "react";
 import LoginForm from '../forms/LoginForm.jsx'
 import { Header } from "../components/Header.jsx";
 import { Footer } from "../components/Footer.jsx";
+import { ScrollToTopButton } from "../components/ScrollToTopButton.jsx";
 
 const LoginPage = () => {
   return (
@@ -14,6 +15,7 @@ const LoginPage = () => {
         </div>
       </main>
       <Footer />
+      <ScrollToTopButton />
     </div>
   );
 };

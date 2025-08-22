@@ -2,6 +2,7 @@ import React from "react";
 import SignUpForm from "../forms/SignUpForm";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { ScrollToTopButton } from "../components/ScrollToTopButton";
 
 const SignUpPage = () => (
   <div className="min-h-screen bg-gradient-to-b from-orange-50 to-amber-100 flex flex-col">
@@ -20,6 +21,7 @@ const SignUpPage = () => (
       </div>
     </main>
     <Footer />
+    <ScrollToTopButton />
   </div>
 );
 
