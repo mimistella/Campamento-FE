@@ -1,19 +1,29 @@
 import React from "react";
-  import { BrowserRouter, Routes, Route } from "react-router-dom";
-  import { LandingPage } from '../pages/LandingPage'
-  import PageNotFound from '../pages/PageNotFound'
-  import LoginPage from '../pages/LoginPage'
-  import SignUpPage from '../pages/SignUpPage'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {ScrollToTop} from '../components/ScrollToTop';
+import { LandingPage } from '../pages/LandingPage'
+import PageNotFound from '../pages/PageNotFound'
+import LoginPage from '../pages/LoginPage'
+import SignUpPage from '../pages/SignUpPage'
+import ForgotPassword from '../pages/ForgotPassword';
+import CamperHomePage from '../pages/campista/Campista.jsx'
+import Talleres from "../components/Talleres.jsx";
 
   export function AppRouter() {
     return (
       <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="*" element={<PageNotFound />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-          </Routes>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="*" element={<PageNotFound />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/campista" element={<CamperHomePage />}>
+            <Route path="talleres" element={<Talleres />} />
+            {/* otras rutas */}
+				  </Route>
+        </Routes>
       </BrowserRouter>
     );
   }
