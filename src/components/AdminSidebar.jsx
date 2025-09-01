@@ -1,22 +1,25 @@
 import { NavLink } from "react-router-dom";
-import { HiMenu, HiX } from "react-icons/hi";
+import { Home, Landmark, Hammer, Calendar, Map, Users, Menu, X } from "lucide-react";
+import '../index.css'; 
 import { useSidebar } from "../hooks/useSidebar";
-import { basePath, menuItems } from "../constants/sidebar";
+import {basePath, menuItems} from "../constants/adminsidebar"
 
-const Sidebar = () => {
+export default function Sidebar() {
+
   const { isOpen, toggleSidebar, closeSidebar } = useSidebar();
+
 
   return (
     <>
       {/* Mobile top bar */}
       <div className="md:hidden flex items-center justify-between p-4 bg-amber-600 text-white border-b border-orange-700">
-        <h2 className="text-xl font-caesar-dressing-regular">Campista</h2>
+        <h2 className="text-xl font-caesar-dressing-regular">Campamento Mestizo</h2>
         <button
           onClick={toggleSidebar}
           aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
-          className="text-2xl text-gray-700"
+          className="text-2xl"
         >
-          {isOpen ? <HiX /> : <HiMenu />}
+          {isOpen ? <X /> : <Menu />}
         </button>
       </div>
 
@@ -35,31 +38,30 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <h2 className="p-6 text-2xl font-caesar-dressing-regular text-center border-b border-orange-700 hidden md:block">
-          Campista
-        </h2>
-        <nav className="flex flex-col gap-1">
+        <div className="p-6 text-2xl font-caesar-dressing-regular text-center border-b border-orange-700 hidden md:block">
+          Campamento Mestizo
+        </div>
+
+        <nav className="flex-1 p-4 space-y-2">
           {menuItems.map(item => (
             <NavLink
-                         key={item.path}
-                         to={`${basePath}/${item.path}`}
-                         onClick={closeSidebar}
-                         className={({ isActive }) =>
-                           `flex items-center gap-3 w-full p-2 rounded-lg transition ${
-                             isActive
-                               ? "bg-amber-500"
-                               : "hover:bg-amber-700"
-                           }`
-                         }
-                       >
-                         <item.icon className="w-5 h-5" />
-                         {item.label}
-                       </NavLink>
+              key={item.path}
+              to={`${basePath}/${item.path}`}
+              onClick={closeSidebar}
+              className={({ isActive }) =>
+                `flex items-center gap-3 w-full p-2 rounded-lg transition ${
+                  isActive
+                    ? "bg-amber-500"
+                    : "hover:bg-amber-700"
+                }`
+              }
+            >
+              <item.icon className="w-5 h-5" />
+              {item.label}
+            </NavLink>
           ))}
         </nav>
       </aside>
     </>
   );
-};
-
-export default Sidebar;
+}

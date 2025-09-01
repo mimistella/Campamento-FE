@@ -4,7 +4,11 @@ export default {
     "./public/index.html"
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'caesar-dressing-regular': ['"Caesar Dressing"', 'system-ui'],
+      },
+    },
   },
   plugins: [],
 }

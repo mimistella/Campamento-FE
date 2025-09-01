@@ -1,10 +1,12 @@
+import { Home, Landmark, Hammer, Calendar, Map, User} from "lucide-react";
 export const basePath = "/campista";
 
+
 export const menuItems = [
-  { label: "Perfil", path: "perfil" },
-  { label: "Campamento", path: "campamento" },
-  { label: "Cabañas", path: "cabanas" },
-  { label: "Talleres", path: "talleres" },
-  { label: "Eventos", path: "eventos" },
-  { label: "Misiones", path: "misiones" },
+  { label: "Mi perfil", path: "perfil", icon: User },
+  { label: "Campamento", path: "campamento", icon: Home },
+  { label: "Mi cabaña", path: "cabanas", icon: Landmark },
+  { label: "Talleres disponibles", path: "talleres", icon: Hammer },
+  { label: "Eventos disponibles", path: "eventos", icon: Calendar },
+  { label: "Mis misiones", path: "misiones", icon: Map },
 ];

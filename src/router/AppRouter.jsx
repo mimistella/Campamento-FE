@@ -8,6 +8,8 @@ import SignUpPage from '../pages/SignUpPage'
 import ForgotPassword from '../pages/ForgotPassword';
 import CamperHomePage from '../pages/campista/Campista.jsx'
 import Talleres from "../components/Talleres.jsx";
+import AdminHomePage from "../pages/Admin/AdminHomePage.jsx";
+import AdminDashboard from "../components/AdminDashboard.jsx";  
 
   export function AppRouter() {
     return (
@@ -19,6 +21,11 @@ import Talleres from "../components/Talleres.jsx";
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+         <Route path="/admin" element={<AdminHomePage />}>
+              <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
+         <Route index element={<AdminDashboard />} /> {/* /admin */}
+    
+         </Route>
           <Route path="/campista" element={<CamperHomePage />}>
             <Route path="talleres" element={<Talleres />} />
             {/* otras rutas */}

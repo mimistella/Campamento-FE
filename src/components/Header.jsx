@@ -71,6 +71,12 @@ export function Header() {
           >
             Campista (TEMP)
           </Link>
+          <Link
+            to="/admin"
+            className="bg-amber-100 text-amber-800 hover:bg-amber-200 px-4 py-2 rounded-md font-semibold transition-colors border border-amber-300"
+          >
+            Admin
+          </Link>
         </nav>
         {/* Mobile menu button */}
         <button
