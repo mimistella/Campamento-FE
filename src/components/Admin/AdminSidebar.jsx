@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { Home, Landmark, Hammer, Calendar, Map, Users, Menu, X } from "lucide-react";
-import '../index.css'; 
-import { useSidebar } from "../hooks/useSidebar";
-import {basePath, menuItems} from "../constants/adminsidebar"
+import '../../index.css'; 
+import { useSidebar } from "../../hooks/useSidebar";
+import {basePath, menuItems} from "../../constants/adminsidebar"
 
 export default function Sidebar() {
 

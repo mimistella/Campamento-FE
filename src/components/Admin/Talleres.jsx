@@ -1,4 +1,4 @@
-import { useTalleres } from "../hooks/useTalleres";
+import { useTalleres } from "../../hooks/useTalleres";
 
 const Talleres = () => {
   const { talleres, loading, error } = useTalleres();
@@ -38,5 +38,3 @@ const Talleres = () => {
 };
 
 export default Talleres;
-
-
