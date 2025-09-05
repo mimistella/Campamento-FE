@@ -33,8 +33,8 @@ export default function Sidebar() {
 
       {/* Sidebar container */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-amber-600 text-white flex flex-col z-50 transform transition-transform duration-300
-        md:static md:h-screen md:translate-x-0 ${
+        className={`fixed top-0 left-0 h-screen w-64 bg-amber-600 text-white flex flex-col z-50 transform transition-transform duration-300
+        md:static md:h-full md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

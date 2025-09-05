@@ -10,7 +10,7 @@ import CamperHomePage from '../pages/campista/Campista.jsx'
 import Talleres from "../components/Admin/Talleres.jsx";
 import AdminHomePage from "../pages/Admin/AdminHomePage.jsx";
 import AdminDashboard from "../components/Admin/AdminDashboard.jsx";  
-import MostrarCabanas from "../components/Admin/mostrarCabanas  .jsx";
+import MostrarCabanas from "../components/Admin/mostrarCabanas.jsx";
 
   export function AppRouter() {
     return (
