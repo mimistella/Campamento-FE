@@ -1,10 +1,13 @@
 import { useContext, useState } from "react";
 import DashboardContext from "../../context/DashboardContext";
+import {Button, Dialog, DialogTitle, DialogContent,DialogActions} from "@mui/material"
+import CabaniaForm from "../../forms/AddCabaniaForm";
 
 const MostrarCabanas = () => {
   const { cabanias, getOcupacion, loading, cabaniasActivas, refreshData, lastUpdated } = useContext(DashboardContext);
   const [currentPage, setCurrentPage] = useState(1);
   const [mostrarSoloActivas, setMostrarSoloActivas] = useState(false);
+  const [openCrear, setOpenCrear] = useState(false);
   const itemsPerPage = 3;
 
  // última actualización
@@ -107,12 +110,19 @@ const MostrarCabanas = () => {
             }}
             className={`px-4 py-2 rounded ${
               mostrarSoloActivas
-                ? 'bg-amber-600 text-white hover:bg-amber-700'
+                ? 'bg-amber-500 text-white hover:bg-amber-600'
                 : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
             }`}
           >
             {mostrarSoloActivas ? "Mostrar todas" : "Solo activas"}
           </button>
+          <Button
+          variant="contained"
+          className="!bg-amber-500 !hover:bg-amber-600 !active:bg-amber-600 !normal-case text-white font-medium px-4 py-2 rounded transition-colors"
+          onClick={() => setOpenCrear(true)}
+        >
+          + Crear nueva cabaña
+        </Button>
         </div>
       </div>
  
@@ -199,6 +209,18 @@ const MostrarCabanas = () => {
         Página {currentPage} de {totalPages} • {cabaniasFiltradas.length} cabañas
         {mostrarSoloActivas ? " activas" : " en total"}
       </p>
+      {/*Dialogo Crear la cabaña*/}
+      <Dialog open={openCrear} onClose={() => setOpenCrear(false)} maxWidth="sm" fullWidth>
+      <DialogTitle className="!font-caesar-dressing-regular text-white bg-amber-400">Crear nueva cabaña</DialogTitle>
+      <DialogContent dividers>
+        <CabaniaForm />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpenCrear(false)} color="error">
+        Cerrar
+        </Button>
+        </DialogActions>
+</Dialog>
     </div>
   );
 };

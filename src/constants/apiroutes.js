@@ -3,4 +3,5 @@ export const API_ROUTES = {
   INSTRUCTORS: "/api/instructor",
   CABANAS: "/api/cabanias",
   HOSPEDA: "/api/hospedaje",
+  DEIDADES: "/api/deidades",
 };
