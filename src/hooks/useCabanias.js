@@ -47,7 +47,7 @@ export function useCabanias() {
   const moveCampista = useCallback(async (hospedajeId, nuevaCabaniaId) => {
   console.log("Enviando:", { hospedajeId, nuevaCabaniaId });
 
-  const res = await api.patch(`hospedaje/${hospedajeId}`, {
+  const res = await api.patch(`/hospedaje/${hospedajeId}/move`, {
     cabania: nuevaCabaniaId
   });
 
