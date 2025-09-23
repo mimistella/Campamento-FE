@@ -11,6 +11,7 @@ import Talleres from "../components/Admin/Talleres.jsx";
 import AdminHomePage from "../pages/Admin/AdminHomePage.jsx";
 import AdminDashboard from "../components/Admin/AdminDashboard.jsx";  
 import MostrarCabanas from "../components/Admin/mostrarCabanas.jsx";
+import EditarCabania from "../components/Admin/EditarCabanias.jsx";
 
   export function AppRouter() {
     return (
@@ -24,7 +25,9 @@ import MostrarCabanas from "../components/Admin/mostrarCabanas.jsx";
           <Route path="/forgot-password" element={<ForgotPassword />} />
          <Route path="/admin" element={<AdminHomePage />}>
               <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
-              <Route path="cabanas" element={<MostrarCabanas />} /> 
+              <Route path="cabanas" element={<MostrarCabanas />} />
+              <Route path="cabanas/editar/:id" element={<EditarCabania />} />
+              
          <Route index element={<AdminDashboard />} /> {/* /admin */}
     
          </Route>

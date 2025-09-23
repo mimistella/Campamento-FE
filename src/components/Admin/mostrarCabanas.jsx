@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import DashboardContext from "../../context/DashboardContext";
 import {Button, Dialog, DialogTitle, DialogContent,DialogActions} from "@mui/material"
 import CabaniaForm from "../../forms/AddCabaniaForm";
+import {useNavigate}from "react-router-dom"
+
 
 const MostrarCabanas = () => {
   const { cabanias, getOcupacion, loading, cabaniasActivas, refreshData, lastUpdated } = useContext(DashboardContext);
@@ -9,6 +11,8 @@ const MostrarCabanas = () => {
   const [mostrarSoloActivas, setMostrarSoloActivas] = useState(false);
   const [openCrear, setOpenCrear] = useState(false);
   const itemsPerPage = 3;
+
+  const navigate = useNavigate(); 
 
  // última actualización
   const formatLastUpdate = () => {
@@ -156,6 +160,16 @@ const MostrarCabanas = () => {
                 <strong>Ocupación actual:</strong> {getOcupacion(c.id)}
               </p>
             </div>
+
+            {/*  Botón Editar Cabaña */}
+            <Button
+              variant="outlined"
+              className="!px-4 py-2 !bg-amber-500 !text-white rounded"
+              onClick={() => navigate(`/admin/cabanas/editar/${c.id}`)}
+            >
+              Editar
+            </Button>
+
           </li>
         ))}
       </ul>

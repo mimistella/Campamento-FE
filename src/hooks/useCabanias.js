@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState,useCallback } from "react";
 import api from "./useApi";
+
 
 export function useCabanias() {
   const [cabanias, setCabanias] = useState([]);
@@ -26,10 +27,41 @@ export function useCabanias() {
     }
   };
 
+  // Editar solo descripción y capacidad
+  const updateCabania = useCallback(async (id, { descripcion, capacidad }) => {
+    const res = await api.patch(`cabanias/${id}`, {
+      descripcion,
+       capacidad: Number(capacidad),
+    });
+    return res.data;
+  }, []);
+
+  // Baja lógica (estado inactiva)
+  const deleteCabania = useCallback(async (id) => {
+    const res = await api.patch(`cabanias/${id}`, {
+      estado: "inactiva"
+    });
+    return res.data;
+  }, []);
+
+  const moveCampista = useCallback(async (hospedajeId, nuevaCabaniaId) => {
+  console.log("Enviando:", { hospedajeId, nuevaCabaniaId });
+
+  const res = await api.patch(`hospedaje/${hospedajeId}`, {
+    cabania: nuevaCabaniaId
+  });
+
+  console.log("Respuesta recibida:", res.data);
+  return res.data;
+}, []);
+
   return {
     cabanias,
     loading,
     error,
     crearCabania,
+    updateCabania, 
+    deleteCabania, 
+    moveCampista
   };
 }
