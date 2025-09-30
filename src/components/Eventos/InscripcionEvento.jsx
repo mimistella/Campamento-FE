@@ -1,15 +1,10 @@
 import api from '../../hooks/useApi';
+import { GetLoggedUser } from '../utilities/GetLoggedUser.jsx';
 
-export default async function inscribirAEvento({evento}, user){
+export default async function inscribirAEvento({evento}){
 
-    try{
-        user = user == undefined || user == null ? await api.get('/me') : user;
-    }catch (error){
-        console.error("Error al obtener el usuario:", error);
-        alert("Error al obtener el usuario. Por favor, inicie sesión nuevamente.");
-    }
-
-
+    const user = await GetLoggedUser();
+    
     const data = {
         solicitudEvento: evento,
         solicitudUsuario: user,

@@ -20,14 +20,12 @@ const widths = ['w-48', 'w-60', 'w-72', 'w-60', 'w-48'];
 
 
 function desktopVersion(eventos, currentIndex){
-    console.log("working on desktop")
-    console.log(typeof(window.innerWidth) + " " + window.innerWidth)
     return (
         <>
             {shownSlides(eventos, currentIndex).map((evento, index) => (
-                <li key={evento.id} className={`p-2 bg-[linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.7)),url(/src/assets/images/EventoBg.jpg)] bg-cover bg-center 
+                <li key={evento.id} className={`p-2 bg-[url(/src/assets/images/chb_lg.svg)] bg-no-repeat bg-center bg-gray-200/90 bg-blend-overlay border-2 border-gray-300
                                                 ${heights[index]} ${widths[index]} mx-10 hover:scale-110 transition-all ease-out duration-300 text-[#ffd700] text-sm overflow-clip`}>
-                    <Evento evento={evento} TitleTextSize={"text-xs"} IsGrid={false} />
+                    <Evento evento={evento} TitleTextSize={"text-lg"} IsGrid={false} textColor="text-blue-950" />
                 </li>
             ))}
         </>
@@ -35,13 +33,11 @@ function desktopVersion(eventos, currentIndex){
 }
 
 function mobileVersion(eventos, currentIndex){
-    console.log("working on mobile")
-    console.log(typeof(window.innerWidth) + " " + window.innerWidth)
-
     return (
         <>
             {shownSlides(eventos, currentIndex, 1).map((evento) => (
-                <li key={evento.id} className={`p-2 bg-[#1b263b] h-32 hover:scale-110 transition-all ease-out duration-300 text-[#ffd700] text-sm overflow-clip`}>
+                <li key={evento.id} className={`p-2 bg-[url(/src/assets/images/chb_lg.svg)] bg-no-repeat bg-center bg-gray-200/90 bg-blend-overlay border-2 border-gray-300
+                                                h-auto w-5/6 hover:scale-110 transition-all ease-out duration-300 text-[#ffd700] text-sm overflow-clip`}>
                     <Evento evento={evento} TitleTextSize={"text-xs"} IsGrid={false} />
                 </li>
             ))}

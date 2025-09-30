@@ -8,8 +8,9 @@ import SignUpPage from '../pages/SignUpPage'
 import ForgotPassword from '../pages/ForgotPassword';
 import CamperHomePage from '../pages/campista/Campista.jsx'
 import Talleres from "../components/Talleres.jsx";
-import Misiones from "../components/misiones.jsx";
+import Misiones from "../components/Misiones.jsx";
 import Eventos from "../components/Eventos.jsx";
+import EventosAdmin from "../components/EventosAdmin.jsx";
 
   export function AppRouter() {
     return (
@@ -25,6 +26,7 @@ import Eventos from "../components/Eventos.jsx";
           <Route path="talleres" element={<Talleres />} />
           <Route path="misiones" element={<Misiones />} />
           <Route path="eventos" element={<Eventos />} />
+          <Route path="perfil" element={<EventosAdmin />} /> //temporalmente a perfil campista a falta de pagina de admin
             {/* otras rutas */}
 				  </Route>
         </Routes>
