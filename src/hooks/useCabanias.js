@@ -17,7 +17,7 @@ export function useCabanias() {
         capacidad: Number(form.capacidad),
         deidad:  Number(form.deidad),
       });
-      setCabanias((prev) => [...prev, data]); // opcional: actualizar lista
+      setCabanias((prev) => [...prev, data]); 
       return data;
     } catch (err) {
       setError(err?.response?.data?.message || "Error al crear cabaña");
@@ -27,7 +27,7 @@ export function useCabanias() {
     }
   };
 
-  // Editar solo descripción y capacidad
+
   const updateCabania = useCallback(async (id, { descripcion, capacidad }) => {
     const res = await api.patch(`cabanias/${id}`, {
       descripcion,
@@ -36,7 +36,6 @@ export function useCabanias() {
     return res.data;
   }, []);
 
-  // Baja lógica (estado inactiva)
   const deleteCabania = useCallback(async (id) => {
     const res = await api.patch(`cabanias/${id}`, {
       estado: "inactiva"

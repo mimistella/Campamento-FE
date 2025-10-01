@@ -90,8 +90,8 @@ const MostrarCabanas = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
+    <div className="min-h-screen w-full p-4 sm:p-6 md:p-8 bg-amber-50">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-2">
         <div>
           <h1 className="text-2xl font-bold text-amber-700">
             Cabañas del campamento
@@ -100,7 +100,7 @@ const MostrarCabanas = () => {
             Actualizado: {formatLastUpdate()}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={refreshData}
             className="px-3 py-2 bg-amber-500 text-white rounded hover:bg-amber-600"
@@ -143,7 +143,7 @@ const MostrarCabanas = () => {
         {currentCabanias.map((c) => (
           <li
             key={c.id}
-            className="p-5 bg-white rounded-lg shadow border border-gray-200"
+            className="p-4 sm:p-5 bg-white rounded-lg shadow border border-gray-200"
           >
             <h2 className="text-xl font-semibold text-gray-800 mb-1">
               {c.nombre}
@@ -175,7 +175,7 @@ const MostrarCabanas = () => {
       </ul>
 
       {/* Paginación */}
-      <div className="flex justify-center items-center space-x-2">
+      <div className="flex flex-wrap justify-center items-center gap-2 mb-4">
         <button
           onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}

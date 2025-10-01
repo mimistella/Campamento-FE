@@ -6,7 +6,7 @@ const AdminHomePage = () => {
     return (
         <div className="flex flex-col md:flex-row h-screen bg-gray-50">
             <AdminSidebar />
-            <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+            <main className="flex-1 p-2 sm:p-4 md:p-8 overflow-y-auto">
                 <Outlet />
             </main>
         </div>

@@ -12,6 +12,7 @@ import AdminHomePage from "../pages/Admin/AdminHomePage.jsx";
 import AdminDashboard from "../components/Admin/AdminDashboard.jsx";  
 import MostrarCabanas from "../components/Admin/mostrarCabanas.jsx";
 import EditarCabania from "../components/Admin/EditarCabanias.jsx";
+import CabinPage from "../components/Camper/MyCabin.jsx";
 
   export function AppRouter() {
     return (
@@ -33,6 +34,7 @@ import EditarCabania from "../components/Admin/EditarCabanias.jsx";
          </Route>
           <Route path="/campista" element={<CamperHomePage />}>
             <Route path="talleres" element={<Talleres />} />
+             <Route path= "cabanas" element={<CabinPage />} />
             {/* otras rutas */}
 				  </Route>
         </Routes>

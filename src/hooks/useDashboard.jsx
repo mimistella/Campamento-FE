@@ -56,18 +56,6 @@ useEffect(() => {
   refreshData();
 }, [refreshData]);
 
-  const moveCampista = (campistaId, nuevaCabaniaId) => {
-    setHospedajes(prev =>
-      prev.map(h =>
-        h.campista_id === campistaId ? { ...h, cabania_id: nuevaCabaniaId } : h
-      )
-    );
-  };
-
-  const removeCabania = (cabaniaId) => {
-    setCabanias(prev => prev.filter(c => c.id !== cabaniaId));
-    setHospedajes(prev => prev.filter(h => h.cabania_id !== cabaniaId));
-  };
 
   const getOcupacion = (cabaniaId) =>
     hospedajes.filter(h => h.cabania.id === cabaniaId).length;
@@ -82,8 +70,6 @@ useEffect(() => {
     instructores,
     cabanias,
     hospedajes,
-    moveCampista,
-    removeCabania,
     getOcupacion,
     cabaniasActivas,
     loading,
