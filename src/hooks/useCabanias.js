@@ -36,12 +36,15 @@ export function useCabanias() {
     return res.data;
   }, []);
 
-  const deleteCabania = useCallback(async (id) => {
-    const res = await api.patch(`cabanias/${id}`, {
-      estado: "inactiva"
-    });
+const deleteCabania = useCallback(async (id) => {
+  try {
+    const res = await api.delete(`cabanias/${id}`);
+    console.log("Cabaña desactivada:", res.data);
     return res.data;
-  }, []);
+  } catch (error) {
+    console.error("Error desactivando cabaña:", error);
+  }
+}, []);
 
   const moveCampista = useCallback(async (hospedajeId, nuevaCabaniaId) => {
   console.log("Enviando:", { hospedajeId, nuevaCabaniaId });

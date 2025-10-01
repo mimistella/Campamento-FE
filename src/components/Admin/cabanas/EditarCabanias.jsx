@@ -7,8 +7,8 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import DashboardContext from "../../context/DashboardContext";
-import { useCabanias } from "../../hooks/useCabanias";
+import DashboardContext from "@context/DashboardContext"
+import { useCabanias } from "@hooks/useCabanias";
 
 const EditarCabania = () => {
   const { id } = useParams();
