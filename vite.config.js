@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,6 +12,18 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api'),
       },
+    },
+  },
+ resolve: {
+    alias: {
+      '@assets': path.resolve('src/assets'),
+      '@components': path.resolve('src/components'),
+      '@context': path.resolve('src/context'),
+      '@constants': path.resolve('src/constants'),
+      '@forms': path.resolve('src/forms'),
+      '@hooks': path.resolve('src/hooks'),
+      '@pages': path.resolve('src/pages'),
+      '@providers': path.resolve('src/providers')
     },
   },
 });
