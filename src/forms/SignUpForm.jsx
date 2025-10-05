@@ -57,7 +57,7 @@ const SignUpForm = () => {
         telefono: form.telefono,
         contrasena: form.contrasena,
       };
-      await api.post('/campista', data, {
+      await api.post('/auth/register', data, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
