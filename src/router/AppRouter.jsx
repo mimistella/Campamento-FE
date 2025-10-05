@@ -14,33 +14,37 @@ import MostrarCabanas from "@components/Admin/cabanas/mostrarCabanas.jsx";
 import EditarCabania from "@components/Admin/cabanas/EditarCabanias.jsx";
 import CabinPage from "@components/Camper/MyCabin.jsx";
 import VerifyEmailPage from "@pages/VerifyEmailPage.jsx";
+import { PrivateRoute } from '@components/PrivateRoute';
   export function AppRouter() {
     return (
       <BrowserRouter>
         <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="*" element={<PageNotFound />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-           <Route path="/auth/verify-email" element={<VerifyEmailPage/>} />
+       <Routes>
+  <Route path="/" element={<LandingPage />} />
+  <Route path="*" element={<PageNotFound />} />
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="/signup" element={<SignUpPage />} />
+  <Route path="/forgot-password" element={<ForgotPassword />} />
+  <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
 
+  {/* Rutas protegidas Admin */}
+  <Route element={<PrivateRoute adminOnly={true} />}>
+    <Route path="/admin" element={<AdminHomePage />}>
+      <Route index element={<AdminDashboard />} />       {/* /admin */}
+      <Route path="dashboard" element={<AdminDashboard />} /> 
+      <Route path="cabanas" element={<MostrarCabanas />} />
+      <Route path="talleres" element={<Talleres />} />
+      <Route path="cabanas/editar/:id" element={<EditarCabania />} />
+    </Route>
+  </Route>
 
-         <Route path="/admin" element={<AdminHomePage />}>
-              <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
-              <Route path="cabanas" element={<MostrarCabanas />} />
-              <Route path="talleres" element={<Talleres />} />
-              <Route path="cabanas/editar/:id" element={<EditarCabania />} />
-              
-         <Route index element={<AdminDashboard />} /> {/* /admin */}
-    
-         </Route>
-          <Route path="/campista" element={<CamperHomePage />}>
-             <Route path= "cabanas" element={<CabinPage />} />
-            {/* otras rutas */}
-				  </Route>
-        </Routes>
+  {/* Rutas protegidas Campista */}
+  <Route element={<PrivateRoute />}>
+    <Route path="/campista" element={<CamperHomePage />}>
+      <Route path="cabanas" element={<CabinPage />} />
+    </Route>
+  </Route>
+</Routes>
       </BrowserRouter>
     );
   }
