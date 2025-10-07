@@ -15,6 +15,7 @@ import EditarCabania from "@components/Admin/cabanas/EditarCabanias.jsx";
 import CabinPage from "@components/Camper/MyCabin.jsx";
 import VerifyEmailPage from "@pages/VerifyEmailPage.jsx";
 import { PrivateRoute } from '@components/PrivateRoute';
+import EditarTaller from "../components/Admin/talleres/editartalleres.jsx";
   export function AppRouter() {
     return (
       <BrowserRouter>
@@ -35,6 +36,7 @@ import { PrivateRoute } from '@components/PrivateRoute';
       <Route path="cabanas" element={<MostrarCabanas />} />
       <Route path="talleres" element={<Talleres />} />
       <Route path="cabanas/editar/:id" element={<EditarCabania />} />
+      <Route path="talleres/editar/:id" element={<EditarTaller />} />
     </Route>
   </Route>
 
