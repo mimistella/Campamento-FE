@@ -7,37 +7,51 @@ import LoginPage from '@pages/LoginPage'
 import SignUpPage from '@pages/SignUpPage'
 import ForgotPassword from '@pages/ForgotPassword';
 import CamperHomePage from '@pages/campista/Campista.jsx'
-import Talleres from "@components/Admin/Talleres.jsx";
+import Talleres from "@components/Admin/talleres/mostrarTalleres.jsx";
 import AdminHomePage from "@pages/Admin/AdminHomePage.jsx";
 import AdminDashboard from "@components/Admin/AdminDashboard.jsx";  
 import MostrarCabanas from "@components/Admin/cabanas/mostrarCabanas.jsx";
 import EditarCabania from "@components/Admin/cabanas/EditarCabanias.jsx";
 import CabinPage from "@components/Camper/MyCabin.jsx";
-
-  export function AppRouter() {
+import VerifyEmailPage from "@pages/VerifyEmailPage.jsx";
+import { PrivateRoute } from '@components/PrivateRoute';
+import EditarTaller from "@components/Admin/talleres/editarTaller.jsx";
+import CamperDashboard from "@components/Camper/CamperDashboard.jsx"
+import Mostrarperiodos from "@components/Camper/MostrarPeriodos.jsx";
+  
+export function AppRouter() {
     return (
       <BrowserRouter>
         <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="*" element={<PageNotFound />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-         <Route path="/admin" element={<AdminHomePage />}>
-              <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
-              <Route path="cabanas" element={<MostrarCabanas />} />
-              <Route path="cabanas/editar/:id" element={<EditarCabania />} />
-              
-         <Route index element={<AdminDashboard />} /> {/* /admin */}
-    
-         </Route>
-          <Route path="/campista" element={<CamperHomePage />}>
-            <Route path="talleres" element={<Talleres />} />
-             <Route path= "cabanas" element={<CabinPage />} />
-            {/* otras rutas */}
-				  </Route>
-        </Routes>
+       <Routes>
+  <Route path="/" element={<LandingPage />} />
+  <Route path="*" element={<PageNotFound />} />
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="/signup" element={<SignUpPage />} />
+  <Route path="/forgot-password" element={<ForgotPassword />} />
+  <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+
+  {/* Rutas protegidas Admin */}
+  <Route element={<PrivateRoute adminOnly={true} />}>
+    <Route path="/admin" element={<AdminHomePage />}>
+      <Route index element={<AdminDashboard />} />       {/* /admin */}
+      <Route path="dashboard" element={<AdminDashboard />} /> 
+      <Route path="cabanas" element={<MostrarCabanas />} />
+      <Route path="talleres" element={<Talleres />} />
+      <Route path="cabanas/editar/:id" element={<EditarCabania />} />
+      <Route path="talleres/editar/:id" element={<EditarTaller />} />
+    </Route>
+  </Route>
+
+  {/* Rutas protegidas Campista */}
+  <Route element={<PrivateRoute />}>
+    <Route path="/campista" element={<CamperHomePage />}>
+    <Route index element={<CamperDashboard />} />
+      <Route path="cabanas" element={<CabinPage />} />
+      <Route path="campamento" element={<Mostrarperiodos />} />
+    </Route>
+  </Route>
+</Routes>
       </BrowserRouter>
     );
   }
