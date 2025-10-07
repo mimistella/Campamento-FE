@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ButtonBase from "@components/commonComp/ButtonBase";
 import { useNavigate } from "react-router-dom";
+import { MousePointerIcon } from 'lucide-react';
 
 export default function CabaniaCard({ cabania, getOcupacion }) {
   const navigate = useNavigate();
