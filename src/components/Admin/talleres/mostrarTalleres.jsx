@@ -60,7 +60,7 @@ export default function MostrarTalleres() {
       {talleresFiltrados && talleresFiltrados.length > 0 && (
         <List
           items={talleresFiltrados}
-          itemsPerPage={3}
+          itemsPerPage={6}
           renderItem={(taller) => (
             <TallerCard
               key={taller.id}
