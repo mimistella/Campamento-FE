@@ -16,7 +16,10 @@ import CabinPage from "@components/Camper/MyCabin.jsx";
 import VerifyEmailPage from "@pages/VerifyEmailPage.jsx";
 import { PrivateRoute } from '@components/PrivateRoute';
 import EditarTaller from "@components/Admin/talleres/editarTaller.jsx";
-  export function AppRouter() {
+import CamperDashboard from "@components/Camper/CamperDashboard.jsx"
+import Mostrarperiodos from "@components/Camper/MostrarPeriodos.jsx";
+  
+export function AppRouter() {
     return (
       <BrowserRouter>
         <ScrollToTop />
@@ -43,7 +46,9 @@ import EditarTaller from "@components/Admin/talleres/editarTaller.jsx";
   {/* Rutas protegidas Campista */}
   <Route element={<PrivateRoute />}>
     <Route path="/campista" element={<CamperHomePage />}>
+    <Route index element={<CamperDashboard />} />
       <Route path="cabanas" element={<CabinPage />} />
+      <Route path="campamento" element={<Mostrarperiodos />} />
     </Route>
   </Route>
 </Routes>
