@@ -1,4 +1,4 @@
-const Modal = ({content, onClose}) =>{
+const Modal = ({children, onClose}) =>{
     return(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-xl shadow-lg p-6 w-11/12 max-w-md relative">
@@ -11,7 +11,9 @@ const Modal = ({content, onClose}) =>{
                     ✖
                 </button>
 
-                {content()}
+                {children}
+
+                {/* {content({onClose})} */}
             
             </div>
 
