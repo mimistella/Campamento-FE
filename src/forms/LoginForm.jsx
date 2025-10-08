@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { UserIcon, LockIcon } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth.js";
+import api from "../hooks/useApi";
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const {login} = useAuth();
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState(null);
@@ -15,24 +14,11 @@ const LoginForm = () => {
     setError(null);
 
     try {
-      const user= await login(email, contrasena)
-      if(!user){
-        throw new Error("No se recibió la información del usuario");
-      }
-      switch(user.role)
-      {
-        case "admin":
-          navigate("/admin");
-          break;
-        /*case "instructor":
-          navigate("/instructor");
-          break;*/           //no implementado aún
-        default:
-          navigate("/campista");
-      }
-
+      const res = await api.post("/login", { email, contrasena });
+      console.log("Login exitoso:", res.data);
+      navigate("/campista"); 
     } catch (err) {
-        console.error(" Error login:", err.response?.data || err.message);
+        console.error("❌ Error login:", err.response?.data || err.message);
         setError(err.response?.data?.message || "Credenciales inválidas");
     }
   };

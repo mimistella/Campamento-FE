@@ -61,7 +61,7 @@ export default function MostrarCabanas() {
       {cabaniasFiltradas && cabaniasFiltradas.length > 0 && (
         <List
           items={cabaniasFiltradas}
-          itemsPerPage={6}
+          itemsPerPage={3}
           renderItem={(cabania) => (
             <CabaniaCard
               key={cabania.id}
