@@ -10,7 +10,8 @@ const Misiones = () =>{
         
         const fetchUser = async () =>{
             const userRol = await GetLoggedUser().role;
-            setRol(userRol ?? "admin");
+            console.log(userRol)
+            setRol(userRol);
         }
         fetchUser()
     },[]);

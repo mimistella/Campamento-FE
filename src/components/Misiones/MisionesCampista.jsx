@@ -7,11 +7,13 @@ import api from "../../hooks/useApi.js";
 const MisionesCampista = () => {
 
      const [misiones, setMisiones] = useState([]);
+     
 
     useEffect(() => {
         const fetchMissions = async () => {
             try {
-                const response = await api.get('/asigna-mision'); // DEBERIA SER RUTA A MISIONES DEL CAMPISTA
+                const response = await api.get('/misiones/me'); // DEBERIA SER RUTA A MISIONES DEL CAMPISTA
+                
 
                 const misionesLista = getMisionList(response.data.data);
                 setMisiones(misionesLista);
@@ -31,6 +33,7 @@ const MisionesCampista = () => {
         asignaMision.forEach(asigna => {
            
             misionesLista.push(asigna.mision);
+            console.log(asigna.mision);
         });
         return misionesLista;
     }

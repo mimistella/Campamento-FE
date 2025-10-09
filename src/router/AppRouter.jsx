@@ -12,10 +12,11 @@ import AdminDashboard from "@components/Admin/AdminDashboard.jsx";
 import MostrarCabanas from "@components/Admin/cabanas/mostrarCabanas.jsx";
 import EditarCabania from "@components/Admin/cabanas/EditarCabanias.jsx";
 import CabinPage from "@components/Camper/MyCabin.jsx";
-import Talleres from "../components/Talleres.jsx";
+//import Talleres from "../components/Talleres.jsx";
 import Misiones from "../components/Misiones.jsx";
 import Eventos from "../components/Eventos.jsx";
 import EventosAdmin from "../components/EventosAdmin.jsx";
+import MisionesAdmin from "../components/Misiones/MisionesAdmin.jsx";
 
   export function AppRouter() {
     return (
@@ -27,21 +28,24 @@ import EventosAdmin from "../components/EventosAdmin.jsx";
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-         <Route path="/admin" element={<AdminHomePage />}>
-              <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
-              <Route path="cabanas" element={<MostrarCabanas />} />
-              <Route path="cabanas/editar/:id" element={<EditarCabania />} />
+          <Route path="/admin" element={<AdminHomePage />}>
+          <Route path="/admin/eventos" element={<EventosAdmin />}/>
+          <Route path="/admin/misiones" element={<MisionesAdmin/>}/>
+
+          <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
+          <Route path="cabanas" element={<MostrarCabanas />} />
+          <Route path="cabanas/editar/:id" element={<EditarCabania />} />
               
-         <Route index element={<AdminDashboard />} /> {/* /admin */}
+          <Route index element={<AdminDashboard />} /> {/* /admin */}
     
          </Route>
           <Route path="/campista" element={<CamperHomePage />}>
-          <Route path="talleres" element={<Talleres />} />
+          
           <Route path="misiones" element={<Misiones />} />
           <Route path="eventos" element={<Eventos />} />
-          <Route path="perfil" element={<EventosAdmin />} /> //temporalmente a perfil campista a falta de pagina de admin
-            <Route path="talleres" element={<Talleres />} />
-             <Route path= "cabanas" element={<CabinPage />} />
+          
+          
+          <Route path= "cabanas" element={<CabinPage />} />
             {/* otras rutas */}
 				  </Route>
         </Routes>

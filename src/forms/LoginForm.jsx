@@ -14,7 +14,7 @@ const LoginForm = () => {
     setError(null);
 
     try {
-      const res = await api.post("/login", { email, contrasena });
+      const res = await api.post("/auth/login", { email, contrasena });
       console.log("Login exitoso:", res.data);
       navigate("/campista"); 
     } catch (err) {
