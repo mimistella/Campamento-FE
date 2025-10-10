@@ -1,9 +1,11 @@
 import {usePeriodo} from "@hooks/usePeriodo"
 import List from "@components/commonComp/List";
 import PeriodoCard from "@components/Camper/PeriodoCard";
+import { useInscripcionPeriodo } from "@hooks/useInscripcionPeriodo.js";
 
 export default function MostrarPeriodos() {
   const { periodos, loading } = usePeriodo();
+  const { inscripciones } = useInscripcionPeriodo(); 
 
 
   if (loading) return <p className="text-gray-500">Cargando Períodos...</p>;
@@ -36,6 +38,7 @@ const periodosActivos = periodos;
             <PeriodoCard
               key={periodo.id}
               periodo={periodo}
+              inscripcionesUsuario={inscripciones}
              
             />
           )}

@@ -5,7 +5,7 @@ import { useAuth } from "@hooks/useAuth";
 
 export function useInscripcionPeriodo() {
   const { user } = useAuth();
-  const [inscripcion, setInscripcion] = useState(null);
+  const [inscripciones, setInscripciones] = useState([]); // Array de inscripciones del usuario
   const [diasRestantes, setDiasRestantes] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -18,10 +18,9 @@ export function useInscripcionPeriodo() {
   };
 
   useEffect(() => {
-    const fetchInscripcion = async () => {
+    const fetchInscripciones = async () => {
       try {
-        console.log("Buscando inscripción para user ID:", user.id);
-        
+        console.log("Buscando inscripciones para user ID:", user?.id);
         const response = await api.get("/inscripcion-periodo", {
           withCredentials: true,
         });
@@ -29,35 +28,30 @@ export function useInscripcionPeriodo() {
         const responseData = response.data;
         console.log("Respuesta completa:", responseData);
 
+        const todasInscripciones = Array.isArray(responseData.data)
+          ? responseData.data
+          : [responseData.data];
 
-        const inscripciones = responseData.data; 
-        console.log("Array de inscripciones:", inscripciones);
+        // Filtramos solo las inscripciones del usuario
+        const inscripcionesUsuario = todasInscripciones.filter(
+          (i) => i.campista?.id === user?.id || i.campistaId === user?.id
+        );
 
+        console.log("Inscripciones encontradas:", inscripcionesUsuario);
+        setInscripciones(inscripcionesUsuario);
 
-        const inscripcionCampista = Array.isArray(inscripciones)
-          ? inscripciones.find(i => {
-
-              const campistaId = i.campista?.id || i.campistaId;
-              console.log(`Comparando: ${campistaId} === ${user.id}`, campistaId === user.id);
-              return campistaId === user.id;
-            })
-          : null;
-
-        console.log("Inscripción encontrada después de corrección:", inscripcionCampista);
-
-        setInscripcion(inscripcionCampista || null);
-
-        if (inscripcionCampista?.periodo?.fechaInicioPer) {
-          console.log("Fecha inicio del período encontrada:", inscripcionCampista.periodo.fechaInicioPer);
-          calcularDiasRestantes(inscripcionCampista.periodo.fechaInicioPer);
+        // Calculamos días restantes para el primer período del usuario (opcional)
+        if (inscripcionesUsuario.length > 0) {
+          const primerPeriodo = inscripcionesUsuario[0].periodo;
+          if (primerPeriodo?.fechaInicioPer) {
+            calcularDiasRestantes(primerPeriodo.fechaInicioPer);
+          }
         } else {
-          console.log("No se encontró fecha de inicio en el período");
           setDiasRestantes(null);
         }
-
       } catch (error) {
-        console.error("Error al obtener la inscripción:", error.response?.data || error.message);
-        setInscripcion(null);
+        console.error("Error al obtener inscripciones:", error.response?.data || error.message);
+        setInscripciones([]);
         setDiasRestantes(null);
       } finally {
         setLoading(false);
@@ -65,11 +59,11 @@ export function useInscripcionPeriodo() {
     };
 
     if (user?.id) {
-      fetchInscripcion();
+      fetchInscripciones();
     } else {
       setLoading(false);
     }
   }, [user?.id]);
 
-  return { inscripcion, diasRestantes, loading };
+  return { inscripciones, diasRestantes, loading };
 }

@@ -3,7 +3,7 @@ import { useAuth } from "@hooks/useAuth";
 
 export default function CampistaDashboard() {
   const { user } = useAuth();
-  const { inscripcion, diasRestantes, loading } = useInscripcionPeriodo();
+  const { inscripciones, diasRestantes, loading } = useInscripcionPeriodo();
 
   if (loading) {
     return <p className="text-center text-gray-500 mt-10">Cargando...</p>;
@@ -15,7 +15,7 @@ export default function CampistaDashboard() {
         ¡Hola, {user.email || "campista"}! 
       </h1>
 
-      {inscripcion ? (
+      {inscripciones ? (
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-2">
             Días que faltan para mi campamento:

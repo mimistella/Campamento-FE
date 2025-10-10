@@ -4,23 +4,23 @@ import ButtonBase from "@components/commonComp/ButtonBase";
 import { MousePointerIcon } from "lucide-react";
 import InscriptionForm from "@forms/InscriptionForm";
 
-export default function PeriodoCard({ periodo }) {
+export default function PeriodoCard({ periodo, inscripcionesUsuario = [] }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   const [selectedPeriodoId, setSelectedPeriodoId] = useState(null);
 
   const toggleExpand = () => setIsExpanded(!isExpanded);
-  
+
+  const yaInscripto = inscripcionesUsuario.some(
+    (insc) => insc.periodo?.id === periodo.id
+  );
+
   const handleAbrirForm = (e) => {
     e.stopPropagation();
-    
-    // Verificación más robusta
     if (!periodo?.id) {
       console.error("Periodo ID no disponible:", periodo);
       return;
     }
-    
-    console.log("Abriendo formulario con periodoId:", periodo.id); // Debug
     setSelectedPeriodoId(periodo.id);
     setOpenForm(true);
   };
@@ -49,6 +49,7 @@ export default function PeriodoCard({ periodo }) {
         <div className="flex justify-between items-start">
           <div className="flex-1">
             <h2 className="text-xl font-semibold text-gray-800 mb-1">{periodo.nombre}</h2>
+
             {isExpanded && (
               <div className="mt-2 text-gray-600 text-sm space-y-1">
                 <p>{periodo.descripcion}</p>
@@ -68,13 +69,19 @@ export default function PeriodoCard({ periodo }) {
               </div>
             )}
           </div>
+
           <div className="text-sm text-gray-400 ml-2">{isExpanded ? "▲" : "▼"}</div>
         </div>
 
         {isExpanded && (
           <div className="mt-3 flex justify-end">
-            <ButtonBase variant="contained" color="amber" onClick={handleAbrirForm}>
-              Inscribirse
+            <ButtonBase
+              variant="contained"
+              color="amber"
+              onClick={handleAbrirForm}
+              disabled={yaInscripto} 
+            >
+              {yaInscripto ? "Ya inscrito" : "Inscribirse"}
             </ButtonBase>
           </div>
         )}
@@ -92,7 +99,7 @@ export default function PeriodoCard({ periodo }) {
           Inscribirse al período: {periodo.nombre}
         </DialogTitle>
         <DialogContent dividers>
-          <InscriptionForm periodoId={selectedPeriodoId}  onSuccess={handleCerrarForm} />
+          <InscriptionForm periodoId={selectedPeriodoId} onSuccess={handleCerrarForm} />
         </DialogContent>
         <DialogActions>
           <ButtonBase variant="outlined" color="gray" onClick={handleCerrarForm}>
