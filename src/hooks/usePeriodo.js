@@ -33,7 +33,7 @@ export function usePeriodo() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Funciones CRUD opcionales si tu API las soporta
+
   const crearPeriodo = async (periodoData) => {
     try {
       const res = await api.post("/periodo", periodoData);
