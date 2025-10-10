@@ -40,7 +40,6 @@ export function useInscripcionPeriodo() {
         console.log("Inscripciones encontradas:", inscripcionesUsuario);
         setInscripciones(inscripcionesUsuario);
 
-        // Calculamos días restantes para el primer período del usuario (opcional)
         if (inscripcionesUsuario.length > 0) {
           const primerPeriodo = inscripcionesUsuario[0].periodo;
           if (primerPeriodo?.fechaInicioPer) {

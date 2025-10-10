@@ -18,7 +18,8 @@ import { PrivateRoute } from '@components/PrivateRoute';
 import EditarTaller from "@components/Admin/talleres/editarTaller.jsx";
 import CamperDashboard from "@components/Camper/CamperDashboard.jsx"
 import Mostrarperiodos from "@components/Camper/MostrarPeriodos.jsx";
-import MostrarTalleres from "../components/Camper/MostrarTalleres.jsx";
+import MostrarTalleres from "@components/Camper/MostrarTalleres.jsx";
+import UserDataForm from "@forms/UserDataForm.jsx";
   
 export function AppRouter() {
     return (
@@ -51,6 +52,7 @@ export function AppRouter() {
       <Route path="cabanas" element={<CabinPage />} />
       <Route path="campamento" element={<Mostrarperiodos />} />
       <Route path="talleres" element={<MostrarTalleres />} />
+      <Route path="perfil" element={<UserDataForm />} />
     </Route>
   </Route>
 </Routes>
