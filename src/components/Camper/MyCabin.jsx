@@ -3,6 +3,8 @@ import { useCabaniaCampista } from "@hooks/useCabaniaCampista";
 import CabinInfo from "./CabinInfo";
 import api from "@hooks/useApi";
 import { useAuth } from "@hooks/useAuth";
+import { useToaster } from "@hooks/useToaster";
+import ButtonBase from "@components/commonComp/ButtonBase";
 
 export default function MyCabin() {
   const {
@@ -16,9 +18,10 @@ export default function MyCabin() {
   } = useCabaniaCampista();
 
   const { user } = useAuth();
+  const toast = useToaster();
+
   const [seleccion, setSeleccion] = useState("");
   const [creando, setCreando] = useState(false);
-  const [feedback, setFeedback] = useState("");
   const [mockCabin, setMockCabin] = useState(null);
 
   useEffect(() => {
@@ -30,23 +33,24 @@ export default function MyCabin() {
     }
   }, [hospedaje]);
 
-  async function handleSeleccionDeidad(e) {
-    const deidadId = e.target.value;
-    setSeleccion(deidadId);
-    if (!deidadId || creando) return;
-
-    if (!user?.id || !periodo) {
-      setFeedback("No se puede crear hospedaje: datos incompletos.");
+  async function handleCrearHospedaje() {
+    if (!seleccion) {
+      toast.error("Debes seleccionar una deidad antes de continuar.");
       return;
     }
 
-    try {
-      setCreando(true);
-      setFeedback("Creando hospedaje, por favor espere...");
+    if (!user?.id || !periodo) {
+      toast.error("No se puede crear hospedaje: datos incompletos.");
+      return;
+    }
 
-      const cabRes = await api.get(`/cabanias/deidad/${deidadId}`);
+    setCreando(true);
+    const loadingToastId = toast.loading("Creando hospedaje...");
+
+    try {
+      const cabRes = await api.get(`/cabanias/deidad/${seleccion}`);
       const cabania = cabRes.data.data;
-      if (!cabania) throw new Error("No se encontró cabaña para esa deidad");
+      if (!cabania) throw new Error("No se encontró una cabaña para esa deidad.");
 
       await api.post("/hospedaje", {
         campista: user.id,
@@ -55,11 +59,13 @@ export default function MyCabin() {
         fechaFin: periodo.fechaFinPer,
       });
 
-      setFeedback("Hospedaje creado correctamente ");
+      toast.dismiss(loadingToastId);
+      toast.success(" Hospedaje creado correctamente.");
       await refetch();
     } catch (err) {
       console.error(err);
-      setFeedback("Error al crear hospedaje. Intente nuevamente.");
+      toast.dismiss(loadingToastId);
+      toast.error(" Error al crear hospedaje. Intente nuevamente.");
     } finally {
       setCreando(false);
     }
@@ -67,7 +73,9 @@ export default function MyCabin() {
 
   if (loading)
     return (
-      <div className="p-8 text-center text-gray-600">Cargando información...</div>
+      <div className="p-8 text-center text-gray-600">
+        Cargando información...
+      </div>
     );
 
   if (error)
@@ -89,7 +97,6 @@ export default function MyCabin() {
       </div>
     );
 
-
   if (hasHospedajeActivo && hospedaje && mockCabin) {
     return (
       <div className="bg-amber-50 flex justify-center items-start lg:items-center min-h-screen">
@@ -98,7 +105,7 @@ export default function MyCabin() {
     );
   }
 
-  // Formulario para elegir deidad
+  // --- FORMULARIO ---
   return (
     <div className="min-h-screen bg-amber-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
@@ -109,7 +116,7 @@ export default function MyCabin() {
         <select
           className="border rounded-lg w-full p-2 text-gray-700"
           value={seleccion}
-          onChange={handleSeleccionDeidad}
+          onChange={(e) => setSeleccion(e.target.value)}
           disabled={creando}
         >
           <option value="">Seleccioná una deidad</option>
@@ -120,14 +127,15 @@ export default function MyCabin() {
           ))}
         </select>
 
-        {creando && (
-          <div className="mt-4 flex justify-center">
-            <span className="animate-pulse text-amber-600">Creando...</span>
-          </div>
-        )}
-        {feedback && (
-          <p className="mt-4 text-gray-600 italic">{feedback}</p>
-        )}
+        <ButtonBase
+          className="mt-4 w-full"
+          variant="contained"
+          color="amber"
+          disabled={creando}
+          onClick={handleCrearHospedaje}
+        >
+          {creando ? "Creando..." : "Aceptar"}
+        </ButtonBase>
       </div>
     </div>
   );

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import ButtonBase from "@components/commonComp/ButtonBase";
 import { MousePointerIcon } from "lucide-react";
+import { useToaster } from "@hooks/useToaster";
 
 export default function TallerCard({ taller, inscribir, misTalleres, inscribiendo }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const toast = useToaster();
 
   const realTaller = taller.taller ? taller.taller : taller;
   const yaInscripto = misTalleres.some(t => t.taller?.id === realTaller.id || t.id === realTaller.id);
@@ -12,11 +14,17 @@ export default function TallerCard({ taller, inscribir, misTalleres, inscribiend
   const handleInscribirse = async (e) => {
     e?.stopPropagation();
     if (yaInscripto) return;
+
+    const loadingId = toast.loading("Inscribiéndote al taller...");
+
     try {
       await inscribir(realTaller.id);
-      alert("Inscripción exitosa ✅");
+      toast.dismiss(loadingId);
+      toast.success(` Inscripción exitosa a "${realTaller.titulo}".`);
     } catch (err) {
-      alert("Error al inscribirse: " + err.message);
+      console.error(err);
+      toast.dismiss(loadingId);
+      toast.error(" Error al inscribirse. Intenta nuevamente.");
     }
   };
 

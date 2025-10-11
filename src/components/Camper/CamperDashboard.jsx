@@ -27,7 +27,7 @@ export default function CampistaDashboard() {
         </h1>
 
         {/*Está inscripto */}
-        {inscripciones ? (
+        {inscripciones.lengt > 0 ? (
           <div className="text-center">
             <h2 className="text-xl font-semibold text-amber-800 mb-3">
               Días que faltan para mi campamento
