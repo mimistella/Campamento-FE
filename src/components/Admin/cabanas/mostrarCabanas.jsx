@@ -16,6 +16,8 @@ export default function MostrarCabanas() {
   if (loading) return <p>Cargando cabañas...</p>;
 
   const cabaniasFiltradas = mostrarSoloActivas ? cabaniasActivasPeriodo : cabanias;
+  const handleCerrarForm = () => {
+    setOpenCrear(false);}
 
   return (
     <div className="min-h-screen p-6 bg-amber-50">
@@ -73,12 +75,12 @@ export default function MostrarCabanas() {
       )}
 
       {/* Dialogo Crear */}
-      <Dialog open={openCrear} onClose={() => setOpenCrear(false)} maxWidth="sm" fullWidth>
+      <Dialog open={openCrear} onClose={handleCerrarForm} maxWidth="sm" fullWidth>
         <DialogTitle className="!font-caesar-dressing-regular text-white bg-amber-400">
           Crear nueva cabaña
         </DialogTitle>
         <DialogContent dividers>
-          <CabaniaForm />
+          <CabaniaForm onSuccess={handleCerrarForm} />
         </DialogContent>
         <DialogActions>
           <ButtonBase variant="outlined" color="gray" onClick={() => setOpenCrear(false)}>

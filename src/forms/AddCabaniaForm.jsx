@@ -3,19 +3,19 @@ import { HomeIcon, UsersIcon, FileTextIcon, MapPinIcon, UserRoundSearchIcon } fr
 import { API_ROUTES } from "../constants/apiroutes";
 import { useCabanias } from "../hooks/useCabanias";
 import axios from "axios";
+import { useToaster } from "@hooks/useToaster";
 
-const CabaniaForm = () => {
+export default function CabaniaForm({ onSuccess }) {
   const [form, setForm] = useState({
     nombre: "",
-    capacidad: null,
+    capacidad: "",
     descripcion: "",
     ubicacion: "",
-    deidad: null,
+    deidad: "",
   });
 
   const [deidades, setDeidades] = useState([]);
-  const [success, setSuccess] = useState("");
-
+  const toast = useToaster();
   const { crearCabania, loading, error } = useCabanias();
 
   useEffect(() => {
@@ -37,23 +37,39 @@ const CabaniaForm = () => {
       ...prev,
       [name]:
         name === "capacidad" || name === "deidad"
-          ? value === "" ? null : parseInt(value, 10)
+          ? value === "" ? "" : parseInt(value, 10)
           : value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess("");
 
+    if (!form.nombre || !form.capacidad || !form.ubicacion || !form.deidad) {
+      toast.error("Debe completar todos los campos obligatorios.");
+      return;
+    }
+
+    const payload = {
+      nombre: form.nombre,
+      capacidad: form.capacidad,
+      descripcion: form.descripcion,
+      ubicacion: form.ubicacion,
+      deidad: form.deidad,
+    };
+
+    const toastId = toast.loading("Creando cabaña...");
 
     try {
-      const data = await crearCabania(form);
-      console.log("Response:", data); // para ver que me dice el back
-      setSuccess("¡Cabaña creada exitosamente!");
-      setForm({ nombre: "", capacidad: null, descripcion: "", ubicacion: "", deidad: null });
+      await crearCabania(payload);
+      toast.dismiss(toastId);
+      toast.success("¡Cabaña creada exitosamente!");
+      setForm({ nombre: "", capacidad: "", descripcion: "", ubicacion: "", deidad: "" });
+      if (onSuccess) onSuccess();
     } catch (err) {
-      console.error("Error en creación:", err.response?.data); 
+      toast.dismiss(toastId);
+      console.error("Error en creación:", err.response?.data || err);
+      toast.error("Ocurrió un error al crear la cabaña.");
     }
   };
 
@@ -84,7 +100,7 @@ const CabaniaForm = () => {
           name="capacidad"
           placeholder="Capacidad"
           className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md outline-none"
-          value={form.capacidad || ""}
+          value={form.capacidad}
           onChange={handleChange}
         />
       </div>
@@ -121,7 +137,7 @@ const CabaniaForm = () => {
         <select
           name="deidad"
           className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md outline-none bg-white"
-          value={form.deidad || ""}
+          value={form.deidad}
           onChange={handleChange}
         >
           <option value="">Seleccione una deidad</option>
@@ -136,18 +152,15 @@ const CabaniaForm = () => {
 
       {/* Mensajes */}
       {error && <div className="col-span-2 text-red-600 text-center font-medium">{error}</div>}
-      {success && <div className="col-span-2 text-green-600 text-center font-medium">{success}</div>}
 
       {/* Botón */}
       <button
         type="submit"
-        className="col-span-2 w-full bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-md font-medium transition-colors disabled:opacity-60 normal-case"
+        className="col-span-2 w-full bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-md font-medium transition-colors disabled:opacity-60"
         disabled={loading}
       >
         {loading ? "Guardando..." : "Crear cabaña"}
       </button>
     </form>
   );
-};
-
-export default CabaniaForm;
+}
