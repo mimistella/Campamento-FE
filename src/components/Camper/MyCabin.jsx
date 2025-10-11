@@ -89,7 +89,7 @@ export default function MyCabin() {
       </div>
     );
 
-  // ✅ Renderiza solo si mockCabin ya tiene datos
+
   if (hasHospedajeActivo && hospedaje && mockCabin) {
     return (
       <div className="bg-amber-50 flex justify-center items-start lg:items-center min-h-screen">

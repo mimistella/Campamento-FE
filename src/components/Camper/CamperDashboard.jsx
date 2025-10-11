@@ -5,40 +5,66 @@ export default function CampistaDashboard() {
   const { user } = useAuth();
   const { inscripciones, diasRestantes, loading } = useInscripcionPeriodo();
 
+  const tieneDatosCompletos = Boolean(
+    user?.nombre && user?.apellido && user?.telefono && user?.grupoSanguineo
+  );
+
   if (loading) {
-    return <p className="text-center text-gray-500 mt-10">Cargando...</p>;
+    return (
+      <div className="min-h-screen bg-amber-200 flex items-center justify-center">
+        <p className="text-orange-600 font-semibold text-lg animate-pulse">
+          Cargando tu información...
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-2xl mx-auto mt-12 p-6 bg-white shadow-xl rounded-2xl">
-      <h1 className="text-2xl font-bold text-center mb-6">
-        ¡Hola, {user.email || "campista"}! 
-      </h1>
+    <div className="min-h-screen bg-amber-200 flex items-center justify-center p-6">
+      <div className="max-w-2xl w-full bg-white shadow-2xl rounded-3xl p-8 border border-amber-300">
+        <h1 className="text-3xl font-bold text-center text-amber-700 mb-6">
+          ¡Hola, {user.nombre || "campista"}!
+        </h1>
 
-      {inscripciones ? (
-        <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">
-            Días que faltan para mi campamento:
-          </h2>
-          <p className="text-5xl font-bold text-amber-600 mb-4">
-            {diasRestantes}
-          </p>
-          <p className="text-gray-700">
-            ¡Por favor no olvides revisar los <strong>talleres disponibles</strong> antes de que termine la cuenta regresiva!
-          </p>
-        </div>
-      ) : (
-        <div className="text-center">
-          <p className="text-lg text-gray-700 mb-4">
-            Parece que no estás inscripto aún 
-          </p>
-          <p className="text-gray-600">
-            Por favor dirígete al apartado <strong>Campamento</strong> e inscríbete a un período para unirte a nosotros.
-            <br />
-            No olvides completar la información adicional en tu perfil, ¡queremos conocerte más! 
-          </p>
-        </div>
-      )}
+        {/*Está inscripto */}
+        {inscripciones ? (
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-amber-800 mb-3">
+              Días que faltan para mi campamento
+            </h2>
+
+            <div className="flex justify-center items-center mb-6">
+              <p className="text-6xl font-caesar-dressing-regular text-orange-500 drop-shadow-sm">
+                {diasRestantes}
+              </p>
+              <span className="ml-2 text-lg text-amber-800 font-semibold">
+                días
+              </span>
+            </div>
+
+            <p className="text-gray-700 mb-6 leading-relaxed">
+              ¡Ya estás inscripto! Antes de que termine el contador recordá decirnos quien es tu padre divino e inscribite a nuestros Talleres. 
+            </p>
+          </div>
+        ) : (
+
+          <div className="text-center">
+            {!tieneDatosCompletos ? (
+              <p className="text-gray-700 leading-relaxed">
+                Por favor dirígete a la sección{" "}
+                <strong className="text-orange-600">Mi Perfil</strong> y completa tu
+                información personal antes de continuar ¡Queremos conocerte!.
+              </p>
+            ) : (
+              <p className="text-gray-700 leading-relaxed">
+                Ya completaste tus datos personales. Ahora puedes seleccionar el{" "}
+                <strong className="text-orange-600">período</strong> al que deseas
+                asistir para unirte al campamento. 
+              </p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
