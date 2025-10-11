@@ -1,14 +1,16 @@
 import { NavLink } from "react-router-dom";
-import { HiMenu, HiX } from "react-icons/hi";
+import { HiMenu, HiX, HiLogout } from "react-icons/hi";
 import { basePath, menuItems } from "@constants/sidebar";
 import { useSidebar } from "@hooks/useSidebar.js";
 import { useNivelAcceso } from "@hooks/useNivelAcceso";
+import { useAuth } from "@hooks/useAuth";
+import ButtonBase from "@components/commonComp/ButtonBase";
 
 const Sidebar = () => {
   const { isOpen, toggleSidebar, closeSidebar } = useSidebar();
   const { nivel: nivelAcceso, loading: nivelLoading } = useNivelAcceso();
+  const { logout } = useAuth();
 
-  // Mientras carga el nivel, no renderizamos nada o mostramos un placeholder
   if (nivelLoading) return null;
 
   const getItemDisabled = (path) => {
@@ -32,6 +34,11 @@ const Sidebar = () => {
       ? "Inscríbete a un período para desbloquear cabañas, talleres, eventos y misiones."
       : "";
 
+  const handleLogout = () => {
+    logout();
+    closeSidebar();
+  };
+
   return (
     <>
       {/* Mobile top bar */}
@@ -46,7 +53,7 @@ const Sidebar = () => {
         </button>
       </div>
 
-      {/* Mobile sidebar overlay */}
+      {/* Overlay */}
       <div
         className={`fixed inset-0 z-40 bg-black bg-opacity-30 transition-opacity duration-300 md:hidden ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
@@ -54,7 +61,7 @@ const Sidebar = () => {
         onClick={closeSidebar}
       />
 
-      {/* Sidebar container */}
+      {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-screen w-64 bg-amber-600 text-white flex flex-col z-50 transform transition-transform duration-300
         md:static md:h-full md:translate-x-0
@@ -63,6 +70,7 @@ const Sidebar = () => {
         <h2 className="p-6 text-2xl font-caesar-dressing-regular text-center border-b border-orange-700 hidden md:block">
           Campista
         </h2>
+
         <nav className="flex flex-col gap-1 flex-1 overflow-y-auto">
           {menuItems.map((item) => {
             const disabled = getItemDisabled(item.path);
@@ -87,6 +95,18 @@ const Sidebar = () => {
         {mensaje && (
           <p className="text-xs text-yellow-200 mt-2 p-2 text-center">{mensaje}</p>
         )}
+
+        {/* Botón de logout */}
+        <div className="p-4 border-t border-orange-700">
+          <ButtonBase
+            onClick={handleLogout}
+            variant="contained"
+            className="w-full flex items-center justify-center gap-2 !bg-amber-500 !hover:bg-amber-600 text-white"
+          >
+            <HiLogout className="w-5 h-5" />
+            Cerrar sesión
+          </ButtonBase>
+        </div>
       </aside>
     </>
   );

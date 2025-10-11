@@ -1,8 +1,11 @@
 import { useAuthContext } from "@context/AuthContext";
 import api from "@hooks/useApi";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 export function useAuth() {
   const { user, setUser, loading } = useAuthContext();
+  const navigate = useNavigate();
 
   const login = async (email, contrasena) => {
     const _res = await api.post("/auth/login", { email, contrasena });
@@ -11,9 +14,10 @@ export function useAuth() {
     return who.data;
   };
 
-  const logout = async () => {
-    await api.post("/auth/logout");
+  const logout = () => {
+    Cookies.remove("token");
     setUser(null);
+    navigate("/login"); 
   };
 
   return { user, loading, login, logout };
