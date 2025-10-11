@@ -4,4 +4,5 @@ export const API_ROUTES = {
   CABANAS: "/api/cabanias",
   HOSPEDA: "/api/hospedaje",
   DEIDADES: "/api/deidades",
+  INSCRIPTOS:"/api/inscripcion-periodo",
 };

@@ -7,7 +7,7 @@ import CabaniaCard from "@components/Admin/cabanas/CabaniaCard";
 import ButtonBase from "@components/commonComp/ButtonBase";
 
 export default function MostrarCabanas() {
-  const { cabanias, cabaniasActivas, getOcupacion, refreshData, lastUpdated, loading } =
+  const { cabanias, cabaniasActivasPeriodo, getOcupacion, refreshData, lastUpdated, loading } =
     useContext(DashboardContext);
 
   const [mostrarSoloActivas, setMostrarSoloActivas] = useState(false);
@@ -15,7 +15,7 @@ export default function MostrarCabanas() {
 
   if (loading) return <p>Cargando cabañas...</p>;
 
-  const cabaniasFiltradas = mostrarSoloActivas ? cabaniasActivas : cabanias;
+  const cabaniasFiltradas = mostrarSoloActivas ? cabaniasActivasPeriodo : cabanias;
 
   return (
     <div className="min-h-screen p-6 bg-amber-50">
