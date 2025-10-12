@@ -1,4 +1,4 @@
-import { Home, Landmark, Hammer, Calendar, Map, Users} from "lucide-react";
+import { Home, Landmark, Hammer, Calendar, Map, Users,CalendarClock} from "lucide-react";
 export const basePath = "/admin";
 export const menuItems = [
   { path: "dashboard", label: "Dashboard", icon: Home },
@@ -7,4 +7,5 @@ export const menuItems = [
   { path: "eventos", label: "Eventos", icon: Calendar },
   { path: "misiones", label: "Misiones", icon: Map },
   { path: "usuarios", label: "Usuarios", icon: Users },
+  {path: "periodos", label: "Períodos", icon: CalendarClock}
 ];

@@ -21,6 +21,7 @@ import Mostrarperiodos from "@components/Camper/MostrarPeriodos.jsx";
 import MostrarTalleres from "@components/Camper/MostrarTalleres.jsx";
 import UserDataForm from "@forms/UserDataForm.jsx";
 import MostrarUsuarios from "@components/Admin/users/mostrarUsuarios.jsx";
+import VerPeriodos from "@components/Admin/periodos/Periodos.jsx";
   
 export function AppRouter() {
     return (
@@ -42,6 +43,7 @@ export function AppRouter() {
       <Route path="cabanas" element={<MostrarCabanas />} />
       <Route path="talleres" element={<Talleres />} />
       <Route path="usuarios" element={<MostrarUsuarios />} />
+      <Route path="periodos" element={<VerPeriodos />} />
       <Route path="cabanas/editar/:id" element={<EditarCabania />} />
       <Route path="talleres/editar/:id" element={<EditarTaller />} />
     </Route>
