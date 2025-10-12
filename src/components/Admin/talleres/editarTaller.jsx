@@ -1,22 +1,33 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useTalleres } from "@hooks/useTalleres";
-import {useDashboard} from "@hooks/useDashboard"
+import { useDashboard } from "@hooks/useDashboard";
+import { useToaster } from "@hooks/useToaster";
 
 const EditarTaller = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { 
-    talleres, 
-    inscripciones, 
-    updateTaller, 
-    deleteTaller, 
-    refreshData, 
+  const toast = useToaster();
+
+  const {
+    talleres,
+    inscripciones,
+    updateTaller,
+    deleteTaller,
+    refreshData,
     deleteInscripto,
-    loading 
+    loading: loadingTalleres,
   } = useTalleres();
 
- const { instructores } = useDashboard(); 
+  const { instructores } = useDashboard();
+
+  const taller = Array.isArray(talleres)
+    ? talleres.find((t) => t.id === parseInt(id))
+    : null;
+
+  const campistasInscriptos = Array.isArray(inscripciones)
+    ? inscripciones.filter((i) => i?.taller?.id === parseInt(id))
+    : [];
 
   const [formData, setFormData] = useState({
     titulo: "",
@@ -28,47 +39,37 @@ const EditarTaller = () => {
     duracionHoras: 0,
   });
 
-  const taller = Array.isArray(talleres) 
-    ? talleres.find((t) => t.id === parseInt(id)) 
-    : null;
+  const [loading, setLoading] = useState(false);
 
-
-  const campistasInscriptos = (() => {
-    if (!inscripciones) return [];
-    if (!Array.isArray(inscripciones)) return [];
-    return inscripciones.filter((i) => i && i.taller && i.taller.id === parseInt(id));
-  })();
-
-  // Inicializar formData cuando el taller esté disponible
   useEffect(() => {
     if (taller) {
-      const fechaHoraCorregida = taller.fechaHora 
-        ? taller.fechaHora.replace('Z', '').slice(0, 16)
+      const fechaHoraCorregida = taller.fechaHora
+        ? taller.fechaHora.replace("Z", "").slice(0, 16)
         : "";
-      
+
       let instructorId = null;
       if (taller.instructor?.nombre && taller.instructor?.apellido) {
-      const instructorEncontrado = instructores.find(inst => 
-        inst.nombre === taller.instructor.nombre && 
-        inst.apellido === taller.instructor.apellido
-      );
-      instructorId = instructorEncontrado?.id || null;      
-    }
-      
+        const instructorEncontrado = instructores.find(
+          (inst) =>
+            inst.nombre === taller.instructor.nombre &&
+            inst.apellido === taller.instructor.apellido
+        );
+        instructorId = instructorEncontrado?.id || null;
+      }
+
       setFormData({
         titulo: taller.titulo || "",
         descripcion: taller.descripcion || "",
         fechaHora: fechaHoraCorregida,
         lugar: taller.lugar || "",
-        instructor: instructorId, // 🔹 Nunca será null
+        instructor: instructorId,
         cupo: taller.cupo || 0,
         duracionHoras: taller.duracionHoras || 0,
       });
     }
   }, [taller, instructores]);
 
-  
-  if (loading) {
+  if (loadingTalleres) {
     return (
       <div className="p-6">
         <p className="text-gray-500">Cargando taller...</p>
@@ -92,58 +93,87 @@ const EditarTaller = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ 
-      ...prev, 
-      [name]: name === "cupo" || name === "duracionHoras" || name === "instructor" 
-        ? Number(value) 
-        : value 
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === "cupo" || name === "duracionHoras" || name === "instructor"
+          ? Number(value)
+          : value,
     }));
   };
 
   const handleSave = async () => {
-    try {
+    if (!formData.instructor) {
+      toast.error("Debe seleccionar un instructor");
+      return;
+    }
 
-      if (!formData.instructor) {
-        alert("Debe seleccionar un instructor");
-        return;
-      }
+    const toastId = toast.loading("Guardando cambios...");
+    setLoading(true);
+
+    try {
       const dataParaEnviar = {
         ...formData,
         fechaHora: formData.fechaHora ? `${formData.fechaHora}:00.000Z` : null,
-        instructor: formData.instructor
+        instructor: formData.instructor,
       };
-      
+
       await updateTaller(taller.id, dataParaEnviar);
       await refreshData();
+
+      toast.dismiss(toastId);
+      toast.success("Taller actualizado correctamente.");
       navigate("/admin/talleres");
     } catch (err) {
       console.error("Error actualizando taller:", err);
-      alert("Error al actualizar el taller");
+      toast.dismiss(toastId);
+      toast.error("No se pudo actualizar el taller.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar este taller?")) {
-      try {
-        await deleteTaller(taller.id);
-        await refreshData();
-        navigate("/admin/talleres");
-      } catch (err) {
-        console.error("Error eliminando taller:", err);
-        alert("Error al eliminar el taller");
-      }
+    const confirmDelete = confirm("¿Seguro que querés eliminar este taller?");
+    if (!confirmDelete) return;
+
+    const toastId = toast.loading("Eliminando taller...");
+    setLoading(true);
+
+    try {
+      await deleteTaller(taller.id);
+      await refreshData();
+
+      toast.dismiss(toastId);
+      toast.success("Taller eliminado correctamente.");
+      navigate("/admin/talleres");
+    } catch (err) {
+      console.error("Error eliminando taller:", err);
+      toast.dismiss(toastId);
+      toast.error("No se pudo eliminar el taller.");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleEliminarInscripto = async (inscripcionId) => {
-    if (window.confirm("¿Estás seguro de que quieres eliminar esta inscripción?")) {
-      try {
-        await deleteInscripto(inscripcionId);
-        await refreshData();
-      } catch (err) {
-        console.error("Error eliminando inscripción:", err);
-        alert("Error al eliminar la inscripción");
-      }
+    const confirmDelete = confirm("¿Seguro que querés eliminar esta inscripción?");
+    if (!confirmDelete) return;
+
+    const toastId = toast.loading("Eliminando inscripción...");
+    setLoading(true);
+
+    try {
+      await deleteInscripto(inscripcionId);
+      await refreshData();
+      toast.dismiss(toastId);
+      toast.success("Inscripción eliminada correctamente.");
+    } catch (err) {
+      console.error("Error eliminando inscripción:", err);
+      toast.dismiss(toastId);
+      toast.error("No se pudo eliminar la inscripción.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -153,31 +183,24 @@ const EditarTaller = () => {
         Editar taller: {taller.titulo}
       </h1>
 
-      {/* Formulario de edición */}
+      {/* Formulario */}
       <div className="mb-6 space-y-3 max-w-2xl">
-         <label className="block text-sm font-medium text-gray-700 mb-1">
-            Titulo del taller *
-          </label>
         <input
           type="text"
           name="titulo"
           value={formData.titulo}
           onChange={handleChange}
           className="border rounded p-2 w-full"
+          placeholder="Título del taller"
         />
-         <label className="block text-sm font-medium text-gray-700 mb-1">
-            Descripción *
-          </label>
         <textarea
           name="descripcion"
           value={formData.descripcion}
           onChange={handleChange}
           className="border rounded p-2 w-full"
           rows={3}
+          placeholder="Descripción"
         />
-         <label className="block text-sm font-medium text-gray-700 mb-1">
-            Fecha y hora del taller *
-          </label>
         <input
           type="datetime-local"
           name="fechaHora"
@@ -185,9 +208,6 @@ const EditarTaller = () => {
           onChange={handleChange}
           className="border rounded p-2 w-full"
         />
-         <label className="block text-sm font-medium text-gray-700 mb-1">
-            Lugar del taller *
-          </label>
         <input
           type="text"
           name="lugar"
@@ -196,9 +216,6 @@ const EditarTaller = () => {
           className="border rounded p-2 w-full"
           placeholder="Lugar"
         />
-         <label className="block text-sm font-medium text-gray-700 mb-1">
-            Cupo del taller *
-          </label>
         <input
           type="number"
           name="cupo"
@@ -208,9 +225,6 @@ const EditarTaller = () => {
           placeholder="Cupo"
           min={1}
         />
-         <label className="block text-sm font-medium text-gray-700 mb-1">
-            Duración estimada del taller en horas: *
-          </label>
         <input
           type="number"
           name="duracionHoras"
@@ -220,7 +234,6 @@ const EditarTaller = () => {
           placeholder="Duración en horas"
           min={1}
         />
-         {/* select instructor */}
         <select
           name="instructor"
           value={formData.instructor || ""}
@@ -229,15 +242,16 @@ const EditarTaller = () => {
           required
         >
           <option value="">Seleccione un instructor</option>
-          {Array.isArray(instructores) && instructores.map((instructor) => (
-            <option key={instructor.id} value={instructor.id}>
-              {instructor.nombre} {instructor.apellido}
-            </option>
-          ))}
+          {Array.isArray(instructores) &&
+            instructores.map((inst) => (
+              <option key={inst.id} value={inst.id}>
+                {inst.nombre} {inst.apellido}
+              </option>
+            ))}
         </select>
       </div>
 
-      {/* Campistas inscritos */}
+      {/* Campistas inscriptos */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2">Campistas inscriptos</h2>
         {campistasInscriptos.length === 0 ? (
@@ -245,13 +259,17 @@ const EditarTaller = () => {
         ) : (
           <ul className="space-y-2">
             {campistasInscriptos.map((inscripcion) => (
-              <li key={inscripcion.id} className="flex justify-between items-center border p-2 rounded">
+              <li
+                key={inscripcion.id}
+                className="flex justify-between items-center border p-2 rounded"
+              >
                 <span>
                   {inscripcion.campista?.nombre} {inscripcion.campista?.apellido}
                 </span>
                 <button
                   onClick={() => handleEliminarInscripto(inscripcion.id)}
                   className="px-3 py-1 bg-orange-500 text-white rounded"
+                  disabled={loading}
                 >
                   Eliminar inscripción
                 </button>
@@ -266,18 +284,21 @@ const EditarTaller = () => {
         <button
           onClick={handleSave}
           className="px-4 py-2 bg-amber-500 text-white rounded"
+          disabled={loading}
         >
-          Guardar cambios
+          {loading ? "Guardando..." : "Guardar cambios"}
         </button>
         <button
           onClick={handleDelete}
           className="px-4 py-2 bg-orange-600 text-white rounded"
+          disabled={loading}
         >
-          Eliminar taller
+          {loading ? "Eliminando..." : "Eliminar taller"}
         </button>
         <button
           onClick={() => navigate("/admin/talleres")}
           className="px-4 py-2 bg-amber-400 text-white rounded"
+          disabled={loading}
         >
           Cancelar
         </button>

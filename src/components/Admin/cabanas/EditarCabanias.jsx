@@ -7,12 +7,15 @@ import {
   DialogActions,
   Button,
 } from "@mui/material";
-import DashboardContext from "@context/DashboardContext"
+import DashboardContext from "@context/DashboardContext";
 import { useCabanias } from "@hooks/useCabanias";
+import { useToaster } from "@hooks/useToaster";
 
 const EditarCabania = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const toast = useToaster();
+
   const { cabanias, hospedajes, refreshData } = useContext(DashboardContext);
   const { updateCabania, deleteCabania, moveCampista } = useCabanias();
 
@@ -27,6 +30,7 @@ const EditarCabania = () => {
   const [openMover, setOpenMover] = useState(false);
   const [hospedajeSeleccionado, setHospedajeSeleccionado] = useState(null);
   const [nuevaCabaniaId, setNuevaCabaniaId] = useState("");
+  const [loading, setLoading] = useState(false);
 
   if (!cabania) return <p>No se encontró la cabaña</p>;
 
@@ -36,35 +40,68 @@ const EditarCabania = () => {
   };
 
   const handleSave = async () => {
-    await updateCabania(cabania.id, {
-      descripcion: formData.descripcion,
-      capacidad: Number(formData.capacidad),
-    });
-    await refreshData();
-    navigate("/admin/cabanas");
+    const toastId = toast.loading("Guardando cambios...");
+    try {
+      await updateCabania(cabania.id, {
+        descripcion: formData.descripcion,
+        capacidad: Number(formData.capacidad),
+      });
+      await refreshData();
+      toast.dismiss(toastId);
+      toast.success("Cabaña actualizada correctamente.");
+      navigate("/admin/cabanas");
+    } catch (err) {
+      toast.dismiss(toastId);
+      console.error("Error al guardar:", err);
+      toast.error("No se pudo actualizar la cabaña.");
+    }
   };
 
+  // 🔹 Eliminar cabaña
   const handleDelete = async () => {
-    await deleteCabania(cabania.id);
-    await refreshData();
-    navigate("/admin/cabanas");
+    const confirmDelete = confirm("¿Seguro que querés eliminar esta cabaña?");
+    if (!confirmDelete) return;
+
+    const toastId = toast.loading("Eliminando cabaña...");
+    try {
+      await deleteCabania(cabania.id);
+      await refreshData();
+      toast.dismiss(toastId);
+      toast.success("Cabaña eliminada correctamente.");
+      navigate("/admin/cabanas");
+    } catch (err) {
+      toast.dismiss(toastId);
+      console.error("Error al eliminar:", err);
+      toast.error("No se pudo eliminar la cabaña.");
+    }
   };
 
-const handleMoverCampista = async () => {
-  try {
-    console.log("Intentando mover:", { hospedajeSeleccionado, nuevaCabaniaId });
-    await moveCampista(hospedajeSeleccionado.id, parseInt(nuevaCabaniaId));
-    await refreshData();
-    setOpenMover(false);
-    setHospedajeSeleccionado(null);
-    setNuevaCabaniaId('');
-    alert("Campista movido correctamente");
-  } catch (err) {
-    console.error("Error moviendo campista:", err);
-    alert(`No se pudo mover el campista: ${err.response?.data?.message || err.message}`);
-  }
+  const handleMoverCampista = async () => {
+    setLoading(true);
+    const toastId = toast.loading("Moviendo campista...");
 
-};
+    try {
+      await moveCampista(hospedajeSeleccionado.id, parseInt(nuevaCabaniaId));
+      await refreshData();
+
+      toast.dismiss(toastId);
+      toast.success("Campista movido correctamente.");
+
+      setOpenMover(false);
+      setHospedajeSeleccionado(null);
+      setNuevaCabaniaId("");
+    } catch (err) {
+      toast.dismiss(toastId);
+      console.error("Error moviendo campista:", err);
+      toast.error(
+        `No se pudo mover el campista: ${
+          err.response?.data?.message || err.message
+        }`
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="p-6">
@@ -133,53 +170,46 @@ const handleMoverCampista = async () => {
         </button>
       </div>
 
-      {/* Dialogo mover campista */}
-      <Dialog
-        open={openMover}
-        onClose={() => setOpenMover(false)}
-        maxWidth="sm"
-        fullWidth
-      >
+      {/* Diálogo mover campista */}
+      <Dialog open={openMover} onClose={() => setOpenMover(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Mover campista</DialogTitle>
         <DialogContent dividers>
-         <p>
-  Seleccioná una nueva cabaña para{" "}
-  <strong>
-    {hospedajeSeleccionado?.campista?.nombre}{" "}
-    {hospedajeSeleccionado?.campista?.apellido}
-  </strong>
-</p>
-<select
-  value={nuevaCabaniaId}
-  onChange={(e) => setNuevaCabaniaId(e.target.value)}
-  className="mt-3 w-full border rounded p-2"
->
-  <option value="">-- Seleccionar cabaña --</option>
-  {cabanias
-    .filter((c) => c.id !== hospedajeSeleccionado?.cabania?.id) 
-    .map((c) => (
-      <option key={c.id} value={c.id}>
-        {c.nombre} (capacidad: {c.capacidad})
-      </option>
-    ))}
-</select>
+          <p>
+            Seleccioná una nueva cabaña para{" "}
+            <strong>
+              {hospedajeSeleccionado?.campista?.nombre}{" "}
+              {hospedajeSeleccionado?.campista?.apellido}
+            </strong>
+          </p>
+
+          <select
+            value={nuevaCabaniaId}
+            onChange={(e) => setNuevaCabaniaId(e.target.value)}
+            className="mt-3 w-full border rounded p-2"
+          >
+            <option value="">-- Seleccionar cabaña --</option>
+            {cabanias
+              .filter((c) => c.id !== hospedajeSeleccionado?.cabania?.id)
+              .map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nombre} (capacidad: {c.capacidad})
+                </option>
+              ))}
+          </select>
         </DialogContent>
         <DialogActions>
-  <Button 
-    onClick={() => setOpenMover(false)} 
-    color="error"
-  >
-    Cancelar
-  </Button>
-  <Button
-  onClick={handleMoverCampista}
-  disabled={!nuevaCabaniaId}
-  className="!px-4 py-2 !bg-amber-400 !text-white rounded"
-  variant="contained"
-  >
-    Confirmar
-  </Button>
-</DialogActions>
+          <Button onClick={() => setOpenMover(false)} color="error">
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleMoverCampista}
+            disabled={!nuevaCabaniaId || loading}
+            className="!px-4 py-2 !bg-amber-400 !text-white rounded"
+            variant="contained"
+          >
+            {loading ? "Moviendo..." : "Confirmar"}
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

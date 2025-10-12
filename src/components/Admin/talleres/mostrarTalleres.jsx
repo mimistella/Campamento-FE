@@ -79,7 +79,7 @@ export default function MostrarTalleres() {
         Crear Taller
       </DialogTitle>
       <DialogContent dividers>
-        <TallerForm/>
+        <TallerForm onSuccess={handleCerrarForm} />
       </DialogContent>
       <DialogActions>
         <ButtonBase variant="outlined" color="gray" onClick={handleCerrarForm}>

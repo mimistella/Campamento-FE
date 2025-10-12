@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { FileTextIcon, MapPinIcon, UserRoundSearchIcon } from "lucide-react";
 import { useTalleres } from "@hooks/useTalleres";
 import { useDashboard } from "@hooks/useDashboard.jsx";
+import { useToaster } from "@hooks/useToaster";
 
-const TallerForm = () => {
+const TallerForm = ({ onSuccess }) => {
   const [form, setForm] = useState({
     titulo: "",
     descripcion: "",
@@ -15,9 +16,8 @@ const TallerForm = () => {
   });
 
   const { instructores } = useDashboard();
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
   const { crearTaller, loading } = useTalleres();
+  const toast = useToaster();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,14 +34,12 @@ const TallerForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccess("");
-    setError("");
+    const toastId = toast.loading("Creando taller...");
 
     try {
       await crearTaller(form);
-
-      // Mostrar mensaje de éxito
-      setSuccess("¡Taller creado exitosamente!");
+      toast.dismiss(toastId);
+      toast.success("¡Taller creado exitosamente!");
 
       setForm({
         titulo: "",
@@ -53,10 +51,12 @@ const TallerForm = () => {
         duracionHoras: "",
       });
 
-
+      if (onSuccess) onSuccess(); // refrescar lista o cerrar modal
     } catch (err) {
+      console.error("Error creando taller:", err);
       const message = err.response?.data?.message || "Error creando taller";
-      setError(message);
+      toast.dismiss(toastId);
+      toast.error(message);
     }
   };
 
@@ -168,18 +168,6 @@ const TallerForm = () => {
           required
         />
       </div>
-
-      {/* Mensajes */}
-      {error && (
-        <div className="col-span-2 text-red-600 text-center font-medium">
-          {error}
-        </div>
-      )}
-      {success && (
-        <div className="col-span-2 text-green-600 text-center font-medium">
-          {success}
-        </div>
-      )}
 
       {/* Botón */}
       <button
