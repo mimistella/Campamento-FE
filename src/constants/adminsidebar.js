@@ -6,5 +6,5 @@ export const menuItems = [
   { path: "talleres", label: "Talleres", icon: Hammer },
   { path: "eventos", label: "Eventos", icon: Calendar },
   { path: "misiones", label: "Misiones", icon: Map },
-  { path: "campistas", label: "Campistas", icon: Users },
+  { path: "usuarios", label: "Usuarios", icon: Users },
 ];
