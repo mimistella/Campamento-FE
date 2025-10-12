@@ -1,13 +1,20 @@
 import { NavLink } from "react-router-dom";
-import { Home, Landmark, Hammer, Calendar, Map, Users, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import {  HiLogout } from "react-icons/hi";
 import '../../index.css'; 
-import { useSidebar } from "../../hooks/useSidebar";
-import {basePath, menuItems} from "../../constants/adminsidebar"
+import { useSidebar } from "@hooks/useSidebar";
+import {basePath, menuItems} from "@constants/adminsidebar"
+import { useAuth }from "@hooks/useAuth";
+import ButtonBase from "@components/commonComp/ButtonBase";
 
 export default function Sidebar() {
 
   const { isOpen, toggleSidebar, closeSidebar } = useSidebar();
-
+   const { logout } = useAuth();   
+  const handleLogout = () => {
+    logout();
+    closeSidebar();
+  };
 
   return (
     <>
@@ -61,6 +68,19 @@ export default function Sidebar() {
             </NavLink>
           ))}
         </nav>
+
+         {/* Botón de logout */}
+                <div className="p-4 border-t border-orange-700">
+                  <ButtonBase
+                    onClick={handleLogout}
+                    variant="contained"
+                    className="w-full flex items-center justify-center gap-2 !bg-amber-500 !hover:bg-amber-600 text-white"
+                  >
+                    <HiLogout className="w-5 h-5" />
+                    Cerrar sesión
+                  </ButtonBase>
+                </div>
+            
       </aside>
     </>
   );
