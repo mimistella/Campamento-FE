@@ -62,31 +62,37 @@ export default function UserData() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const incompletos = camposObligatorios.filter(
-      (campo) => !formData[campo]?.trim()
-    );
+  const incompletos = camposObligatorios.filter(
+    (campo) => !formData[campo]?.trim()
+  );
 
-    if (incompletos.length > 0) {
-      toast.error("Por favor, completa todos los campos antes de continuar.");
-      return;
-    }
+  if (incompletos.length > 0) {
+    toast.error("Por favor, completa todos los campos antes de continuar.");
+    return;
+  }
 
-    const loadingToastId = toast.loading("Guardando cambios...");
+  const loadingToastId = toast.loading("Guardando cambios...");
 
-    try {
-      // eslint-disable-next-line no-unused-vars
-      const { data } = await api.patch(`/campista/${user.id}`, formData);
+  try {
 
-      toast.dismiss(loadingToastId);
-      toast.success(" Los cambios han sido guardados correctamente.");
-    } catch (error) {
-      toast.dismiss(loadingToastId);
-      toast.error(" Ocurrió un error al guardar los cambios.");
-      console.error(error);
-    }
-  };
+    const endpoint =
+      user.role === "instructor"
+        ? `/instructor/${user.id}`
+        : `/campista/${user.id}`;
+
+    // eslint-disable-next-line no-unused-vars
+    const { data } = await api.patch(endpoint, formData);
+
+    toast.dismiss(loadingToastId);
+    toast.success("Los cambios han sido guardados correctamente.");
+  } catch (error) {
+    toast.dismiss(loadingToastId);
+    toast.error("Ocurrió un error al guardar los cambios.");
+    console.error(error);
+  }
+};
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row items-start justify-center bg-amber-200 p-6">

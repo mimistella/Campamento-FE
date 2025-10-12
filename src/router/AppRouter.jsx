@@ -22,6 +22,8 @@ import MostrarTalleres from "@components/Camper/MostrarTalleres.jsx";
 import UserDataForm from "@forms/UserDataForm.jsx";
 import MostrarUsuarios from "@components/Admin/users/mostrarUsuarios.jsx";
 import VerPeriodos from "@components/Admin/periodos/Periodos.jsx";
+import InstructorHomePage from "@pages/Instructor/InstructorHomePage.jsx";
+import InstructorDashboard from "@components/Instructor/InstructorDashboard.jsx";
   
 export function AppRouter() {
     return (
@@ -59,6 +61,15 @@ export function AppRouter() {
       <Route path="perfil" element={<UserDataForm />} />
     </Route>
   </Route>
+   
+    {/* Rutas protegidas Instructor */}
+  <Route element={<PrivateRoute />}>
+    <Route path="/instructor" element={<InstructorHomePage />}>
+    <Route index element={<InstructorDashboard />} />
+      <Route path="perfil" element={<UserDataForm />} />
+    </Route>
+  </Route>
+
 </Routes>
       </BrowserRouter>
     );

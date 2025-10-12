@@ -24,9 +24,9 @@ const LoginForm = () => {
         case "admin":
           navigate("/admin");
           break;
-        /*case "instructor":
+        case "instructor":
           navigate("/instructor");
-          break;*/           //no implementado aún
+          break;
         default:
           navigate("/campista");
       }
