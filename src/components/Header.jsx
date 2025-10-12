@@ -62,21 +62,7 @@ export function Header() {
           >
             Ubicación
           </a>
-          {/* <a href="#faq" className="hover:text-amber-300 transition-colors">FAQ</a>
-          <a href="#prices" className="hover:text-amber-300 transition-colors">Precios y tarifas</a> */}
           <Link to="/login" className="bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded-md font-medium transition-colors text-center">Iniciar Sesión</Link>
-          <Link
-            to="/campista"
-            className="bg-amber-100 text-amber-800 hover:bg-amber-200 px-4 py-2 rounded-md font-semibold transition-colors border border-amber-300"
-          >
-            Campista (TEMP)
-          </Link>
-          <Link
-            to="/admin"
-            className="bg-amber-100 text-amber-800 hover:bg-amber-200 px-4 py-2 rounded-md font-semibold transition-colors border border-amber-300"
-          >
-            Admin
-          </Link>
         </nav>
         {/* Mobile menu button */}
         <button
@@ -121,8 +107,6 @@ export function Header() {
           >
             Ubicación
           </a>
-          {/* <a href="#faq" className="hover:text-amber-300 transition-colors">FAQ</a>
-          <a href="#prices" className="hover:text-amber-300 transition-colors">Precios y tarifas</a> */}
           <Link to="/login" className="bg-amber-600 hover:bg-amber-500 px-4 py-2 rounded-md font-medium transition-colors text-left">Iniciar sesión</Link>
         </nav>
       )}
