@@ -57,20 +57,30 @@ export function useCabaniaCampista() {
 
       const cabaniaRes = await api.get("/cabanias");
       const cabanias = cabaniaRes.data.data;
-      const cabania = cabanias.find((c) => c.deidad?.id === deidadId) || null;
-
+      const cabania = cabanias.find((c) => c.deidad?.id === Number(deidadId)) || null;
+      const fechaInicioHosp = periodo.fechaInicioPer.replace("T", " ").slice(0, 19);
+      const fechaFinHosp = periodo.fechaFinPer.replace("T", " ").slice(0, 19);
       if (!cabania) throw new Error("No se encontró cabaña para esa deidad");
 
       const res = await api.post("/hospedaje", {
-        campistaId: user.id,
-        cabaniaId: cabania.id,
+        campista: user.id,
+        cabania: cabania.id,
+        fechaInicio: fechaInicioHosp,
+        fechaFin: fechaFinHosp,
+        periodo: periodo.id,
       });
 
       setHospedaje(res.data.data);
 
-      // Traer detalles de la cabaña creada
-      const cabRes = await api.get(`/cabanias/myCabin/${res.data.data.cabania.id}`);
+    const cabaniaId = res.data.data.cabania?.id ?? res.data.data.cabania;
+    if (cabaniaId) {
+      const cabRes = await api.get(`/cabanias/myCabin/${cabaniaId}`);
       setCabaniaDetalle(cabRes.data.data || null);
+    } else {
+      console.error("No se pudo obtener el id de la cabaña", res.data.data.cabania);
+    }
+
+
 
       setDeidades(null);
       alert("Hospedaje creado con éxito");

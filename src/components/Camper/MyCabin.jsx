@@ -41,7 +41,7 @@ export default function MyCabin() {
       await crearHospedaje(seleccion);
       toast.dismiss(loadingToastId);
       toast.success("Hospedaje creado correctamente.");
-      setSeleccion(""); // limpiar selección
+      setSeleccion(""); 
     } catch (err) {
       toast.dismiss(loadingToastId);
       toast.error("Error al crear hospedaje. Intente nuevamente.");
@@ -84,7 +84,7 @@ export default function MyCabin() {
     );
   }
 
-  // --- FORMULARIO ---
+
   return (
     <div className="min-h-screen bg-amber-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
