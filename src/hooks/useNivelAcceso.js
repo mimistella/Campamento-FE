@@ -1,21 +1,32 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@hooks/useAuth";
 import { useInscripcionPeriodo } from "@hooks/useInscripcionPeriodo";
 import api from "@hooks/useApi";
 
 export function useNivelAcceso() {
-  const { user } = useAuth();
+  const [user, setUser] = useState(null);
   const { inscripciones, loading: loadingInscripciones } = useInscripcionPeriodo();
   const [nivel, setNivel] = useState(0);
   const [loading, setLoading] = useState(true);
   const [periodoActualId, setPeriodoActualId] = useState(null);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/auth/profile", { withCredentials: true });
+        setUser(res.data?.data || null);
+      } catch (error) {
+        console.error("Error obteniendo perfil:", error);
+      }
+    };
+    fetchUser();
+  }, []); 
+
+  useEffect(() => {
     const fetchPeriodo = async () => {
       try {
         const periodoRes = await api.get("/periodo/current");
-        const periodoData = periodoRes.data.data;
-        setPeriodoActualId(Number(periodoData.id));
+        const periodoData = periodoRes.data?.date;
+        setPeriodoActualId(Number(periodoData?.id || null));
       } catch (error) {
         console.error("Error obteniendo periodo actual:", error);
       }
@@ -24,7 +35,6 @@ export function useNivelAcceso() {
   }, []);
 
   useEffect(() => {
-    // Si todavía no tenemos todos los datos, seguimos en loading
     if (!user || loadingInscripciones || periodoActualId === null) {
       setLoading(true);
       return;
@@ -51,11 +61,8 @@ export function useNivelAcceso() {
       return;
     }
 
-    // Verificar si hay inscripción para el periodo actual
     const inscripcionActual = inscripciones?.some((ins) => {
-      // Primero intentamos periodoId directo
       if (ins.periodoId !== undefined) return Number(ins.periodoId) === periodoActualId;
-      // Si está anidado: ins.periodo.id
       if (ins.periodo?.id !== undefined) return Number(ins.periodo.id) === periodoActualId;
       return false;
     });

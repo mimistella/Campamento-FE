@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useCabaniaCampista } from "@hooks/useCabaniaCampista";
 import CabinInfo from "./CabinInfo";
-import api from "@hooks/useApi";
 import { useAuth } from "@hooks/useAuth";
 import { useToaster } from "@hooks/useToaster";
 import ButtonBase from "@components/commonComp/ButtonBase";
@@ -9,12 +8,13 @@ import ButtonBase from "@components/commonComp/ButtonBase";
 export default function MyCabin() {
   const {
     hospedaje,
+    cabaniaDetalle,
     loading,
     error,
     periodo,
     hasHospedajeActivo,
     deidades,
-    refetch,
+    crearHospedaje,
   } = useCabaniaCampista();
 
   const { user } = useAuth();
@@ -22,16 +22,6 @@ export default function MyCabin() {
 
   const [seleccion, setSeleccion] = useState("");
   const [creando, setCreando] = useState(false);
-  const [mockCabin, setMockCabin] = useState(null);
-
-  useEffect(() => {
-    if (hospedaje?.cabania?.id) {
-      api
-        .get(`/cabanias/myCabin/${hospedaje.cabania.id}`)
-        .then((res) => setMockCabin(res.data.data))
-        .catch((err) => console.error("Error al obtener mock:", err));
-    }
-  }, [hospedaje]);
 
   async function handleCrearHospedaje() {
     if (!seleccion) {
@@ -48,24 +38,13 @@ export default function MyCabin() {
     const loadingToastId = toast.loading("Creando hospedaje...");
 
     try {
-      const cabRes = await api.get(`/cabanias/deidad/${seleccion}`);
-      const cabania = cabRes.data.data;
-      if (!cabania) throw new Error("No se encontró una cabaña para esa deidad.");
-
-      await api.post("/hospedaje", {
-        campista: user.id,
-        cabania: cabania.id,
-        fechaInicio: periodo.fechaInicioPer,
-        fechaFin: periodo.fechaFinPer,
-      });
-
+      await crearHospedaje(seleccion);
       toast.dismiss(loadingToastId);
-      toast.success(" Hospedaje creado correctamente.");
-      await refetch();
+      toast.success("Hospedaje creado correctamente.");
+      setSeleccion(""); // limpiar selección
     } catch (err) {
-      console.error(err);
       toast.dismiss(loadingToastId);
-      toast.error(" Error al crear hospedaje. Intente nuevamente.");
+      toast.error("Error al crear hospedaje. Intente nuevamente.");
     } finally {
       setCreando(false);
     }
@@ -97,10 +76,10 @@ export default function MyCabin() {
       </div>
     );
 
-  if (hasHospedajeActivo && hospedaje && mockCabin) {
+  if (hasHospedajeActivo && hospedaje && cabaniaDetalle) {
     return (
       <div className="bg-amber-50 flex justify-center items-start lg:items-center min-h-screen">
-        <CabinInfo cabin={mockCabin} />
+        <CabinInfo cabin={cabaniaDetalle} />
       </div>
     );
   }
