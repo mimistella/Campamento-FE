@@ -31,7 +31,8 @@ export default function TallerCard({ taller}) {
                 <p><strong>Lugar:</strong> {taller.lugar}</p>
                 <p><strong>Instructor:</strong> {taller.instructor.nombre} {taller.instructor.apellido}</p>
                 <p><strong>Cupo:</strong> {taller.cupo} personas</p>
-                <p><strong>Duración:</strong> {taller.duracionHoras} hora{taller.duracionHoras !== 1 ? 's' : ''}</p>
+               <p><strong>Duración:</strong> {taller.duracionMin} minuto{taller.duracionMin !== 1 ? 's' : ''}</p>
+              <p><strong>Período:</strong> {taller.periodo}</p>
               </div>
             </div>
           )}
