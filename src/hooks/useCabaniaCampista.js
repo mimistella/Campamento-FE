@@ -26,14 +26,14 @@ export function useCabaniaCampista() {
       setPeriodo(periodoData);
 
       let hospedajeData = null;
+
       try {
-        const hospedajeRes = await api.get(`hospedaje/campista/${user.id}`, {
-          params: {
-            fechaInicio: periodoData.fechaInicioPer,
-            fechaFin: periodoData.fechaFinPer,
-          },
-        });
-        hospedajeData = hospedajeRes.data.data;
+        const hospedajeRes = await api.get("/hospedaje");
+        const data = hospedajeRes.data.data;
+
+        const hospedaje = data.find((h) => h.user.id === user.id) || null;
+
+        hospedajeData = hospedaje; 
       } catch (err) {
         if (err.response?.status !== 404) throw err;
       }
@@ -59,19 +59,22 @@ export function useCabaniaCampista() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  async function crearHospedaje(deidadId) {
-    try {
-      setLoading(true);
-      setError(null);
+      async function crearHospedaje(deidadId) {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const cabaniaRes = await api.get(`/cabania/deidad/${deidadId}`);
-      const cabania = cabaniaRes.data.data;
-      if (!cabania) throw new Error('No se encontró cabaña para esa deidad');
+        const cabaniaRes = await api.get("/cabanias");
+        const cabanias = cabaniaRes.data.data;
 
-      const res = await api.post('/hospedaje', {
-        campistaId: user.id,
-        cabaniaId: cabania.id,
-      });
+        const cabania = cabanias.find((c) => c.deidad.id === deidadId) || null;
+
+        if (!cabania) throw new Error("No se encontró cabaña para esa deidad");
+
+        const res = await api.post("/hospedaje", {
+          campistaId: user.id,
+          cabaniaId: cabania.id,
+        });
 
       setHospedaje(res.data.data);
       setDeidades(null);

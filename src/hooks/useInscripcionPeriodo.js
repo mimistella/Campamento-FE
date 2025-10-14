@@ -5,7 +5,7 @@ import { useAuth } from "@hooks/useAuth";
 
 export function useInscripcionPeriodo() {
   const { user } = useAuth();
-  const [inscripciones, setInscripciones] = useState([]); // Array de inscripciones del usuario
+  const [inscripciones, setInscripciones] = useState([]);
   const [diasRestantes, setDiasRestantes] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,27 +21,20 @@ export function useInscripcionPeriodo() {
     const fetchInscripciones = async () => {
       try {
         console.log("Buscando inscripciones para user ID:", user?.id);
-        const response = await api.get("/inscripcion-periodo", {
-          withCredentials: true,
-        });
+        const response = await api.get("/inscripcion-periodo");
 
         const responseData = response.data;
-        console.log("Respuesta completa:", responseData);
 
         const todasInscripciones = Array.isArray(responseData.data)
           ? responseData.data
           : [responseData.data];
 
-        // Filtramos solo las inscripciones del usuario
-        const inscripcionesUsuario = todasInscripciones.filter(
-          (i) => i.campista?.id === user?.id || i.campistaId === user?.id
-        );
+      
+        console.log("Inscripciones encontradas:", todasInscripciones);
+        setInscripciones(todasInscripciones);
 
-        console.log("Inscripciones encontradas:", inscripcionesUsuario);
-        setInscripciones(inscripcionesUsuario);
-
-        if (inscripcionesUsuario.length > 0) {
-          const primerPeriodo = inscripcionesUsuario[0].periodo;
+        if (todasInscripciones.length > 0) {
+          const primerPeriodo = todasInscripciones[0].periodo;
           if (primerPeriodo?.fechaInicioPer) {
             calcularDiasRestantes(primerPeriodo.fechaInicioPer);
           }

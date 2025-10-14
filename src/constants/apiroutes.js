@@ -1,8 +1,0 @@
-export const API_ROUTES = {
-  CAMPERS: "/api/campista",
-  INSTRUCTORS: "/api/instructor",
-  CABANAS: "/api/cabanias",
-  HOSPEDA: "/api/hospedaje",
-  DEIDADES: "/api/deidades",
-  INSCRIPTOS:"/api/inscripcion-periodo",
-};

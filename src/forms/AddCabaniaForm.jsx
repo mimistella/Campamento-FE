@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { HomeIcon, UsersIcon, FileTextIcon, MapPinIcon, UserRoundSearchIcon } from "lucide-react";
-import { API_ROUTES } from "../constants/apiroutes";
-import { useCabanias } from "../hooks/useCabanias";
-import axios from "axios";
+import { useCabanias } from "@hooks/useCabanias";
 import { useToaster } from "@hooks/useToaster";
+import api from "@hooks/useApi";
 
 export default function CabaniaForm({ onSuccess }) {
   const [form, setForm] = useState({
@@ -21,7 +20,7 @@ export default function CabaniaForm({ onSuccess }) {
   useEffect(() => {
     const fetchDeidades = async () => {
       try {
-        const { data } = await axios.get(API_ROUTES.DEIDADES);
+        const { data } = await api.get('/deidades');
         setDeidades(Array.isArray(data.data) ? data.data : []);
       } catch (err) {
         console.error("Error al cargar deidades", err);

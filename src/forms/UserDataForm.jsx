@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@hooks/useAuth";
 import { CircleUserRound, PhoneIcon } from "lucide-react";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -8,7 +7,8 @@ import ButtonBase from "@components/commonComp/ButtonBase";
 import { useToaster } from "@hooks/useToaster"; 
 
 export default function UserData() {
-  const { user } = useAuth();
+  const { user } =api.get("/auth/profile");
+
   const toast = useToaster();
 
   const camposObligatorios = [
@@ -77,13 +77,8 @@ export default function UserData() {
 
   try {
 
-    const endpoint =
-      user.role === "instructor"
-        ? `/instructor/${user.id}`
-        : `/campista/${user.id}`;
-
     // eslint-disable-next-line no-unused-vars
-    const { data } = await api.patch(endpoint, formData);
+    const { data } = await api.patch("/auth/profile", formData);
 
     toast.dismiss(loadingToastId);
     toast.success("Los cambios han sido guardados correctamente.");

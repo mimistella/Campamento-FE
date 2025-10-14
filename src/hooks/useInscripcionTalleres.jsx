@@ -16,17 +16,8 @@ export function useInscripcionTalleres() {
     const fetchDisponibles = async () => {
       setLoadingDisponibles(true);
       try {
-        const periodoRes = await api.get("/periodo/current");
-        const per = periodoRes.data.data;
-
-        const response = await api.get("/talleres", { withCredentials: true });
-        const filtrados = response.data.data.filter(t => {
-          const fechaTaller = new Date(t.fechaHora);
-          const inicio = new Date(per.fechaInicioPer);
-          const fin = new Date(per.fechaFinPer);
-          return fechaTaller >= inicio && fechaTaller <= fin;
-        });
-
+        const response = await api.get("/talleres");
+        const filtrados = response.data.data;
         setTalleresDisponibles(filtrados);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
@@ -44,12 +35,10 @@ export function useInscripcionTalleres() {
 
       setLoadingMisTalleres(true);
       try {
-        const response = await api.get(`/inscripcion-taller?ts=${Date.now()}`); // rompe cache
+        const response = await api.get("/inscripcion-taller");
         const data = response.data.data;
         const inscripciones = Array.isArray(data) ? data : [data];
-
-        const filtrados = inscripciones.filter(it => it.campista?.id === user.id);
-        setMisTalleres(filtrados);
+        setMisTalleres(inscripciones);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
       } finally {
