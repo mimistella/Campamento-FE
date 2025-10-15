@@ -1,13 +1,16 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import api from "./useApi";
 import { useLocalStorage } from "./useLocalStorage";
+import { usePeriodo } from "./usePeriodo"; 
 
 export function useTalleres() {
-  const [talleres, setTalleres] = useLocalStorage('talleres', []);
+  const [talleres, setTalleres] = useLocalStorage("talleres", []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [inscripciones, setInscripciones] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
+
+  const { periodos } = usePeriodo();
 
   const fetchTalleres = async () => {
     try {
@@ -29,10 +32,10 @@ export function useTalleres() {
     try {
       const res = await api.get("/inscripcion-taller");
       const data = Array.isArray(res.data.data) ? res.data.data : [];
-      setInscripciones(data); 
+      setInscripciones(data);
     } catch (err) {
       console.error("Error fetching inscripciones:", err);
-      setInscripciones([]); 
+      setInscripciones([]);
     }
   };
 
@@ -43,28 +46,55 @@ export function useTalleres() {
 
   useEffect(() => {
     refreshData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const talleresActivos = talleres.filter(taller =>
-    inscripciones.some(t => t.taller.id === taller.id)
+  const talleresActivos = talleres.filter((taller) =>
+    inscripciones.some((t) => t.taller.id === taller.id)
   );
 
-  const crearTaller = async (tallerData) => {
+
+  const crearTaller = async (form) => {
+    setLoading(true);
     try {
-      const res = await api.post("/talleres", tallerData);
-      setTalleres(prev => [...prev, res.data]);
+      const fechaTaller = new Date(form.fechaHora);
+
+      // Encontrar período correspondiente
+      const periodoDelTaller = periodos.find((p) => {
+        const inicio = new Date(p.fechaInicioPer);
+        const fin = new Date(p.fechaFinPer);
+        return fechaTaller >= inicio && fechaTaller <= fin;
+      });
+
+      if (!periodoDelTaller) {
+        throw new Error("No se encontró un período válido para la fecha del taller");
+      }
+
+      const payload = {
+        titulo: form.titulo,
+        descripcion: form.descripcion,
+        fechaHora: new Date(form.fechaHora).toISOString(),
+        lugar: form.lugar,
+        instructor: form.instructor,
+        cupo: form.cupo,
+        duracionMin: form.duracionMinutos,
+        periodo: periodoDelTaller.id,
+      };
+
+      const res = await api.post("/talleres", payload);
       return res.data;
-    } catch (err) {
-      setError(err.response?.data || err.message);
-      throw err;
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const updateTaller = async (id, tallerData) => {
     try {
       const res = await api.put(`/talleres/${id}`, tallerData);
-      setTalleres(prev => prev.map(t => t.id === id ? res.data : t));
+      setTalleres((prev) =>
+        prev.map((t) => (t.id === id ? res.data : t))
+      );
       return res.data;
     } catch (err) {
       setError(err.response?.data || err.message);
@@ -75,7 +105,7 @@ export function useTalleres() {
   const deleteTaller = async (id) => {
     try {
       await api.delete(`/talleres/${id}`);
-      setTalleres(prev => prev.filter(t => t.id !== id));
+      setTalleres((prev) => prev.filter((t) => t.id !== id));
     } catch (err) {
       setError(err.response?.data || err.message);
       throw err;
@@ -85,12 +115,13 @@ export function useTalleres() {
   const deleteInscripto = async (id) => {
     try {
       await api.delete(`/inscripcion-taller/${id}`);
-      setInscripciones(prev => prev.filter(i => i.id !== id));
+      setInscripciones((prev) => prev.filter((i) => i.id !== id));
     } catch (err) {
       setError(err.response?.data || err.message);
       throw err;
     }
   };
+
   return {
     talleres,
     inscripciones,
@@ -102,6 +133,6 @@ export function useTalleres() {
     deleteTaller,
     crearTaller,
     updateTaller,
-    refreshData
+    refreshData,
   };
 }

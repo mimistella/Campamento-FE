@@ -23,7 +23,7 @@ export function useDashboard() {
       api.get("/periodo/current"),
     ]);
 
-    setPeriodo(periodoRes.data?.data || null);
+    setPeriodo(periodoRes.data?.date || null);
 
     return {
       campers: Array.isArray(campersRes.data?.data) ? campersRes.data.data : [],

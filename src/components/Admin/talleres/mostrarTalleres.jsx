@@ -5,12 +5,14 @@ import List from "@components/commonComp/List";
 import TallerCard from "@components/Admin/talleres/TallerCard";
 import ButtonBase from "@components/commonComp/ButtonBase";
 import TallerForm from "@forms/AddTallerForm";
+import { usePeriodo } from "@hooks/usePeriodo.js";
 
 export default function MostrarTalleres() {
   const { talleres, talleresActivos, refreshData, lastUpdated, loading } = useTalleres();
   const [mostrarSoloActivos, setMostrarSoloActivos] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   const [setTallerSeleccionado] = useState(null);
+    const [filtroPeriodo, setFiltroPeriodo] = useState(""); 
 
   if (loading) return <p className="text-gray-500">Cargando talleres...</p>;
 
