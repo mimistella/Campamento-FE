@@ -200,6 +200,7 @@ export default function PeriodForm({ periodoId = null, onSuccess }) {
           className="mt-1 w-full border border-gray-300 rounded-md p-2 focus:ring-amber-400 focus:border-amber-400"
         >
           <option value="abierto">Abierto</option>
+          <option value="en curso">En curso</option>
           <option value="cerrado">Cerrado</option>
         </select>
       </div>

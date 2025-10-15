@@ -12,7 +12,7 @@ const TallerForm = ({ onSuccess }) => {
     lugar: "",
     instructor: null,
     cupo: "",
-    duracionHoras: "",
+    duracionMinutos: "",
   });
 
   const { instructores } = useDashboard();
@@ -26,7 +26,7 @@ const TallerForm = ({ onSuccess }) => {
       [name]:
         name === "instructor"
           ? value === "" ? null : parseInt(value, 10)
-          : name === "cupo" || name === "duracionHoras"
+          : name === "cupo" || name === "duracionMinutos"
           ? Number(value)
           : value,
     }));
@@ -48,10 +48,10 @@ const TallerForm = ({ onSuccess }) => {
         lugar: "",
         instructor: null,
         cupo: "",
-        duracionHoras: "",
+        duracionMinutos: "",
       });
 
-      if (onSuccess) onSuccess(); // refrescar lista o cerrar modal
+      if (onSuccess) onSuccess();
     } catch (err) {
       console.error("Error creando taller:", err);
       const message = err.response?.data?.message || "Error creando taller";
@@ -159,10 +159,10 @@ const TallerForm = ({ onSuccess }) => {
         <FileTextIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
         <input
           type="number"
-          name="duracionHoras"
-          value={form.duracionHoras}
+          name="duracionMinutos"
+          value={form.duracionMinutos}
           onChange={handleChange}
-          placeholder="Duración (horas)"
+          placeholder="Duración (minutos)"
           className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md outline-none"
           min={1}
           required

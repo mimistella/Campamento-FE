@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
         const res = await api.get(`/auth/me?ts=${Date.now()}`, { withCredentials: true });
 
     
-        if (res.data && res.data.email) {
-          setUser(res.data);
+        if (res.data.data && res.data.data.email) {
+          setUser(res.data.data);
         } else {
           setUser(null);
         }
