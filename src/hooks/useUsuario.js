@@ -17,11 +17,11 @@ export function useUsuarios() {
       ]);
 
       const admins =
-        adminsRes.data?.data?.map((u) => ({ ...u, rol: "admin" })) ?? [];
+        adminsRes.data?.data?.map((u) => ({ ...u, role: "admin" })) ?? [];
       const instructores =
-        instructoresRes.data?.data?.map((u) => ({ ...u, rol: "instructor" })) ?? [];
+        instructoresRes.data?.data?.map((u) => ({ ...u, role: "instructor" })) ?? [];
       const campistas =
-        campistasRes.data?.data?.map((u) => ({ ...u, rol: "campista" })) ?? [];
+        campistasRes.data?.data?.map((u) => ({ ...u, role: "campista" })) ?? [];
 
       const allUsers = [...admins, ...instructores, ...campistas];
 
