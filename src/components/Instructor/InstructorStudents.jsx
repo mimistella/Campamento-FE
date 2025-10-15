@@ -1,11 +1,22 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useInstructor } from "@hooks/useInstructor";
-import AlumnoCard from "./AlumnoCard.jsx";
+import AlumnoCard from "@components/Instructor/AlumnoCard";
 import List from "@components/commonComp/List";
 
 export default function MisAlumnos() {
   const { misTalleres, inscriptos, loading } = useInstructor();
+  const [searchParams] = useSearchParams();
+  const tallerQuery = searchParams.get("taller");
+
   const [tallerSeleccionado, setTallerSeleccionado] = useState("todos");
+
+
+  useEffect(() => {
+    if (tallerQuery) {
+      setTallerSeleccionado(tallerQuery);
+    }
+  }, [tallerQuery]);
 
   const talleresOpciones = useMemo(() => {
     if (!Array.isArray(misTalleres)) return [];
