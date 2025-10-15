@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { GetLoggedUser } from "./utilities/GetLoggedUser.jsx";
 import MisionesAdmin from "./Misiones/MisionesAdmin.jsx";
 import MisionesCampista from "./Misiones/MisionesCampista.jsx";
+import { MisionesProvider } from "../providers/MisionesProvider.jsx";
 
 const Misiones = () =>{
     const [rol, setRol] = useState(null)
@@ -9,9 +10,14 @@ const Misiones = () =>{
     useEffect ( () =>{
         
         const fetchUser = async () =>{
-            const userRol = await GetLoggedUser().role;
-            console.log(userRol)
-            setRol(userRol);
+            try{
+                const user = await GetLoggedUser();
+                const userRol = user.role
+                setRol(userRol);
+            }catch(err){
+                console.log(err);
+                throw err;
+            }
         }
         fetchUser()
     },[]);
@@ -19,9 +25,11 @@ const Misiones = () =>{
 
 
     return(
-        <div id="Misiones">
-            {rol == "admin" ? ( <MisionesAdmin/> ) : (<MisionesCampista/>)}
-        </div>
+        <MisionesProvider>
+            <div id="Misiones">
+                {rol == "admin" ? ( <MisionesAdmin/> ) : (<MisionesCampista/>)}
+            </div>
+        </MisionesProvider>
     );
 }
 

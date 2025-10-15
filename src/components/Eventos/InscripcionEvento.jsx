@@ -5,9 +5,10 @@ export default async function inscribirAEvento({evento}){
 
     const user = await GetLoggedUser();
     
+    console.log(user.data)
     const data = {
-        solicitudEvento: evento,
-        solicitudUsuario: user,
+        campista: user.data,
+        evento: evento,
         estado: "pendiente"
     };
 

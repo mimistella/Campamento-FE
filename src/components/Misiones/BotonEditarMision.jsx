@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FormEditarMision from "./FormEditarMision.jsx";
 
 const BotonEditarMision = ({ mision, onSave }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,42 +42,7 @@ const BotonEditarMision = ({ mision, onSave }) => {
             </h2>
 
             {/* Formulario */}
-            <div className="space-y-3">
-              <input
-                type="text"
-                name="titulo"
-                value={formData.titulo}
-                onChange={handleChange}
-                placeholder="Título"
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
-              />
-
-              <textarea
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-                placeholder="Descripción"
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
-              />
-
-              <input
-                type="text"
-                name="recompensa"
-                value={formData.recompensa}
-                onChange={handleChange}
-                placeholder="Recompensa"
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
-              />
-
-              <input
-                type="text"
-                name="pista"
-                value={formData.pista}
-                onChange={handleChange}
-                placeholder="Pista"
-                className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
-              />
-            </div>
+            <FormEditarMision formData={formData} handleChange={handleChange}/>
 
             {/* Botón guardar */}
             <button

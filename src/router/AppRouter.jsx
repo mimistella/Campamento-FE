@@ -30,7 +30,7 @@ import MisionesAdmin from "../components/Misiones/MisionesAdmin.jsx";
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin" element={<AdminHomePage />}>
           <Route path="/admin/eventos" element={<EventosAdmin />}/>
-          <Route path="/admin/misiones" element={<MisionesAdmin/>}/>
+          <Route path="/admin/misiones" element={<Misiones/>}/>
 
           <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
           <Route path="cabanas" element={<MostrarCabanas />} />

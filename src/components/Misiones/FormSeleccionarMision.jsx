@@ -1,29 +1,32 @@
-import { useState } from "react";
-import api from "../../hooks/useApi.js";
+import { useState, useContext } from "react";
+import MisionesContext from "../../context/MisionesContext.js";
+import useFetch from "../../hooks/useFetch.js";
 
-const FormSeleccionarMision = ({misiones, campistas, onClose, onChange}) =>{
+const FormSeleccionarMision = ({onClose}) =>{
 
     const [misionSel, setMisionSel] = useState("");
-    const [campistaSel, setCampistaSel] = useState(null)
+    const [campistaSel, setCampistaSel] = useState("");
     //const [mision, setMision] = useState(null)
+    const {data:campistas} = useFetch('campista');
+    const {misiones, createAsignada} = useContext(MisionesContext)
 
 
     const  handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log(misionSel)
-            await api.post("/asigna-mision", {
+            await createAsignada({
                 "campista":campistaSel,
                 "mision":misionSel,
                 estado : "asignada"
-            });
-
-            // Cierra el modal al guardar
+            })
+            //await refetch('asigna-mision')
+            // Cierra el modal al guardar y recarga la lista
             onClose();
-            onChange();
+            setMisionSel("")
+            setCampistaSel("")
 
         } catch (err) {
-            console.error("Error creando misión:", err);
+            console.error("Error al asignar la mision :", err);
         }
     };
 

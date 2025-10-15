@@ -1,13 +1,15 @@
 import { useState } from "react";
-import api from "../../hooks/useApi.js"; // ajustá la ruta según tu proyecto
+import { useContext } from "react";
+import MisionesContext from "../../context/MisionesContext.js";
 
-const AddMisionForm = ({ onClose , onChange}) => {
+const AddMisionForm = ({ onClose }) => {
     const [titulo, setTitulo] = useState("");
     const [descripcion, setDescripcion] = useState("");
     const [recompensa, setRecompensa] = useState("");
     const [pista, setPista] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { createMision } = useContext(MisionesContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,7 +18,8 @@ const AddMisionForm = ({ onClose , onChange}) => {
         
 
         try {
-            await api.post("/misiones", {
+            
+            await createMision({
                 titulo,
                 descripcion,
                 recompensa,
@@ -25,8 +28,6 @@ const AddMisionForm = ({ onClose , onChange}) => {
 
             // Cierra el modal al guardar
             onClose();
-            onChange();
-
             // Limpiar inputs
             setTitulo("");
             setDescripcion("");

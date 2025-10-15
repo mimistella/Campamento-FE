@@ -1,6 +1,18 @@
-const ListaMisionesAsignadas = ({misionesAsig}) =>{
+import { useContext, useEffect } from "react";
+import MisionesContext from "../../context/MisionesContext.js";
 
-    
+const ListaMisionesAsignadas = () =>{
+
+    const { 
+        asignadas, 
+        fetchAsignadas,
+        misiones
+        } = useContext(MisionesContext);
+
+    useEffect( ()=>{
+        fetchAsignadas()
+    },[fetchAsignadas, misiones])
+
 
     return(
 
@@ -8,7 +20,8 @@ const ListaMisionesAsignadas = ({misionesAsig}) =>{
             <h1 className="text-2xl font-bold p-4">Lista Misiones Asignadas</h1>
 
             <ul>
-                {misionesAsig.map(asigna =>(
+                
+                {asignadas.map(asigna =>(
                     <li className="m-2 p-2 bg-gray-200">
                         {asigna.mision.titulo} - {asigna.campista.nombre} {asigna.campista.apellido} - {asigna.estado}
                     </li>

@@ -7,12 +7,13 @@ import { GetLoggedUser } from '../utilities/GetLoggedUser.jsx';
 export const ListaMisEventos = ({ onCancel }) => {
     const [eventos, setEventos] = useState([]);
     
-    const user = GetLoggedUser();
+    const user = GetLoggedUser().data;
+    console.log(user)
 
     useEffect(() => {
         const fetchEventos = async () => {
             try {
-                const response = await api.get(`/mis-eventos`);
+                const response = await api.get(`/solicitud-evento/me`);
                 setEventos(response.data.data);
             } catch (err) {
                 console.error(err);

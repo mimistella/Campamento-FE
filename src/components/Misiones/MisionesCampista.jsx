@@ -1,43 +1,14 @@
 import { MissionCard } from "./MissionsCard.jsx";
-import { useState } from "react";
-import { useEffect } from "react";
-import api from "../../hooks/useApi.js";
-
+import { useContext, useEffect } from "react";
+import MisionesContext from "../../context/MisionesContext.js";
 
 const MisionesCampista = () => {
+    const {misiones, fetchMisiones} = useContext(MisionesContext)
 
-     const [misiones, setMisiones] = useState([]);
-     
-
-    useEffect(() => {
-        const fetchMissions = async () => {
-            try {
-                const response = await api.get('/misiones/me'); // DEBERIA SER RUTA A MISIONES DEL CAMPISTA
-                
-
-                const misionesLista = getMisionList(response.data.data);
-                setMisiones(misionesLista);
-
-                return ;
-            } catch (err) {
-                console.error(err);
-                return err;
-            } 
-        };
-
-        fetchMissions();
-    }, []);
-
-    function getMisionList(asignaMision){
-        const misionesLista = [];
-        asignaMision.forEach(asigna => {
-           
-            misionesLista.push(asigna.mision);
-            console.log(asigna.mision);
-        });
-        return misionesLista;
-    }
-
+    useEffect(()=>{
+        fetchMisiones()
+    },[fetchMisiones])
+    
     return(
         <div>
             <h1 className="w-fit py-6 px-8 mb-2 text-2xl font-bold text-gray-800 rounded-lg"> 

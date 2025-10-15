@@ -8,5 +8,5 @@ export const GetLoggedUser = async (user) => {
         return null;
     }
 
-    return user;
+    return user.data;
 }
