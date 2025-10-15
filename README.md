@@ -81,10 +81,6 @@ pnpm preview
 ## 📝 Notas importantes
 
 * El backend **Campamento-BE** debe estar corriendo antes de iniciar el frontend.
-* Usar **Core UI** y **FontAwesome** para mantener consistencia visual.
-* Centralizar las rutas de API en `src/constants` para facilitar el mantenimiento.
-* Utilizar **Axios** para las peticiones HTTP.
-
 * Si hay cambios en `.env`, vuelve a iniciar el servidor (`Ctrl + C` para parar y `pnpm dev` para arrancar de nuevo).
 
 ```
