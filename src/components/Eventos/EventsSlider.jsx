@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Evento from "./Evento";
+import { useEventos } from '../../hooks/useEventos.js';
 
 //Define las slides a mostrar 
 function shownSlides(eventos, currentIndex, maxEventsShown = 5) {
@@ -46,13 +47,18 @@ function mobileVersion(eventos, currentIndex){
 }
 
 
-export default function EventsSlider({ eventos }) {
+export default function EventsSlider() {
+    const {eventos, fetchEventos} = useEventos()
+
+
     const [currentIndex, setCurrentIndex] = useState(0);
     //currentIndex es el indice del primer evento que se muestra en el slider, el que esta mas a la izquierda
 
       const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1280);
 
     useEffect(() => {
+        fetchEventos();
+
         function handleResize() {
         setIsDesktop(window.innerWidth >= 1280);
         }
@@ -62,7 +68,7 @@ export default function EventsSlider({ eventos }) {
 
         // Limpieza al desmontar
         return () => window.removeEventListener("resize", handleResize);
-    }, []);
+    }, [fetchEventos]);
 
     const nextSlide = () => {
         setCurrentIndex((currentIndex) => (currentIndex + 1) % eventos.length);

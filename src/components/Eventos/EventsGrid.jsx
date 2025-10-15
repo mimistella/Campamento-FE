@@ -1,5 +1,6 @@
 import Evento from "./Evento";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useEventos } from "../../hooks/useEventos.js";
 
 const layout = [
     "col-span-2 row-span-2", // evento 1 → 2x2
@@ -16,8 +17,13 @@ const layout = [
 
 
 
-export default function EventsGrid({ eventos }) {
+export default function EventsGrid() {
+    const {eventos, fetchEventos} = useEventos();
     const [visibleCount, setVisibleCount] = useState(8); // mostrar 8 eventos al inicio
+
+    useEffect(() =>{
+        fetchEventos();
+    }, [fetchEventos])
 
     const handleLoadMore = () => {
         setVisibleCount((prev) => prev + 8); // sumar 8 eventos cada clic

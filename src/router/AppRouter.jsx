@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {ScrollToTop} from '../components/ScrollToTop';
 import { LandingPage } from '../pages/LandingPage'
@@ -14,9 +13,8 @@ import EditarCabania from "@components/Admin/cabanas/EditarCabanias.jsx";
 import CabinPage from "@components/Camper/MyCabin.jsx";
 //import Talleres from "../components/Talleres.jsx";
 import Misiones from "../components/Misiones.jsx";
-import Eventos from "../components/Eventos.jsx";
+import Eventos2 from "../components/Eventos2.jsx";
 import EventosAdmin from "../components/EventosAdmin.jsx";
-import MisionesAdmin from "../components/Misiones/MisionesAdmin.jsx";
 
   export function AppRouter() {
     return (
@@ -42,7 +40,7 @@ import MisionesAdmin from "../components/Misiones/MisionesAdmin.jsx";
           <Route path="/campista" element={<CamperHomePage />}>
           
           <Route path="misiones" element={<Misiones />} />
-          <Route path="eventos" element={<Eventos />} />
+          <Route path="eventos" element={<Eventos2 />} />
           
           
           <Route path= "cabanas" element={<CabinPage />} />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { GetLoggedUser } from "./utilities/GetLoggedUser.jsx";
+import { GetLoggedUser } from "./utilities/GetLoggedUser.js";
 import MisionesAdmin from "./Misiones/MisionesAdmin.jsx";
 import MisionesCampista from "./Misiones/MisionesCampista.jsx";
 import { MisionesProvider } from "../providers/MisionesProvider.jsx";

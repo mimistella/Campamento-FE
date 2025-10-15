@@ -1,4 +1,4 @@
-import inscribirAEvento from "./InscripcionEvento.jsx";
+import InscribirAEvento from "./InscripcionEvento.jsx";
 
 export default function Evento({evento, TitleTextSize = "text-4xl", IsGrid = true, isEditMode = false, titleJustify = "justify-center", textColor = "text-black" }) {
     return (
@@ -20,12 +20,15 @@ export default function Evento({evento, TitleTextSize = "text-4xl", IsGrid = tru
 
             {!isEditMode && (() => {
                 return (
-                    <button
-                        className="flex mx-auto mt-4 bg-green-800 bg-opacity-20 hover:bg-green-950/50 font-bold py-2 px-4 rounded"
-                        onClick={!isEditMode ? () => inscribirAEvento({ evento }) : null}
-                    >
-                        Inscribirse
-                    </button>
+                    <InscribirAEvento evento={evento}/>
+                    // <button
+                    //     className="flex mx-auto mt-4 bg-green-800 bg-opacity-20 hover:bg-green-950/50 font-bold py-2 px-4 rounded"
+                    //     onClick={
+                    //         !isEditMode ? () => {<InscribirAEvento evento={evento}/>}: null
+                    //     }
+                    // >
+                    //     Inscribirse
+                    // </button>
                 );
             })()}
         </div>
