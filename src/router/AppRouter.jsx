@@ -52,7 +52,7 @@ export function AppRouter() {
       <Route path="periodos" element={<VerPeriodos />} />
       <Route path="cabanas/editar/:id" element={<EditarCabania />} />
       <Route path="talleres/editar/:id" element={<EditarTaller />} />
-      <Route path="usuarios/editar/:userId/:userRole" element={<EditarUsuario />} />
+      <Route path="/admin/usuarios/editar/:id/:role" element={<EditarUsuario />} />
     </Route>
   </Route>
 

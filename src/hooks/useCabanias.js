@@ -31,7 +31,7 @@ export function useCabanias() {
   const updateCabania = useCallback(async (id, { descripcion, capacidad }) => {
     const res = await api.patch(`cabanias/${id}`, {
       descripcion,
-       capacidad: Number(capacidad),
+      capacidad: Number(capacidad),
     });
     return res.data;
   }, []);
