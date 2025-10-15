@@ -25,6 +25,7 @@ import VerPeriodos from "@components/Admin/periodos/Periodos.jsx";
 import InstructorHomePage from "@pages/Instructor/InstructorHomePage.jsx";
 import InstructorDashboard from "@components/Instructor/InstructorDashboard.jsx";
 import MostrarMisTalleres from "@components/Instructor/MisTalleres.jsx";
+import MisAlumnos from "@components/Instructor/InstructorStudents.jsx";
   
 export function AppRouter() {
     return (
@@ -69,6 +70,7 @@ export function AppRouter() {
     <Route index element={<InstructorDashboard />} />
       <Route path="perfil" element={<UserDataForm />} />
       <Route path="talleres" element={<MostrarMisTalleres />} />
+      <Route path="alumnos" element={<MisAlumnos/>} />
     </Route>
   </Route>
 
