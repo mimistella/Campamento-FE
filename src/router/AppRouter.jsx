@@ -24,6 +24,7 @@ import MostrarUsuarios from "@components/Admin/users/mostrarUsuarios.jsx";
 import VerPeriodos from "@components/Admin/periodos/Periodos.jsx";
 import InstructorHomePage from "@pages/Instructor/InstructorHomePage.jsx";
 import InstructorDashboard from "@components/Instructor/InstructorDashboard.jsx";
+import MostrarMisTalleres from "@components/Instructor/MisTalleres.jsx";
   
 export function AppRouter() {
     return (
@@ -67,6 +68,7 @@ export function AppRouter() {
     <Route path="/instructor" element={<InstructorHomePage />}>
     <Route index element={<InstructorDashboard />} />
       <Route path="perfil" element={<UserDataForm />} />
+      <Route path="talleres" element={<MostrarMisTalleres />} />
     </Route>
   </Route>
 
