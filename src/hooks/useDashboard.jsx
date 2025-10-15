@@ -80,23 +80,26 @@ export function useDashboard() {
     hospedajes.some((h) => h.cabania?.id === cabania.id)
   );
 
-  const inscriptosPeriodo = useMemo(() => {
-    if (!periodo || !periodo.id) return [];
-    return inscriptos.filter((i) => i.periodo.id === periodo.id);
-  }, [inscriptos, periodo]);
+      const inscriptosPeriodo = useMemo(() => {
+        if (!periodo || !periodo.id) return [];
+        return inscriptos.filter((i) => i.periodo?.id === periodo.id);
+      }, [inscriptos, periodo]);
 
-  const cabaniasActivasPeriodo = useMemo(() => {
-    if (!periodo || !periodo.id) return [];
+      const cabaniasActivasPeriodo = useMemo(() => {
+        if (!periodo || !periodo.id) return [];
 
-    const idsCampistas = inscriptosPeriodo.map((i) => i.campista.id);
+        
+        const idsCampistas = inscriptosPeriodo.map((i) =>
+        typeof i.campista === "object" ? i.campista.id : i.campista
+        );
 
-    return cabanias.filter((cabania) =>
-      hospedajes.some(
-        (h) =>
-          idsCampistas.includes(h.campista.id) && h.cabania?.id === cabania.id
-      )
-    );
-  }, [inscriptosPeriodo, cabanias, hospedajes, periodo]);
+        return cabanias.filter((cabania) =>
+          hospedajes.some(
+            (h) =>
+              idsCampistas.includes(h.campista.id) && h.cabania?.id === cabania.id
+          )
+        );
+      }, [inscriptosPeriodo, cabanias, hospedajes, periodo]);
 
 
   return {
