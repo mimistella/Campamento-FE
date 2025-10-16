@@ -3,44 +3,46 @@ import api from "@hooks/useApi";
 import { useToaster } from "@hooks/useToaster";
 
 export default function LibretaForm({ inscripcion, onClose }) {
-  const { toast } = useToaster();
-  const [nota, setNota] = useState(inscripcion.nota || "");
-  const [comentario, setComentario] = useState(inscripcion.comentario || "");
-  const [loading, setLoading] = useState(false);
+  const { loading, dismiss, success, error } = useToaster();
+  const [nota, setNota] = useState(inscripcion?.nota || "");
+  const [comentario, setComentario] = useState(inscripcion?.comentario || "");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const notaNum = Number(nota);
     if (isNaN(notaNum) || notaNum < 1 || notaNum > 10) {
-      return toast.error("La nota debe ser un número entre 1 y 10.");
+      return error("La nota debe ser un número entre 1 y 10.");
     }
 
     if (!comentario.trim()) {
-      return toast.error("El comentario no puede estar vacío.");
+      return error("El comentario no puede estar vacío.");
     }
 
-    const toastId = toast.loading("Guardando feedback...");
-    setLoading(true);
+    const toastId = loading("Guardando feedback...");
+    setIsLoading(true);
 
     try {
-      await api.patch(`/inscripcion-taller/${inscripcion.id}`, {
+      const _res = await api.patch(`/inscripcion-taller/${inscripcion.id}`, {
         nota: notaNum,
         comentario: comentario.trim(),
       });
-      toast.dismiss(toastId);
-      toast.success("Feedback guardado correctamente.");
+      dismiss(toastId);
+      success("Feedback guardado correctamente.");
       onClose?.();
     } catch (err) {
-      toast.dismiss(toastId);
-      console.error(err);
-      toast.error(
-        err.response?.data?.message || "Ocurrió un error al guardar la nota."
+      dismiss(toastId);
+      error(
+        err.response?.data?.message ||
+          "Ocurrió un error al guardar la nota."
       );
     } finally {
-      setLoading(false);
+      console.log("Finalizando...");
+      setIsLoading(false);
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <label>
@@ -64,10 +66,12 @@ export default function LibretaForm({ inscripcion, onClose }) {
       </label>
       <button
         type="submit"
-        disabled={loading}
-        className="bg-amber-500 text-white py-2 px-4 rounded"
+        disabled={isLoading}
+        className="bg-amber-500 text-white py-2 px-4 rounded disabled:opacity-60"
       >
-        {inscripcion.nota !== null || inscripcion.comentario !== null
+        {isLoading
+          ? "Guardando..."
+          : inscripcion?.nota != null || inscripcion?.comentario != null
           ? "Modificar nota"
           : "Asignar nota"}
       </button>

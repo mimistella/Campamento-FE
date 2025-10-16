@@ -16,6 +16,7 @@ export default function AlumnoCard({ inscripcion }) {
 
   const handleCerrarForm = () => {
     setOpenForm(false);
+    setTimeout(() => document.activeElement?.blur(), 0);
   };
 
   const tieneNota = inscripcion?.nota != null && inscripcion?.comentario != null;
