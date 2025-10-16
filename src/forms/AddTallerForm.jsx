@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FileTextIcon, MapPinIcon, UserRoundSearchIcon } from "lucide-react";
 import { useTalleres } from "@hooks/useTalleres";
-import { useDashboard } from "@hooks/useDashboard.jsx";
+import { useDashboard } from "@hooks/useDashboard.js";
 import { useToaster } from "@hooks/useToaster";
 
 const TallerForm = ({ onSuccess }) => {
