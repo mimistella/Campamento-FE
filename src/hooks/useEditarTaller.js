@@ -20,6 +20,7 @@ export const useEditarTaller = () => {
   } = useTalleres();
 
   const { instructores } = useDashboard();
+
   const [formData, setFormData] = useState({
     titulo: "",
     descripcion: "",
@@ -29,6 +30,8 @@ export const useEditarTaller = () => {
     cupo: 0,
     duracionMin: 0,
   });
+
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const taller = Array.isArray(talleres)
@@ -38,7 +41,6 @@ export const useEditarTaller = () => {
   const campistasInscriptos = Array.isArray(inscripciones)
     ? inscripciones.filter((i) => i?.taller?.id === parseInt(id))
     : [];
-
 
   useEffect(() => {
     if (taller) {
@@ -78,6 +80,18 @@ export const useEditarTaller = () => {
           ? Number(value)
           : value,
     }));
+    setErrors((prev) => ({ ...prev, [name]: undefined })); // limpia error al modificar
+  };
+
+  const traducirMensaje = (msg) => {
+    return msg
+      .replace("String must contain at least", "Debe tener al menos")
+      .replace("character(s)", "caracteres")
+      .replace("Number must be greater than or equal to", "Debe ser mayor o igual a")
+      .replace("Value must be greater than", "Debe ser mayor que")
+      .replace("Required", "Campo obligatorio")
+      .replace("Expected number, received string", "Debe ser un número")
+      .replace("Invalid date", "Fecha inválida");
   };
 
   const handleSave = async () => {
@@ -103,7 +117,20 @@ export const useEditarTaller = () => {
     } catch (err) {
       console.error("Error actualizando taller:", err);
       toast.dismiss(toastId);
-      toast.error("No se pudo actualizar el taller.");
+
+      const details = err.response?.data?.details;
+      if (Array.isArray(details)) {
+        const fieldErrors = {};
+        details.forEach((d) => {
+          const field = d.path?.[0];
+          const msg = traducirMensaje(d.message);
+          if (field) fieldErrors[field] = msg;
+        });
+        setErrors(fieldErrors);
+        toast.error("Revisá los campos con errores.");
+      } else {
+        toast.error(err.response?.data?.message || "No se pudo actualizar el taller.");
+      }
     } finally {
       setLoading(false);
     }
@@ -159,5 +186,6 @@ export const useEditarTaller = () => {
     loading,
     loadingTalleres,
     navigate,
+    errors, 
   };
 };

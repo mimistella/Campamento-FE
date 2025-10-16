@@ -26,9 +26,8 @@ export default function CabaniaForm({ onSuccess }) {
   const [loadingDeidades, setLoadingDeidades] = useState(false);
   
   const toast = useToaster();
-  const { crearCabania, loading, error } = useCabanias();
+  const { crearCabania, loading} = useCabanias();
 
-  // Cargar deidades con manejo de errores - FIXED: useCallback sin dependencias
   const fetchDeidades = useCallback(async () => {
     setLoadingDeidades(true);
     try {
@@ -42,13 +41,14 @@ export default function CabaniaForm({ onSuccess }) {
     } finally {
       setLoadingDeidades(false);
     }
-  }, []); // ✅ Removí la dependencia de toast para evitar loops
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
 
   useEffect(() => {
     fetchDeidades();
-  }, [fetchDeidades]); // ✅ Ahora fetchDeidades es estable
+  }, [fetchDeidades]); 
 
-  // Validación del formulario
+
   const validateForm = () => {
     const errors = {};
 
@@ -91,7 +91,7 @@ export default function CabaniaForm({ onSuccess }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Limpiar error del campo cuando el usuario empiece a escribir
+
     if (formErrors[name]) {
       setFormErrors(prev => ({
         ...prev,
@@ -108,7 +108,7 @@ export default function CabaniaForm({ onSuccess }) {
     }));
   };
 
-  // Función mejorada para manejar errores del backend
+
   const handleBackendErrors = (error) => {
     const backendError = error.response?.data;
     
@@ -116,7 +116,7 @@ export default function CabaniaForm({ onSuccess }) {
       return "Error de conexión con el servidor";
     }
 
-    // Manejar errores de validación con details array
+
     if (backendError.details && Array.isArray(backendError.details)) {
       const fieldErrors = {};
       
@@ -124,7 +124,7 @@ export default function CabaniaForm({ onSuccess }) {
         let fieldName = 'general';
         let errorMessage = detail.message || JSON.stringify(detail);
         
-        // Mapear mensajes de error a campos específicos
+
         if (errorMessage.includes('descripcion') || errorMessage.includes('descripción')) {
           fieldName = 'descripcion';
           if (errorMessage.includes('más larga') || errorMessage.includes('al menos')) {
