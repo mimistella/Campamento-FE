@@ -7,6 +7,25 @@ export function usePeriodo() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [periodoActual, setPeriodoActual] =useState(null);
+
+  const askCurrent = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get("/periodo/current");
+
+      // el backend devuelve "date", no "data"
+      const current = res.data?.date || null;
+
+      setPeriodoActual(current);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching periodo actual:", err);
+      setError("No se pudieron cargar los periodos");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchPeriodos = async () => {
     try {
@@ -26,6 +45,7 @@ export function usePeriodo() {
 
   const refreshData = async () => {
     await fetchPeriodos();
+    await askCurrent();
   };
 
   useEffect(() => {
@@ -55,6 +75,7 @@ export function usePeriodo() {
       throw err;
     }
   };
+  
 
   const deletePeriodo = async (id) => {
     try {
@@ -71,6 +92,7 @@ export function usePeriodo() {
     lastUpdated,
     loading,
     error,
+    periodoActual,
     refreshData,
     crearPeriodo,
     updatePeriodo,

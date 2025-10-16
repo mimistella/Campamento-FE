@@ -18,21 +18,28 @@ export function useCabaniaCampista() {
       setLoading(true);
       setError(null);
 
+
       const periodoRes = await api.get("/periodo/current");
       setPeriodo(periodoRes.data.date || null);
 
+
       const hospedajeRes = await api.get("/hospedaje");
       const data = hospedajeRes.data.data || [];
-      const hospedajeData = data.find((h) => h.campista?.id === user.id) || null;
-      setHospedaje(hospedajeData);
 
-      if (hospedajeData?.cabania?.id) {
-        // Si hay hospedaje, traer detalles de la cabaña
-        const cabRes = await api.get(`/cabanias/myCabin/${hospedajeData.cabania.id}`);
-        setCabaniaDetalle(cabRes.data.data || null);
-        setDeidades(null); // No necesitamos deidades
+
+      const hospedajeActivo = Array.isArray(data)
+        ? data.find(h => h.estado === "reservada") || data[0]
+        : data;
+
+      setHospedaje(hospedajeActivo);
+
+      if (hospedajeActivo?.cabania?.id) {
+
+        const cabRes = await api.get(`/cabanias/myCabin/${hospedajeActivo.cabania.id}`);
+        setCabaniaDetalle(cabRes.data.data || cabRes.data || null);
+        setDeidades(null);
       } else {
-        // Si no hay hospedaje, traer las deidades disponibles
+
         const deidadesRes = await api.get("/deidades");
         setDeidades(deidadesRes.data.data || []);
         setCabaniaDetalle(null);
@@ -70,17 +77,14 @@ export function useCabaniaCampista() {
         periodo: periodo.id,
       });
 
-      setHospedaje(res.data.data);
+      const nuevoHospedaje = res.data.data;
+      setHospedaje(nuevoHospedaje);
 
-    const cabaniaId = res.data.data.cabania?.id ?? res.data.data.cabania;
-    if (cabaniaId) {
-      const cabRes = await api.get(`/cabanias/myCabin/${cabaniaId}`);
-      setCabaniaDetalle(cabRes.data.data || null);
-    } else {
-      console.error("No se pudo obtener el id de la cabaña", res.data.data.cabania);
-    }
-
-
+      const cabaniaId = nuevoHospedaje.cabania?.id ?? nuevoHospedaje.cabania;
+      if (cabaniaId) {
+        const cabRes = await api.get(`/cabanias/myCabin/${cabaniaId}`);
+        setCabaniaDetalle(cabRes.data.data || null);
+      }
 
       setDeidades(null);
       alert("Hospedaje creado con éxito");
@@ -100,7 +104,7 @@ export function useCabaniaCampista() {
     loading,
     error,
     periodo,
-    hasHospedajeActivo: !!hospedaje,
+    hasHospedajeActivo: !!hospedaje?.cabania?.id,
     deidades,
     crearHospedaje,
     refetch: fetchData,

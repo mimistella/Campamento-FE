@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import api from "@hooks/useApi";
 import { useAuth } from "@hooks/useAuth";
+import { usePeriodo } from "@hooks/usePeriodo";
 
 export function useInscripcionPeriodo() {
   const { user } = useAuth();
   const [inscripciones, setInscripciones] = useState([]);
   const [diasRestantes, setDiasRestantes] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { periodoActual } = usePeriodo();
 
   const calcularDiasRestantes = (fechaInicio) => {
     if (!fechaInicio) return;
@@ -22,25 +24,26 @@ export function useInscripcionPeriodo() {
       try {
         console.log("Buscando inscripciones para user ID:", user?.id);
         const response = await api.get("/inscripcion-periodo");
+        console.log("Respuesta completa del backend:", response.data);
 
-        const responseData = response.data;
+        const data = response.data?.data || [];
+        const todasInscripciones = Array.isArray(data) ? data : [data].filter(Boolean);
 
-        const todasInscripciones = Array.isArray(responseData.data)
-          ? responseData.data
-          : [responseData.data];
-
-      
         console.log("Inscripciones encontradas:", todasInscripciones);
+
         setInscripciones(todasInscripciones);
 
-        if (todasInscripciones.length > 0) {
-          const primerPeriodo = todasInscripciones[0].periodo;
-          if (primerPeriodo?.fechaInicioPer) {
-            calcularDiasRestantes(primerPeriodo.fechaInicioPer);
-          }
+        const inscripcionActual = todasInscripciones.find(
+          (i) =>
+            i?.periodo?.id === periodoActual?.id
+        );
+
+        if (inscripcionActual?.periodo?.fechaInicioPer) {
+          calcularDiasRestantes(inscripcionActual.periodo.fechaInicioPer);
         } else {
           setDiasRestantes(null);
         }
+
       } catch (error) {
         console.error("Error al obtener inscripciones:", error.response?.data || error.message);
         setInscripciones([]);
@@ -55,7 +58,8 @@ export function useInscripcionPeriodo() {
     } else {
       setLoading(false);
     }
-  }, [user?.id]);
+   
+  }, [user?.id,periodoActual?.id]);
 
   return { inscripciones, diasRestantes, loading };
 }

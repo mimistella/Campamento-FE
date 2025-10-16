@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 
 export function useAuth() {
-  const { user, setUser, loading } = useAuthContext();
+  const { user, setUser,mydata, setMyData, loading } = useAuthContext();
   const navigate = useNavigate();
 
 
@@ -13,6 +13,8 @@ export function useAuth() {
     const _res = await api.post("/auth/login", { email, contrasena });
     const who = await api.get("/auth/me",{ withCredentials: true });
     setUser(who.data.data);
+    const dataRes = await api.get("/auth/profile");
+    setMyData(dataRes.data.data)
     return who.data.data;
   };
 
@@ -22,5 +24,5 @@ export function useAuth() {
     navigate("/login"); 
   };
 
-  return { user, loading, login, logout };
+  return { user, loading,mydata, login, logout };
 }
