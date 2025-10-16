@@ -3,16 +3,19 @@ import { useInstructor } from "@hooks/useInstructor";
 import { useUsuarios } from "@hooks/useUsuario";
 import api from "@hooks/useApi";
 import ButtonBase from "@components/commonComp/ButtonBase";
+import { useToaster } from "@hooks/useToaster";
 
 export default function UserDetailInstructor({ userData }) {
   const { talleres: initialTalleres, loading: initialLoading } = useInstructor();
   const { usuarios } = useUsuarios();
+  const { success, error } = useToaster();
 
   const [talleres, setTalleres] = useState([]);
   const [loading, setLoading] = useState(initialLoading);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTaller, setSelectedTaller] = useState(null);
   const [nuevoInstructorId, setNuevoInstructorId] = useState("");
+  const [activo, setActivo] = useState(userData.activo !== false); // true si está activo
 
   // Inicializar talleres
   useEffect(() => {
@@ -42,7 +45,7 @@ export default function UserDetailInstructor({ userData }) {
 
   const openModal = (taller) => {
     setSelectedTaller(taller);
-    setNuevoInstructorId(""); // reset select
+    setNuevoInstructorId("");
     setModalOpen(true);
   };
 
@@ -65,6 +68,27 @@ export default function UserDetailInstructor({ userData }) {
       alert("Error al asignar instructor");
     }
   };
+
+  const handleDeactivate = async () => {
+    if (Italler.length > 0) {
+      alert("Este instructor todavía tiene talleres asignados y no puede ser desactivado.");
+      return;
+    }
+
+    const confirm = window.confirm("¿Estás seguro de desactivar este instructor?");
+    if (!confirm) return;
+
+    try {
+      await api.delete(`/instructor/${userData.id}`);
+      setActivo(false); 
+      success("El instructor ha sido desactivado");
+    } catch (err) {
+      console.error(err);
+      error("No se pudo desactivar el instructor");
+    }
+  };
+
+  const desactivarDisabled = !activo || Italler.length > 0;
 
   return (
     <div className="p-4 md:p-8 space-y-8">
@@ -97,6 +121,18 @@ export default function UserDetailInstructor({ userData }) {
           <p><strong>Grupo sanguíneo:</strong> {userData.grupoSanguineo || "No registrado"}</p>
           <p><strong>Teléfono de emergencia:</strong> {userData.telefonoEmergencia || "No registrado"}</p>
         </div>
+
+        {/* Botón Desactivar */}
+        <div className="mt-6 flex justify-center">
+          <ButtonBase
+            variant="contained"
+            color="amber"
+            onClick={handleDeactivate}
+            disabled={desactivarDisabled}
+          >
+            {activo ? "Desactivar instructor" : "Instructor desactivado"}
+          </ButtonBase>
+        </div>
       </section>
 
       {/* Talleres */}
@@ -112,8 +148,8 @@ export default function UserDetailInstructor({ userData }) {
                 <ButtonBase
                   className="mt-2 md:mt-0"
                   onClick={() => openModal(t)}
-                          variant="contained"
-                          color="amber"
+                  variant="contained"
+                  color="amber"
                 >
                   Asignar a otro instructor
                 </ButtonBase>
@@ -124,6 +160,7 @@ export default function UserDetailInstructor({ userData }) {
           <p className="text-gray-500">No tiene talleres asignados.</p>
         )}
       </section>
+
       {/* Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

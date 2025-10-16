@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import api from "@hooks/useApi";
 import ButtonBase from "@components/commonComp/ButtonBase";
+import { useToaster } from "@hooks/useToaster";
 
 export default function UserDetailCampista({ userData }) {
+  const { success, error } = useToaster();
   const [userTalleres, setUserTalleres] = useState([]);
   const [userPeriodos, setUserPeriodos] = useState([]);
   const [hospedaje, setHospedaje] = useState(null);
@@ -10,6 +12,7 @@ export default function UserDetailCampista({ userData }) {
   const [loadingTalleres, setLoadingTalleres] = useState(true);
   const [loadingPeriodos, setLoadingPeriodos] = useState(true);
   const [loadingHospedaje, setLoadingHospedaje] = useState(true);
+  const [activo, setActivo] = useState(true); // estado del campista
 
   useEffect(() => {
     async function fetchData() {
@@ -31,8 +34,8 @@ export default function UserDetailCampista({ userData }) {
         setHospedaje(
           (hospedajesResp.data.data || []).find(h => h.campista?.id === userData.id) || null
         );
-      } catch (error) {
-        console.error("Error cargando datos del campista:", error);
+      } catch (err) {
+        console.error("Error cargando datos del campista:", err);
       } finally {
         setLoadingTalleres(false);
         setLoadingPeriodos(false);
@@ -56,6 +59,20 @@ export default function UserDetailCampista({ userData }) {
     });
   };
 
+  const handleDeactivate = async () => {
+    const confirm = window.confirm("¿Estás seguro de desactivar este campista?");
+    if (!confirm) return;
+
+    try {
+      await api.delete(`/campista/${userData.id}`);
+      setActivo(false);
+      success("El campista ha sido desactivado");
+    } catch (err) {
+      console.error(err);
+      error("No se pudo desactivar el campista");
+    }
+  };
+
   return (
     <div className="p-4 md:p-8 space-y-8">
       {/* Título principal */}
@@ -73,13 +90,22 @@ export default function UserDetailCampista({ userData }) {
           <p><strong>País:</strong> {userData.pais || "No registrado"}</p>
           <p><strong>Ciudad:</strong> {userData.ciudad || "No registrado"}</p>
           <p><strong>Dirección:</strong> {userData.direccion || "No registrado"}</p>
-          <p>
-            <strong>Fecha de nacimiento:</strong>{" "}
-            {userData.fechaNac ? new Date(userData.fechaNac).toLocaleDateString("es-AR") : "No registrado"}
-          </p>
+          <p><strong>Fecha de nacimiento:</strong> {userData.fechaNac ? new Date(userData.fechaNac).toLocaleDateString("es-AR") : "No registrado"}</p>
           <p><strong>Alergias:</strong> {userData.alergias || "No registrado"}</p>
           <p><strong>Grupo sanguíneo:</strong> {userData.grupoSanguineo || "No registrado"}</p>
           <p><strong>Teléfono de emergencia:</strong> {userData.telefonoEmergencia || "No registrado"}</p>
+        </div>
+
+        {/* Botón Desactivar */}
+        <div className="mt-6 flex justify-center">
+          <ButtonBase
+            variant="contained"
+            color="amber"
+            onClick={handleDeactivate}
+            disabled={!activo}
+          >
+            {activo ? "Desactivar campista" : "Campista desactivado"}
+          </ButtonBase>
         </div>
       </section>
 
