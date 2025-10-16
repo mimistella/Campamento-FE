@@ -2,7 +2,7 @@ import api from '../../hooks/useApi';
 
 export const GetLoggedUser = async (user) => {
     try{
-        user = user == undefined || user == null ? await api.get('/auth/me') : user;
+        user = await api.get('/auth/me');
     }catch (error){
         console.error("Error al obtener el usuario:", error);
         return null;

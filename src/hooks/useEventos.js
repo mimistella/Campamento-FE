@@ -20,7 +20,7 @@ export function useEventos() {
     setErrorEventos(null);
     try {
       const { data } = await api.get("/eventos");
-      setEventos(data.data || data);
+      setEventos(data.data);
       return data;
     } catch (err) {
       setErrorEventos(err?.response?.data?.message || "Error al cargar eventos");

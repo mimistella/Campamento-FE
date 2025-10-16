@@ -1,9 +1,12 @@
 import { useState} from 'react';
 import Evento from '../Eventos/Evento.jsx';
 import EditEventButton from './EditEventButton.jsx';
+import { useContext } from 'react';
+import EventosContext from '../../context/EventosContext.js';
 
-export default function ListaEventos({ eventos, onEdit }) {
+export default function ListaEventos({ onEdit }) {
 
+    const {eventos} = useContext(EventosContext);
     const [mostrarTodos, setMostrarTodos] = useState(false);
 
     return (

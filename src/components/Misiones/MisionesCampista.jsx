@@ -1,19 +1,31 @@
 import { MissionCard } from "./MissionsCard.jsx";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import MisionesContext from "../../context/MisionesContext.js";
 
 const MisionesCampista = () => {
-    const {misiones, fetchMisiones} = useContext(MisionesContext)
+    const {fetchAsignadas} = useContext(MisionesContext)
+    const [misiones, setMisiones] = useState([])
+
 
     useEffect(()=>{
-        fetchMisiones()
-    },[fetchMisiones])
+        const FetchMisiones = async() =>{
+            const asig = await fetchAsignadas();
+            console.log(asig.data);
+            const lista = []
+            asig.data.map(asigna => {lista.push(asigna.mision)})
+            setMisiones(lista)
+        }
+        FetchMisiones();
+    },[fetchAsignadas])
     
     return(
         <div>
             <h1 className="w-fit py-6 px-8 mb-2 text-2xl font-bold text-gray-800 rounded-lg"> 
                 Misiones Asignadas 
             </h1>
+            
+            {misiones.length > 1 ?
+
             <ul>
                 {misiones.map(mision =>(
                     <li key={mision.id} className="p-2 bg-gray-100">
@@ -23,7 +35,9 @@ const MisionesCampista = () => {
                 )
             
             )}
-            </ul>
+            </ul>  :
+            <p>No hay misiones asignadas</p>
+            }
         </div>
     );
 }

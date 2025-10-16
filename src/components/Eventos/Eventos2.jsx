@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-import EventsGrid from './Eventos/EventsGrid';
-import EventsSlider from './Eventos/EventsSlider';
-import { BotonMisEventos } from './Eventos/BotonMisEventos';
-import { ListaMisEventos } from './Eventos/ListaMisEventos';
+
+import EventsGrid from './EventsGrid';
+import EventsSlider from './EventsSlider';
+import { BotonMisEventos } from './BotonMisEventos';
+import { ListaMisEventos } from './ListaMisEventos';
 
 const Eventos2 = () =>{
     const [viewMisEventos, setViewMisEventos] = useState(false)

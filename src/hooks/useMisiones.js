@@ -34,7 +34,8 @@ export function useMisiones() {
   },[fetch]);
 
   const fetchAsignadas = useCallback(() =>{
-    fetch('asigna-mision', setAsignadas);
+    return fetch('asigna-mision', setAsignadas);
+
   },[fetch]);
 
   const refetch = useCallback((ruta = 'misiones') =>{

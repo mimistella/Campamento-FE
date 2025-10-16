@@ -13,8 +13,10 @@ import EditarCabania from "@components/Admin/cabanas/EditarCabanias.jsx";
 import CabinPage from "@components/Camper/MyCabin.jsx";
 //import Talleres from "../components/Talleres.jsx";
 import Misiones from "../components/Misiones.jsx";
-import Eventos2 from "../components/Eventos2.jsx";
-import EventosAdmin from "../components/EventosAdmin.jsx";
+
+import Eventos from "../components/EventosHandler.jsx";
+// import Eventos2 from "../components/Eventos2.jsx";
+// import EventosAdmin from "../components/EventosAdmin.jsx";
 
   export function AppRouter() {
     return (
@@ -27,7 +29,7 @@ import EventosAdmin from "../components/EventosAdmin.jsx";
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin" element={<AdminHomePage />}>
-          <Route path="/admin/eventos" element={<EventosAdmin />}/>
+          <Route path="/admin/eventos" element={<Eventos />}/>
           <Route path="/admin/misiones" element={<Misiones/>}/>
 
           <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
@@ -40,7 +42,7 @@ import EventosAdmin from "../components/EventosAdmin.jsx";
           <Route path="/campista" element={<CamperHomePage />}>
           
           <Route path="misiones" element={<Misiones />} />
-          <Route path="eventos" element={<Eventos2 />} />
+          <Route path="eventos" element={<Eventos />} />
           
           
           <Route path= "cabanas" element={<CabinPage />} />

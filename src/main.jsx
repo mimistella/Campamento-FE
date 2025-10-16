@@ -12,10 +12,11 @@ import { MyThemeProvider } from '@providers/ThemeProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-     <MyThemeProvider>
     <DashboardProvider>
-      <App />
+      <MyThemeProvider>
+        <App />
+      </MyThemeProvider>
     </DashboardProvider>
-    </MyThemeProvider>
+    
   </StrictMode>,
 )
