@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useToaster } from "@hooks/useToaster";
 import api from "@hooks/useApi";
+import ButtonBase from "@components/commonComp/ButtonBase";
 
 export default function UserDetailAdmin({ userData }) {
   const { success, error } = useToaster();
@@ -28,7 +29,7 @@ export default function UserDetailAdmin({ userData }) {
     e.preventDefault();
 
     const validGrupos = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-    const telEmergencia = form.telefonoEmergencia.replace(/\D/g, ""); // sólo dígitos
+    const telEmergencia = form.telefonoEmergencia.replace(/\D/g, "");
 
     if (!form.nombre.trim() || !form.apellido.trim()) {
       error("Nombre y apellido son obligatorios");
@@ -66,36 +67,40 @@ export default function UserDetailAdmin({ userData }) {
 
     try {
       const res = await api.patch(`/admin/${userData.id}`, payload);
-      console.log(" PATCH response:", res.data);
+      console.log("PATCH response:", res.data);
       success("Perfil actualizado correctamente");
     } catch (err) {
       console.error("Error en PATCH /admin:", err.response?.data || err);
-      error(
-        err.response?.data?.message || "Error al actualizar el perfil"
-      );
+      error(err.response?.data?.message || "Error al actualizar el perfil");
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h2 className="text-xl font-bold mb-4">Editar perfil de administrador</h2>
-      <form onSubmit={handleSubmit} className="grid gap-3">
+    <div className="p-4 md:p-8 max-w-3xl mx-auto space-y-6">
+      {/* Título principal */}
+      <h1 className="w-full text-center text-white text-3xl md:text-4xl font-caesar-dressing-regular bg-amber-500 py-4 rounded-md shadow-md">
+        Editar perfil de Administrador
+      </h1>
+
+      {/* Formulario */}
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded-lg p-6 md:p-8 grid gap-4"
+      >
         {Object.keys(form).map((campo) => (
           <div key={campo} className="flex flex-col">
-            <label className="capitalize">{campo}</label>
+            <label className="capitalize font-semibold mb-1">{campo}</label>
 
             {campo === "grupoSanguineo" ? (
               <select
                 name={campo}
                 value={form[campo]}
                 onChange={handleChange}
-                className="border rounded p-2"
+                className="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
               >
                 <option value="">Seleccionar</option>
                 {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((g) => (
-                  <option key={g} value={g}>
-                    {g}
-                  </option>
+                  <option key={g} value={g}>{g}</option>
                 ))}
               </select>
             ) : (
@@ -104,14 +109,15 @@ export default function UserDetailAdmin({ userData }) {
                 name={campo}
                 value={form[campo] || ""}
                 onChange={handleChange}
-                className="border rounded p-2"
+                className="border rounded p-2 focus:outline-none focus:ring-2 focus:ring-amber-300"
               />
             )}
           </div>
         ))}
-        <button className="bg-amber-500 hover:bg-amber-600 text-white rounded p-2 mt-2">
+
+        <ButtonBase type="submit" variant="contained" color="amber" className="mt-4">
           Guardar cambios
-        </button>
+        </ButtonBase>
       </form>
     </div>
   );

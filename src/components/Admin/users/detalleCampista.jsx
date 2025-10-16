@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "@hooks/useApi";
+import ButtonBase from "@components/commonComp/ButtonBase";
 
 export default function UserDetailCampista({ userData }) {
   const [userTalleres, setUserTalleres] = useState([]);
@@ -42,12 +43,29 @@ export default function UserDetailCampista({ userData }) {
     fetchData();
   }, [userData.id]);
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "No registrado";
+    const date = new Date(dateStr);
+    return date.toLocaleString("es-AR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
+
   return (
-    <div className="p-4 space-y-6">
-      {/* Perfil */}
-      <section>
-        <h2 className="text-xl font-bold mb-2">Perfil del campista</h2>
-        <div className="grid grid-cols-2 gap-2">
+    <div className="p-4 md:p-8 space-y-8">
+      {/* Título principal */}
+      <h1 className="w-full text-center text-white text-3xl md:text-4xl font-caesar-dressing-regular bg-amber-500 py-4 rounded-md shadow-md">
+        Perfil del Campista
+      </h1>
+
+      {/* Perfil del campista */}
+      <section className="bg-white text-orange-900 shadow-md rounded-lg p-6 md:p-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
           <p><strong>Nombre:</strong> {userData.nombre || "No registrado"}</p>
           <p><strong>Apellido:</strong> {userData.apellido || "No registrado"}</p>
           <p><strong>Email:</strong> {userData.email || "No registrado"}</p>
@@ -55,7 +73,10 @@ export default function UserDetailCampista({ userData }) {
           <p><strong>País:</strong> {userData.pais || "No registrado"}</p>
           <p><strong>Ciudad:</strong> {userData.ciudad || "No registrado"}</p>
           <p><strong>Dirección:</strong> {userData.direccion || "No registrado"}</p>
-          <p><strong>Fecha de nacimiento:</strong> {userData.fechaNac ? new Date(userData.fechaNac).toLocaleDateString("es-AR") : "No registrado"}</p>
+          <p>
+            <strong>Fecha de nacimiento:</strong>{" "}
+            {userData.fechaNac ? new Date(userData.fechaNac).toLocaleDateString("es-AR") : "No registrado"}
+          </p>
           <p><strong>Alergias:</strong> {userData.alergias || "No registrado"}</p>
           <p><strong>Grupo sanguíneo:</strong> {userData.grupoSanguineo || "No registrado"}</p>
           <p><strong>Teléfono de emergencia:</strong> {userData.telefonoEmergencia || "No registrado"}</p>
@@ -63,48 +84,52 @@ export default function UserDetailCampista({ userData }) {
       </section>
 
       {/* Hospedaje */}
-      <section>
-        <h3 className="text-lg font-semibold">Hospedaje</h3>
+      <section className="bg-white text-orange-900 shadow-md rounded-lg p-6 md:p-8">
+        <h2 className="text-2xl md:text-3xl font-semibold text-orange-600 mb-4">Hospedaje</h2>
         {loadingHospedaje ? (
-          <p>Cargando...</p>
+          <p className="text-gray-500">Cargando...</p>
         ) : hospedaje ? (
           <p>Se hospeda en la cabaña <strong>{hospedaje.cabania.nombre}</strong></p>
         ) : (
-          <p>No tiene hospedaje asignado.</p>
+          <p className="text-gray-500">No tiene hospedaje asignado.</p>
         )}
       </section>
 
       {/* Talleres */}
-      <section>
-        <h3 className="text-lg font-semibold">Talleres inscriptos</h3>
+      <section className="bg-white text-orange-900 shadow-md rounded-lg p-6 md:p-8">
+        <h2 className="text-2xl md:text-3xl font-semibold text-orange-600 mb-4">Talleres inscriptos</h2>
         {loadingTalleres ? (
-          <p>Cargando...</p>
+          <p className="text-gray-500">Cargando...</p>
         ) : userTalleres.length ? (
-          <ul className="list-disc ml-5">
+          <ul className="space-y-3">
             {userTalleres.map((i) => (
-              <li key={i.id}>
-                {i.taller?.titulo} — {i.taller?.fechaHora ? new Date(i.taller.fechaHora).toLocaleString("es-AR", { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }) : "Sin fecha"}
+              <li key={i.id} className="bg-amber-100 p-4 rounded-lg shadow-sm flex justify-between items-center">
+                <span className="font-medium text-gray-700">
+                  {i.taller?.titulo} — {i.taller?.fechaHora ? formatDate(i.taller.fechaHora) : "Sin fecha"}
+                </span>
               </li>
             ))}
           </ul>
         ) : (
-          <p>No tiene talleres asignados.</p>
+          <p className="text-gray-500">No tiene talleres asignados.</p>
         )}
       </section>
 
       {/* Periodos */}
-      <section>
-        <h3 className="text-lg font-semibold">Periodos</h3>
+      <section className="bg-white text-orange-900 shadow-md rounded-lg p-6 md:p-8">
+        <h2 className="text-2xl md:text-3xl font-semibold text-orange-600 mb-4">Periodos</h2>
         {loadingPeriodos ? (
-          <p>Cargando...</p>
+          <p className="text-gray-500">Cargando...</p>
         ) : userPeriodos.length ? (
-          <ul className="list-disc ml-5">
+          <ul className="space-y-2">
             {userPeriodos.map((p) => (
-              <li key={p.id}>{p.periodo?.nombre || "Sin nombre"}</li>
+              <li key={p.id} className="bg-amber-100 p-3 rounded-lg shadow-sm">
+                {p.periodo?.nombre || "Sin nombre"}
+              </li>
             ))}
           </ul>
         ) : (
-          <p>No tiene periodos asignados.</p>
+          <p className="text-gray-500">No tiene periodos asignados.</p>
         )}
       </section>
     </div>
