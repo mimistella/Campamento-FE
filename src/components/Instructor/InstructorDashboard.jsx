@@ -2,8 +2,9 @@ import { useAuth } from "@hooks/useAuth";
 import { useInstructor } from "@hooks/useInstructor.js";
 
 export default function InstructorDashboard() {
-  const { user } = useAuth();
+  const { mydata } = useAuth();
 
+  const user = mydata
 
   const {diasCampamento, loading } = useInstructor();
   if (loading) {

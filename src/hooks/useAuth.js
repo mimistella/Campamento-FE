@@ -11,7 +11,7 @@ export function useAuth() {
 
   const login = async (email, contrasena) => {
     const _res = await api.post("/auth/login", { email, contrasena });
-    const who = await api.get("/auth/me",{ withCredentials: true });
+    const who = await api.get("/auth/me");
     setUser(who.data.data);
     const dataRes = await api.get("/auth/profile");
     setMyData(dataRes.data.data)
