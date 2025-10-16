@@ -29,7 +29,7 @@ export default function MostrarUsuarios() {
 
   const usuariosFiltrados = useMemo(() => {
     return usuarios
-      .filter((u) => (filtroRol ? u.rol === filtroRol : true));
+      .filter((u) => (filtroRol ? u.role === filtroRol : true));
   }, [usuarios, filtroRol]);
 
   if (loading) return <p className="text-gray-500">Cargando usuarios...</p>;
@@ -77,7 +77,7 @@ export default function MostrarUsuarios() {
           itemsPerPage={6}
           renderItem={(user) => (
             <UserCard
-              key={user.id}
+               key={`${user.role}-${user.id}`}
               user={user}
             />
           )}
