@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import api from '../hooks/useApi';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { useToaster } from '@hooks/useToaster';
 
 const SignUpForm = () => {
+  const { success, error } = useToaster();
   const [form, setForm] = useState({
     nombre: '',
     apellido: '',
@@ -17,8 +19,6 @@ const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,29 +27,26 @@ const SignUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+
     // Validación de campos obligatorios
     const required = ['nombre', 'apellido', 'email', 'telefono', 'contrasena', 'repetirContrasena'];
     for (const key of required) {
       if (!form[key]) {
-        setError('Por favor completa todos los campos obligatorios.');
-        return;
+        return error('Por favor completa todos los campos obligatorios.');
       }
     }
     if (form.contrasena !== form.repetirContrasena) {
-      setError('Las contraseñas no coinciden.');
-      return;
+      return error('Las contraseñas no coinciden.');
     }
-    // Validar teléfono (mínimo 8 dígitos sin código país)
+
+    // Validar teléfono (mínimo 10 dígitos sin contar prefijo)
     const phoneDigits = form.telefono.replace(/\D/g, '');
     if (phoneDigits.length < 10) {
-      setError('El número de teléfono no es válido.');
-      return;
+      return error('El número de teléfono no es válido.');
     }
+
     setLoading(true);
     try {
-      // Enviar contraseña sin encriptar, la encriptación se realiza en el backend
       const data = {
         nombre: form.nombre,
         apellido: form.apellido,
@@ -58,24 +55,20 @@ const SignUpForm = () => {
         contrasena: form.contrasena,
       };
       await api.post('/auth/register', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       });
-      setSuccess('¡Registro exitoso! Revisa tu correo para más instrucciones.');
-      setForm({
-        nombre: '', apellido: '', email: '', telefono: '', contrasena: '', repetirContrasena: '',
-      });
+      success('¡Registro exitoso! Revisa tu correo para más instrucciones.');
+      setForm({ nombre: '', apellido: '', email: '', telefono: '', contrasena: '', repetirContrasena: '' });
     } catch (err) {
-      setError(err?.response?.data?.message || 'Error al registrar. Intenta nuevamente.');
+      console.error(err);
+      error(err?.response?.data?.message || 'Error al registrar. Intenta nuevamente.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-  <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit} autoComplete="off">
+    <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit} autoComplete="off">
       {/* Nombre */}
       <div className="relative">
         <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -132,7 +125,6 @@ const SignUpForm = () => {
         />
       </div>
 
-
       {/* Contraseña */}
       <div className="relative">
         <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -148,19 +140,19 @@ const SignUpForm = () => {
           type="button"
           tabIndex={-1}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-          onClick={() => setShowPassword((v) => !v)}
-          aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          onClick={() => setShowPassword(v => !v)}
         >
           {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
         </button>
       </div>
+
       {/* Repetir contraseña */}
       <div className="relative">
         <LockIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
         <input
           type={showRepeatPassword ? 'text' : 'password'}
           name="repetirContrasena"
-          placeholder="Password"
+          placeholder="Repetir Password"
           className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md outline-none"
           value={form.repetirContrasena}
           onChange={handleChange}
@@ -169,21 +161,12 @@ const SignUpForm = () => {
           type="button"
           tabIndex={-1}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-          onClick={() => setShowRepeatPassword((v) => !v)}
-          aria-label={showRepeatPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+          onClick={() => setShowRepeatPassword(v => !v)}
         >
           {showRepeatPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
         </button>
       </div>
 
-
-      {/* Mensajes de error y éxito */}
-      {error && (
-        <div className="col-span-2 text-red-600 text-center font-medium mb-2">{error}</div>
-      )}
-      {success && (
-        <div className="col-span-2 text-green-600 text-center font-medium mb-2">{success}</div>
-      )}
       {/* Botón Sign Up */}
       <button
         type="submit"
@@ -192,12 +175,10 @@ const SignUpForm = () => {
       >
         {loading ? 'Registrando...' : 'Registrarse'}
       </button>
+
       <div className="col-span-2 flex flex-col items-center mt-4 text-sm">
         <span className="text-gray-700">¿Ya tienes cuenta?</span>
-        <Link
-          to="/login"
-          className="text-amber-700 hover:text-amber-600 underline transition-colors font-semibold mt-1"
-        >
+        <Link to="/login" className="text-amber-700 hover:text-amber-600 underline transition-colors font-semibold mt-1">
           Inicia sesión
         </Link>
       </div>
