@@ -44,7 +44,7 @@ export default function InscriptionForm({ periodoId, onSuccess }) {
       periodo: periodoId,
       metodoPago,
       referenciaPago,
-      estado: "PENDIENTE",
+      estado: "ACEPTADO",
     };
 
     const loadingToastId = toast.loading("Procesando inscripción...");
