@@ -44,7 +44,7 @@ export default function MostrarCabanas() {
             {mostrarSoloActivas ? "Mostrar todas" : "Solo activas"}
           </ButtonBase>
 
-          <ButtonBase color="amber" onClick={() => setOpenCrear(true)}>
+          <ButtonBase color="amber" onClick={(e) =>{ setOpenCrear(true); e.currentTarget.blur();} }>
             + Crear nueva cabaña
           </ButtonBase>
         </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import api from "@hooks/useApi";
 import { useAuth } from "@hooks/useAuth";
 import ButtonBase from "@components/commonComp/ButtonBase";
@@ -12,60 +12,71 @@ export default function InscriptionForm({ periodoId, onSuccess }) {
   const [referenciaPago, setReferenciaPago] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Debug para verificar el periodoId
-  useEffect(() => {
-    console.log("InscriptionForm recibió periodoId:", periodoId);
-  }, [periodoId]);
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // Validaciones
-    if (!metodoPago || !referenciaPago) {
-      toast.error("Debe completar todos los campos.");
-      return;
-    }
+  if (!metodoPago || !referenciaPago) {
+    toast.error("Debe completar todos los campos.");
+    return;
+  }
 
-    if (!user?.id) {
-      toast.error("Usuario no autenticado.");
-      return;
-    }
+  if (!user?.id) {
+    toast.error("Usuario no autenticado.");
+    return;
+  }
 
-    if (!periodoId) {
-      toast.error("ID del período no disponible. Por favor, recargue la página.");
-      console.error("periodoId es null/undefined:", periodoId);
-      return;
-    }
+  if (!periodoId) {
+    toast.error("ID del período no disponible. Por favor, recargue la página.");
+    console.error("periodoId es null/undefined:", periodoId);
+    return;
+  }
 
-    setLoading(true);
-
-    const payload = {
-      campista: user.id,
-      periodo: periodoId,
-      metodoPago,
-      referenciaPago,
-      estado: "ACEPTADO",
-    };
-
-    const loadingToastId = toast.loading("Procesando inscripción...");
-
-    try {
-      console.log("Enviando payload:", payload);
-
-      await api.post("/inscripcion-periodo", payload, { withCredentials: true });
-
-      toast.dismiss(loadingToastId);
-      toast.success(" Inscripción enviada correctamente.");
-
-      if (onSuccess) onSuccess();
-    } catch (err) {
-      console.error("Error al inscribir:", err.response?.data || err.message);
-      toast.dismiss(loadingToastId);
-      toast.error(" Ocurrió un error al inscribirse. Intente nuevamente.");
-    } finally {
-      setLoading(false);
-    }
+  setLoading(true);
+  const payload = {
+    campista: user.id,
+    periodo: periodoId,
+    metodoPago,
+    referenciaPago,
+    estado: "PAGADO" //lo ponemos por default, wuizá en una expansión se podría implementar mock de mp
   };
+  const loadingToastId = toast.loading("Procesando inscripción...");
+
+  try {
+    await api.post("/inscripcion-periodo", payload);
+
+    toast.dismiss(loadingToastId);
+    toast.success("Inscripción enviada correctamente.");
+
+    if (onSuccess) onSuccess();
+  } catch (err) {
+    toast.dismiss(loadingToastId);
+
+    if (err.response?.data?.details) {
+      const detalles = err.response.data.details
+        .map((d) => {
+          switch (d.path[0]) {
+            case "referenciaPago":
+              return "Referencia de pago inválida.";
+            case "metodoPago":
+              return "Método de pago inválido.";
+            default:
+              return d.message;
+          }
+        })
+        .join(" ");
+      toast.error(detalles);
+      console.error("Detalles de validación:", err.response.data.details);
+    } else if (err.response?.data?.message) {
+      toast.error(err.response.data.message);
+    } else {
+      toast.error("Ocurrió un error al inscribirse. Intente nuevamente.");
+    }
+
+    console.error("Error al inscribir:", err.response?.data || err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
