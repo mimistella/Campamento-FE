@@ -19,7 +19,7 @@ export default function EditarUsuario() {
       
 
       if (!id || !role) {
-        console.warn("Esperando id o role válidos...");
+        console.warn("Esperando id o rol válidos...");
         setLoading(false);
         return;
       }
