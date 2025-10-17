@@ -20,8 +20,8 @@ export default function UserData() {
     grupoSanguineo: "",
     telefonoEmergencia: "",
   });
+  const [fieldErrors, setFieldErrors] = useState({});
   const toast = useToaster();
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -34,9 +34,8 @@ export default function UserData() {
       }
     };
     fetchUser();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
 
   useEffect(() => {
     if (user) {
@@ -73,10 +72,73 @@ export default function UserData() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const parseBackendErrors = (error) => {
+    setFieldErrors({});
+
+    if (error.response?.data?.errors) {
+      const errors = error.response.data.errors;
+      const newFieldErrors = {};
+
+      // Si es un array de errores de Zod
+      if (Array.isArray(errors)) {
+        errors.forEach((err) => {
+          if (err.path && err.path.length > 0) {
+            const fieldName = err.path[0];
+            newFieldErrors[fieldName] = err.message;
+          }
+        });
+        setFieldErrors(newFieldErrors);
+        return "Por favor, corrige los errores en el formulario.";
+      }
+
+      if (typeof errors === "object") {
+        Object.keys(errors).forEach((key) => {
+          newFieldErrors[key] = Array.isArray(errors[key])
+            ? errors[key][0]
+            : errors[key];
+        });
+        setFieldErrors(newFieldErrors);
+        return "Por favor, corrige los errores en el formulario.";
+      }
+    }
+
+    // Mensaje de error general del backend
+    if (error.response?.data?.message) {
+      return error.response.data.message;
+    }
+
+    switch (error.response?.status) {
+      case 400:
+        return "Los datos enviados no son válidos.";
+      case 401:
+        return "Tu sesión ha expirado. Por favor, inicia sesión nuevamente.";
+      case 403:
+        return "No tienes permisos para realizar esta acción.";
+      case 404:
+        return "No se encontró el recurso solicitado.";
+      case 409:
+        return "Ya existe un registro con estos datos.";
+      case 422:
+        return "Los datos no cumplen con los requisitos de validación.";
+      case 500:
+        return "Error en el servidor. Por favor, inténtalo más tarde.";
+      default:
+        return "Ocurrió un error inesperado. Por favor, inténtalo de nuevo.";
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setFieldErrors({});
 
     const incompletos = camposObligatorios.filter(
       (campo) => !formData[campo]?.trim()
@@ -95,9 +157,19 @@ export default function UserData() {
       toast.success("Los cambios han sido guardados correctamente.");
     } catch (error) {
       toast.dismiss(loadingToastId);
-      toast.error("Ocurrió un error al guardar los cambios.");
-      console.error(error);
+      const errorMessage = parseBackendErrors(error);
+      toast.error(errorMessage);
+      console.error("Error al guardar:", error);
     }
+  };
+
+  const getFieldLabel = (campo) => {
+    const labels = {
+      fechaNac: "Fecha de Nacimiento",
+      grupoSanguineo: "Grupo Sanguíneo",
+      telefonoEmergencia: "Teléfono de Emergencia",
+    };
+    return labels[campo] || campo.charAt(0).toUpperCase() + campo.slice(1);
   };
 
   if (!user) {
@@ -124,43 +196,59 @@ export default function UserData() {
         {camposObligatorios.map((campo) => (
           <div key={campo} className="flex flex-col relative">
             <label className="font-semibold mb-1 capitalize text-gray-700">
-              {campo === "fechaNac"
-                ? "Fecha de Nacimiento"
-                : campo === "grupoSanguineo"
-                ? "Grupo Sanguíneo"
-                : campo === "telefonoEmergencia"
-                ? "Teléfono de Emergencia"
-                : campo.charAt(0).toUpperCase() + campo.slice(1)}
+              {getFieldLabel(campo)}
             </label>
 
             {campo === "grupoSanguineo" ? (
-              <select
-                name="grupoSanguineo"
-                value={formData.grupoSanguineo}
-                onChange={handleChange}
-                required
-                className="border rounded-lg p-2 bg-white focus:ring-2 focus:ring-amber-400"
-              >
-                <option value="">Seleccionar</option>
-                <option value="A+">A+</option>
-                <option value="A-">A-</option>
-                <option value="B+">B+</option>
-                <option value="B-">B-</option>
-                <option value="AB+">AB+</option>
-                <option value="AB-">AB-</option>
-                <option value="O+">O+</option>
-                <option value="O-">O-</option>
-              </select>
+              <>
+                <select
+                  name="grupoSanguineo"
+                  value={formData.grupoSanguineo}
+                  onChange={handleChange}
+                  required
+                  className={`border rounded-lg p-2 bg-white focus:ring-2 focus:ring-amber-400 ${
+                    fieldErrors.grupoSanguineo
+                      ? "border-red-500 focus:ring-red-400"
+                      : ""
+                  }`}
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
+                </select>
+                {fieldErrors.grupoSanguineo && (
+                  <span className="text-red-500 text-sm mt-1">
+                    {fieldErrors.grupoSanguineo}
+                  </span>
+                )}
+              </>
             ) : campo === "telefonoEmergencia" ? (
               <div className="relative">
-                <PhoneIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                <PhoneIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10" />
                 <PhoneInput
                   country={"ar"}
                   value={formData.telefonoEmergencia}
-                  onChange={(value) =>
-                    setFormData((f) => ({ ...f, telefonoEmergencia: value }))
-                  }
-                  inputClass="!w-full !pl-10 !pr-3 !py-2 !border !border-gray-300 !rounded-md !outline-none focus:!border-amber-500 transition !h-[42px] !text-base"
+                  onChange={(value) => {
+                    setFormData((f) => ({ ...f, telefonoEmergencia: value }));
+                    if (fieldErrors.telefonoEmergencia) {
+                      setFieldErrors((prev) => {
+                        const newErrors = { ...prev };
+                        delete newErrors.telefonoEmergencia;
+                        return newErrors;
+                      });
+                    }
+                  }}
+                  inputClass={`!w-full !pl-10 !pr-3 !py-2 !border !rounded-md !outline-none transition !h-[42px] !text-base ${
+                    fieldErrors.telefonoEmergencia
+                      ? "!border-red-500 focus:!border-red-400"
+                      : "!border-gray-300 focus:!border-amber-500"
+                  }`}
                   buttonClass="!border-none !bg-transparent !absolute !left-0 !top-1/2 !-translate-y-1/2 !z-20"
                   dropdownClass="!z-50"
                   containerClass="w-full"
@@ -172,16 +260,32 @@ export default function UserData() {
                   masks={{ ar: ".......... " }}
                   enableSearch
                 />
+                {fieldErrors.telefonoEmergencia && (
+                  <span className="text-red-500 text-sm mt-1">
+                    {fieldErrors.telefonoEmergencia}
+                  </span>
+                )}
               </div>
             ) : (
-              <input
-                type={campo === "fechaNac" ? "date" : "text"}
-                name={campo}
-                value={formData[campo]}
-                onChange={handleChange}
-                required
-                className="border rounded-lg p-2 focus:ring-2 focus:ring-amber-400"
-              />
+              <>
+                <input
+                  type={campo === "fechaNac" ? "date" : "text"}
+                  name={campo}
+                  value={formData[campo]}
+                  onChange={handleChange}
+                  required
+                  className={`border rounded-lg p-2 focus:ring-2 ${
+                    fieldErrors[campo]
+                      ? "border-red-500 focus:ring-red-400"
+                      : "focus:ring-amber-400"
+                  }`}
+                />
+                {fieldErrors[campo] && (
+                  <span className="text-red-500 text-sm mt-1">
+                    {fieldErrors[campo]}
+                  </span>
+                )}
+              </>
             )}
           </div>
         ))}
