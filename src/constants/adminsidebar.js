@@ -3,7 +3,7 @@ export const basePath = "/admin";
 export const menuItems = [
   { path: "dashboard", label: "Dashboard", icon: Home },
   { path: "cabanas", label: "Cabañas", icon: Landmark },
-  {path:"deidades", label:"Deidades",icon: UserStar}
+  {path:"deidades", label:"Deidades",icon: UserStar},
   { path: "talleres", label: "Talleres", icon: Hammer },
   { path: "eventos", label: "Eventos", icon: Calendar },
   { path: "misiones", label: "Misiones", icon: Map },
