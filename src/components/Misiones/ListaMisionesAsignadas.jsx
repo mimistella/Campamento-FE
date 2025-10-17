@@ -2,20 +2,24 @@ import { useContext, useEffect, useState } from "react";
 import MisionesContext from "../../context/MisionesContext.js";
 
 const ListaMisionesAsignadas = () => {
-  const { asignadas, fetchAsignadas, misiones, updateAsignada } =
+  const { asignadas, fetchAsignadas, updateAsignada } =
     useContext(MisionesContext);
 
   const [menuActivo, setMenuActivo] = useState(null); // ID del menú abierto
 
   useEffect(() => {
     fetchAsignadas();
-  }, [fetchAsignadas, misiones]);
+  }, [fetchAsignadas]);
 
-  const handleEstadoChange = async (id, nuevoEstado) => {
+  const handleEstadoChange = async (asigna, nuevoEstado) => {
     try {
-      await updateAsignada(id, { estado: nuevoEstado });
+      await updateAsignada(asigna.id, {
+         ...asigna ,
+         campista: asigna.campista.id,
+         mision: asigna.mision.id,
+         periodo: asigna.periodo.id,
+         estado: nuevoEstado, });
       setMenuActivo(null);
-      fetchAsignadas(); // refresca la lista luego de actualizar
     } catch (err) {
       console.error("Error al actualizar estado:", err);
     }
@@ -64,7 +68,7 @@ const ListaMisionesAsignadas = () => {
                   <li>
                     <button
                       onClick={() =>
-                        handleEstadoChange(asigna.id, "asignada")
+                        handleEstadoChange(asigna, "asignada")
                       }
                       className="block px-4 py-2 w-full text-left hover:bg-amber-100"
                     >
@@ -74,11 +78,19 @@ const ListaMisionesAsignadas = () => {
                   <li>
                     <button
                       onClick={() =>
-                        handleEstadoChange(asigna.id, "completada")
+                        handleEstadoChange(asigna, "completada")
                       }
                       className="block px-4 py-2 w-full text-left hover:bg-amber-100"
                     >
                       Completada
+                    </button>
+                    <button
+                      onClick={() =>
+                        handleEstadoChange(asigna, "fallida")
+                      }
+                      className="block px-4 py-2 w-full text-left hover:bg-amber-100"
+                    >
+                      Fallida
                     </button>
                   </li>
                 </ul>

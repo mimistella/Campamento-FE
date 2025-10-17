@@ -4,10 +4,14 @@ import { useState } from "react";
 import ListaEventos from "./ListaEventos.jsx";
 import { EditEventForm } from "./EditEventForm.jsx";
 import { AddEventButton } from "./AddEventButton.jsx";
+import SolicitudesList from "./SolicitudesList.jsx";
+import AddButton from "../UICommons/AddButton.jsx";
+
 
 export default function EventosAdmin() {
-//    const [eventos, setEventos] = useState([]);
-    const [eventToEdit, setEventToEdit] = useState(null);
+    const [listOpen, setListOpen] = useState(null);
+
+    const [eventToEdit, setEventToEdit] = useState(false);
 
     // if (loading) return <p className="flex justify-center align-items-center text-gray-500 text-4xl p-16">Cargando eventos...</p>;
     // if (error) return <p className="text-red-500">{error}</p>;
@@ -34,15 +38,18 @@ export default function EventosAdmin() {
 
 
             <section className="flex">
-                <h2 className="font-bold text-xl text-amber-600 m-4 p-2">
-                    Próximos Eventos
-                </h2>
 
                 {/* AGREGAR EVENTO */}
                 <AddEventButton/>
 
 
+                <AddButton onClick={()  => setListOpen(true)} text="Lista de Solicitudes"/>
+                {listOpen && (
+                    <SolicitudesList onClose={()=> setListOpen(false)}/>
+                )}                   
+
             </section>
+
             <ProximoEvento onEdit={setEventToEdit} />
 
             <ListaEventos  onEdit={setEventToEdit} />

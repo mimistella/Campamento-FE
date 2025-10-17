@@ -76,10 +76,9 @@ export function useMisiones() {
     },[create])
 
 
-    const update = useCallback(async (id, formData, ruta, setter) =>{
+    const update = useCallback(async (id, formData, ruta) =>{
         try{
             const { data } = await api.patch(`/${ruta}/${id}`, formData);  
-            setter(prev => prev.map(m => m.id === id ? data : m));
             refetch(ruta);
         return data;
         }
@@ -90,11 +89,11 @@ export function useMisiones() {
     }, [refetch]);
 
     const updateMision = useCallback((id, formData)=>{
-      update(id, formData, 'misiones', setMisiones)
+      update(id, formData, 'misiones')
     },[update])
 
     const updateAsignada = useCallback((id, formData)=>{
-        update(id, formData, 'asigna-mision', setAsignadas)
+        update(id, formData, 'asigna-mision')
       },[update])
 
     const deleteGen = useCallback(async (id, ruta, setter) => {

@@ -1,20 +1,13 @@
 import { MissionCard } from "./MissionsCard.jsx";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import MisionesContext from "../../context/MisionesContext.js";
 
 const MisionesCampista = () => {
-    const {fetchAsignadas} = useContext(MisionesContext)
-    const [misiones, setMisiones] = useState([])
-
+    const {fetchAsignadas, asignadas:misiones} = useContext(MisionesContext)
 
     useEffect(()=>{
-        const FetchMisiones = async() =>{
-            const asig = await fetchAsignadas();
-            const lista = []
-            asig.data.map(asigna => {lista.push(asigna.mision)})
-            setMisiones(lista)
-        }
-        FetchMisiones();
+
+        fetchAsignadas();
     },[fetchAsignadas])
     
     return(
@@ -27,8 +20,9 @@ const MisionesCampista = () => {
 
             <ul>
                 {misiones.map(mision =>(
-                    <li key={mision.id} className="p-2 ">
-                        <MissionCard mission = {mision}/>
+                    <li key={mision.id} className="p-2 relative">
+                        <MissionCard mission = {mision.mision}/>
+                        <p className="absolute text-amber-950 font-bold right-20 top-16">{mision.estado}</p>
                     </li>    
 
                 )

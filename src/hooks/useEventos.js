@@ -132,7 +132,7 @@ export function useEventos() {
     setErrorSolicitudes(null);
     try {
       const { data } = await api.patch(`/solicitud-evento/${id}`, formData);
-      setSolicitudes(prev => prev.map(s => s.id === id ? data : s));
+      fetchSolicitudes();
       return data;
     } catch (err) {
       setErrorSolicitudes(err?.response?.data?.message || "Error al actualizar solicitud");
@@ -141,7 +141,7 @@ export function useEventos() {
     } finally {
       setLoadingSolicitudes(false);
     }
-  }, []);
+  }, [fetchSolicitudes]);
 
   const deleteSolicitud = useCallback(async (id) => {
     setLoadingSolicitudes(true);
