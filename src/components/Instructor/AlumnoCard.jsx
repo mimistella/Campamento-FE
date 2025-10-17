@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material
 import ButtonBase from "@components/commonComp/ButtonBase";
 import LibretaForm from "@forms/LibretaForm";
 
-export default function AlumnoCard({ inscripcion }) {
+export default function AlumnoCard({ inscripcion, refreshData }) {
   const { campista, taller } = inscripcion;
   const [openForm, setOpenForm] = useState(false);
 
@@ -16,6 +16,7 @@ export default function AlumnoCard({ inscripcion }) {
 
   const handleCerrarForm = () => {
     setOpenForm(false);
+    refreshData();
     setTimeout(() => document.activeElement?.blur(), 0);
   };
 

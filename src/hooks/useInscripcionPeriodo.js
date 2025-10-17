@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import dayjs from "dayjs";
 import api from "@hooks/useApi";
 import { useAuth } from "@hooks/useAuth";
@@ -11,6 +11,9 @@ export function useInscripcionPeriodo() {
   const [loading, setLoading] = useState(true);
   const { periodoActual } = usePeriodo();
 
+  const [trigger, setTrigger] = useState(0); 
+  const triggerRefresh = () => setTrigger(prev => prev + 1);
+
   const calcularDiasRestantes = (fechaInicio) => {
     if (!fechaInicio) return;
     const hoy = dayjs().startOf("day");
@@ -19,47 +22,44 @@ export function useInscripcionPeriodo() {
     setDiasRestantes(diff >= 0 ? diff : 0);
   };
 
-  useEffect(() => {
-    const fetchInscripciones = async () => {
-      try {
-        console.log("Buscando inscripciones para user ID:", user?.id);
-        const response = await api.get("/inscripcion-periodo");
-        console.log("Respuesta completa del backend:", response.data);
+  const fetchInscripciones = useCallback(async () => {
+    if (!user?.id || !periodoActual?.id) return;
 
-        const data = response.data?.data || [];
-        const todasInscripciones = Array.isArray(data) ? data : [data].filter(Boolean);
+    setLoading(true);
+    try {
+      const response = await api.get("/inscripcion-periodo");
+      const data = response.data?.data || [];
+      const todasInscripciones = Array.isArray(data) ? data : [data].filter(Boolean);
+      setInscripciones(todasInscripciones);
 
-        console.log("Inscripciones encontradas:", todasInscripciones);
+      const inscripcionActual = todasInscripciones.find(
+        (i) => i?.periodo?.id === periodoActual?.id
+      );
 
-        setInscripciones(todasInscripciones);
-
-        const inscripcionActual = todasInscripciones.find(
-          (i) =>
-            i?.periodo?.id === periodoActual?.id
-        );
-
-        if (inscripcionActual?.periodo?.fechaInicioPer) {
-          calcularDiasRestantes(inscripcionActual.periodo.fechaInicioPer);
-        } else {
-          setDiasRestantes(null);
-        }
-
-      } catch (error) {
-        console.error("Error al obtener inscripciones:", error.response?.data || error.message);
-        setInscripciones([]);
+      if (inscripcionActual?.periodo?.fechaInicioPer) {
+        calcularDiasRestantes(inscripcionActual.periodo.fechaInicioPer);
+      } else {
         setDiasRestantes(null);
-      } finally {
-        setLoading(false);
       }
-    };
 
-    if (user?.id) {
-      fetchInscripciones();
-    } else {
+    } catch (error) {
+      console.error("Error al obtener inscripciones:", error.response?.data || error.message);
+      setInscripciones([]);
+      setDiasRestantes(null);
+    } finally {
       setLoading(false);
     }
-   
-  }, [user?.id,periodoActual?.id]);
+  }, [user?.id, periodoActual?.id]);
 
-  return { inscripciones, diasRestantes, loading };
+
+  useEffect(() => {
+    fetchInscripciones();
+  }, [fetchInscripciones, trigger]);
+
+  return {
+    inscripciones,
+    diasRestantes,
+    loading,
+    triggerRefresh,
+  };
 }

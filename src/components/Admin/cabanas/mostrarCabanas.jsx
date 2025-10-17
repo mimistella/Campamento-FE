@@ -80,7 +80,10 @@ export default function MostrarCabanas() {
           Crear nueva cabaña
         </DialogTitle>
         <DialogContent dividers>
-          <CabaniaForm onSuccess={handleCerrarForm} />
+          <CabaniaForm onSuccess={() => { 
+            handleCerrarForm(); 
+            refreshData(); // refresca la lista de cabañas
+            }} />
         </DialogContent>
         <DialogActions>
           <ButtonBase variant="outlined" color="gray" onClick={() => setOpenCrear(false)}>

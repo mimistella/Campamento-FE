@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import api from "./useApi";
 import { useLocalStorage } from "./useLocalStorage";
 
@@ -7,16 +7,14 @@ export function usePeriodo() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
-  const [periodoActual, setPeriodoActual] =useState(null);
+  const [periodoActual, setPeriodoActual] = useState(null);
+  const [trigger, setTrigger] = useState(0); 
 
-  const askCurrent = async () => {
+  const askCurrent = useCallback(async () => {
     try {
       setLoading(true);
       const res = await api.get("/periodo/current");
-
-      // el backend devuelve "date", no "data"
       const current = res.data?.date || null;
-
       setPeriodoActual(current);
       setError(null);
     } catch (err) {
@@ -25,12 +23,12 @@ export function usePeriodo() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchPeriodos = async () => {
+  const fetchPeriodos = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await api.get("/periodo"); 
+      const res = await api.get("/periodo");
       const data = Array.isArray(res.data.data) ? res.data.data : [];
       setPeriodos(data);
       setLastUpdated(new Date().toISOString());
@@ -41,23 +39,26 @@ export function usePeriodo() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setPeriodos]);
 
-  const refreshData = async () => {
+  const refreshData = useCallback(async () => {
     await fetchPeriodos();
     await askCurrent();
-  };
+  }, [fetchPeriodos, askCurrent]);
+
 
   useEffect(() => {
     refreshData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
 
+
+  const triggerRefresh = () => setTrigger(prev => prev + 1);
 
   const crearPeriodo = async (periodoData) => {
     try {
       const res = await api.post("/periodo", periodoData);
-      setPeriodos(prev => [...prev, res.data]);
+      triggerRefresh(); 
       return res.data;
     } catch (err) {
       setError(err.response?.data || err.message);
@@ -67,20 +68,18 @@ export function usePeriodo() {
 
   const updatePeriodo = async (id, periodoData) => {
     try {
-      const res = await api.put(`/periodo/${id}`, periodoData);
-      setPeriodos(prev => prev.map(p => p.id === id ? res.data : p));
-      return res.data;
+      await api.put(`/periodo/${id}`, periodoData);
+      triggerRefresh(); // 🔹 refetch automático
     } catch (err) {
       setError(err.response?.data || err.message);
       throw err;
     }
   };
-  
 
   const deletePeriodo = async (id) => {
     try {
       await api.delete(`/periodo/${id}`);
-      setPeriodos(prev => prev.filter(p => p.id !== id));
+      triggerRefresh(); // 🔹 refetch automático
     } catch (err) {
       setError(err.response?.data || err.message);
       throw err;
