@@ -53,10 +53,11 @@ export function useMisiones() {
   },[])
 
 
-  const create = useCallback(async (formData, ruta, setter) => {
+  const create = useCallback(async (formData, ruta) => {
       try {
           const { data } = await api.post(`/${ruta}`, formData);
-          setter(prev => [...prev, data.data]);
+          console.log(data);
+          //setter(prev => [...prev, data.data]);
           await refetch(ruta)
           return data;
       } catch (err) {

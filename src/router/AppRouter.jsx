@@ -27,6 +27,11 @@ import MostrarMisTalleres from "@components/Instructor/MisTalleres.jsx";
 import MisAlumnos from "@components/Instructor/InstructorStudents.jsx";
 import EditarUsuario from "@components/Admin/users/editarUsuario.jsx";
 
+import Eventos from "@components/EventosHandler.jsx";
+import Misiones from "@components/MisionesHandler.jsx";
+import DeidadesHandler from "@components/DeidadesHandler.jsx";
+
+import LoadingScreen from "../components/UICommons/loadingScreen.jsx";
   
 export function AppRouter() {
     return (
@@ -40,6 +45,9 @@ export function AppRouter() {
   <Route path="/forgot-password" element={<ForgotPassword />} />
   <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
 
+
+  <Route path="/loading" element={<LoadingScreen />} />
+
   {/* Rutas protegidas Admin */}
   <Route element={<PrivateRoute adminOnly={true} />}>
     <Route path="/admin" element={<AdminHomePage />}>
@@ -47,6 +55,9 @@ export function AppRouter() {
       <Route path="dashboard" element={<AdminDashboard />} /> 
       <Route path="cabanas" element={<MostrarCabanas />} />
       <Route path="talleres" element={<Talleres />} />
+      <Route path="eventos" element={<Eventos/>} />
+      <Route path="misiones" element={<Misiones/>} />
+      <Route path="deidades" element={<DeidadesHandler/>} />
       <Route path="usuarios" element={<MostrarUsuarios />} />
       <Route path="periodos" element={<VerPeriodos />} />
       <Route path="cabanas/editar/:id" element={<EditarCabania />} />
@@ -60,6 +71,8 @@ export function AppRouter() {
     <Route path="/campista" element={<CamperHomePage />}>
     <Route index element={<CamperDashboard />} />
       <Route path="cabanas" element={<CabinPage />} />
+      <Route path="eventos" element={<Eventos />} />
+      <Route path="misiones" element={<Misiones />} />
       <Route path="campamento" element={<Mostrarperiodos />} />
       <Route path="talleres" element={<MostrarTalleres />} />
       <Route path="perfil" element={<UserDataForm />} />

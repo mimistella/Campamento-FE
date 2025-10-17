@@ -21,14 +21,6 @@ export default function Evento({evento, TitleTextSize = "text-4xl", IsGrid = tru
             {!isEditMode && (() => {
                 return (
                     <InscribirAEvento evento={evento}/>
-                    // <button
-                    //     className="flex mx-auto mt-4 bg-green-800 bg-opacity-20 hover:bg-green-950/50 font-bold py-2 px-4 rounded"
-                    //     onClick={
-                    //         !isEditMode ? () => {<InscribirAEvento evento={evento}/>}: null
-                    //     }
-                    // >
-                    //     Inscribirse
-                    // </button>
                 );
             })()}
         </div>

@@ -12,8 +12,8 @@ const MisionesAdmin = () =>{
     const [openAsign, setOpenAsign] = useState(null)
 
     return(
-        <div className="h-screen justify-between items-start">
-            <h1 className="w-fit py-6 px-8 mb-2 text-2xl font-bold text-gray-800 rounded-lg" > Administrar Misiones </h1>
+        <div className="h-screen justify-between items-start bg-amber-50">
+            <h1 className="w-fit py-6 px-8 mb-2 text-2xl font-bold text-amber-800 rounded-lg" > Administrar Misiones </h1>
 
 
             { /* Botones Crear - Asignar */ }

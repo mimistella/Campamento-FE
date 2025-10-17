@@ -46,7 +46,7 @@ export function useEventos() {
     setErrorEventos(null);
     try {
       const { data } = await api.post("/eventos", formData);
-      setEventos(prev => [...prev, data]);
+      fetchEventos()
       return data;
     } catch (err) {
       setErrorEventos(err?.response?.data?.message || "Error al crear evento");
@@ -55,7 +55,7 @@ export function useEventos() {
     } finally {
       setLoadingEventos(false);
     }
-  }, []);
+  }, [fetchEventos]);
 
   const updateEvento = useCallback(async (id, formData) => {
     setLoadingEventos(true);

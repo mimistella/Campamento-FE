@@ -24,19 +24,21 @@ const ListaMisionesActivas = () =>{
     }
 
     return(
-        <div className="inset-0 bg-gray-400 min-h-32 p-4 rounded-lg">
+        <div className="inset-0 bg-white shadow-md border-2 min-h-32 p-4 rounded-lg">
             <h1 className="text-2xl font-bold p-4">Lista Misiones Activas</h1>
 
-            <ul>          
+            <ul className="flex flex-col gap-2">          
                 {misiones.map(mision =>(
-                    <li className="m-2 p-2 bg-gray-200 flex justify-between">
-                        {mision.titulo}
+                    <li className="m- p-3 bg-amber-100 flex justify-between rounded-lg shadow-sm border-amber-900 border-1">
+                        <p className="text-amber-950 font-bold">{mision.titulo}</p>
                         <button 
-                            className="bg-gray-300 px-2 hover:bg-gray-400 rounded-md"
+                            
                             onClick={() => setOnClick(mision)}
                         >
-
-                            ver mas
+                            {/* */}
+                            <svg className="mr-2 text-amber-950 hover:text-amber-800 size-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
                         </button>
                     </li>
                 ))}

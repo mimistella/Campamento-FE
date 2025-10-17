@@ -2,22 +2,28 @@ import { useState, useContext } from "react";
 import MisionesContext from "../../context/MisionesContext.js";
 import useFetch from "../../hooks/useFetch.js";
 
-const FormSeleccionarMision = ({onClose}) =>{
+import DashboardContext from "../../context/DashboardContext.js";
 
-    const [misionSel, setMisionSel] = useState("");
-    const [campistaSel, setCampistaSel] = useState("");
+const FormSeleccionarMision = ({onClose}) =>{
+    
+    const [misionSel, setMisionSel] = useState(null);
+    const [campistaSel, setCampistaSel] = useState(null);
     //const [mision, setMision] = useState(null)
     const {data:campistas} = useFetch('campista');
     const {misiones, createAsignada} = useContext(MisionesContext)
-
-
+    const {periodo} = useContext(DashboardContext);
+    
+    
     const  handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            {console.log(campistaSel)}
+            {console.log(misionSel)}
             await createAsignada({
-                "campista":campistaSel,
-                "mision":misionSel,
-                estado : "asignada"
+                campista : Number(campistaSel),
+                mision : Number(misionSel),
+                estado : 'asignada',
+                periodo: periodo.id,
             })
             //await refetch('asigna-mision')
             // Cierra el modal al guardar y recarga la lista

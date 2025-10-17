@@ -20,7 +20,7 @@ export const AddEventButton = () => {
       {/* Modal */}
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-11/12 max-w-md relative">
+          <div className="rounded-xl shadow-lg w-11/12 max-w-md relative">
             
             {/* Botón cerrar (esquina) */}
             <button
@@ -31,7 +31,6 @@ export const AddEventButton = () => {
             </button>
 
             {/* Formulario como componente */}
-            <h2 className="text-xl font-bold mb-4">Agregar Evento</h2>
             <AddEventForm onClose={() => setOpen(false)}/>
           </div>
         </div>

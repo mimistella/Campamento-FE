@@ -13,7 +13,7 @@ export default function EventosAdmin() {
     // if (error) return <p className="text-red-500">{error}</p>;
 
     return (
-        <div id="EventosAdmin" className="min-h-screen bg-blue-50">
+        <div id="EventosAdmin" className="min-h-screen bg-amber-50">
             <div className="fixed bg-gray-800 bg-opacity-20 text-white font-bold py-4 px-8 shadow-md text-sm right-0 bottom-4 lg:top-4 lg:bottom-auto">
                 Sesión Admin
             </div>
@@ -35,7 +35,7 @@ export default function EventosAdmin() {
 
 
             <section className="flex">
-                <h2 className="font-bold text-xl text-blue-950 m-4 p-2">
+                <h2 className="font-bold text-xl text-amber-600 m-4 p-2">
                     Próximos Eventos
                 </h2>
 

@@ -1,11 +1,13 @@
-import api from "../../hooks/useApi.js"
 import { useState } from "react";
+import { useContext } from "react";
+import EventosContext from "../../context/EventosContext.js";
 
 export function EditEventForm({ event, onSave, onCancel }) {
     const [titulo, setTitulo] = useState(event.titulo);
     const [fechaHora, setFechaHora] = useState(event.fechahora);
     const [descripcion, setDescripcion] = useState(event.descripcion);
     const [lugar, setLugar] = useState(event.lugar);
+    const {updateEvento} = useContext(EventosContext);
 
 
     const handleSubmit = async (e) => {
@@ -20,8 +22,7 @@ export function EditEventForm({ event, onSave, onCancel }) {
 
     if (event != updatedEvent) {
         try {
-            const res = await api.patch("/eventos/" + event.id, { ...updatedEvent });
-            console.log("Evento editado:", res.data);
+            updateEvento(event.id, { ...updatedEvent });
             onSave(updatedEvent);
         } catch (err) {
             console.error("❌ Error editando evento:", err.response?.data || err.message);

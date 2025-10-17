@@ -1,36 +1,20 @@
-import { useState, useEffect } from "react";
-import { GetLoggedUser } from "./utilities/GetLoggedUser.js";
+//import { useState, useEffect } from "react";
 import EventosAdmin from "./EventosAdmin/EventosAdmin.jsx";
 import Eventos2 from "./Eventos/Eventos2.jsx";
 import { EventosProvider } from "../providers/EventosProvider.jsx";
+import { useContext } from "react";
+import { AuthContext } from "@context/AuthContext.js";
+import LoadingScreen from "./UICommons/loadingScreen.jsx";
 
 const Eventos = () =>{
-    const [rol, setRol] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const {user, loading} = useContext(AuthContext);
 
-    useEffect ( () =>{
-        
-        const fetchUser = async () =>{
-            try{
-                const user = await GetLoggedUser();
-                const userRol = user.role
-                setRol(userRol);
-            }catch(err){
-                console.log(err);
-                throw err;
-            }finally{
-                setLoading(false);
-            }
-        }
-        fetchUser()
-    },[]);
 
-    if(loading) return(<p>Cargando . . .</p>);
+    if(loading) return(<LoadingScreen/>);
     return(
         <EventosProvider>
             <div id="Eventos">
-                {console.log("welcome " + rol)};
-                {rol == "admin" ? ( <EventosAdmin/> ) : (<Eventos2/>)}
+                {user.role == "admin" ? ( <EventosAdmin/> ) : (<Eventos2/>)}
             </div>
         </EventosProvider> 
     );
