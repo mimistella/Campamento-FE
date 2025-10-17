@@ -21,6 +21,7 @@ export default function ProximoEvento({ onEdit }) {
     useEffect(() => {
         if (eventos && eventos.length > 0) {
             const sorted = sortEventos(eventos);
+            console.log(eventos)
             setEventosSorted(sorted);
             console.log("Eventos ordenados:", sorted);
         }
@@ -81,6 +82,7 @@ function sortEventos(eventos) {
     .sort((a, b) => new Date(a.fechahora) - new Date(b.fechahora)) // 👈 orden ascendente
     .slice(0, 4); // 👈 primeros 4
 
+    console.log(sortedEventos)
     return sortedEventos;
         // resta a - b, si es negativo a ocurre primero, se orden antes
 }

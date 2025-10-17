@@ -10,7 +10,6 @@ const MisionesCampista = () => {
     useEffect(()=>{
         const FetchMisiones = async() =>{
             const asig = await fetchAsignadas();
-            console.log(asig.data);
             const lista = []
             asig.data.map(asigna => {lista.push(asigna.mision)})
             setMisiones(lista)
@@ -24,7 +23,7 @@ const MisionesCampista = () => {
                 Misiones Asignadas 
             </h1>
             
-            {misiones.length > 1 ?
+            {misiones.length > 0 ?
 
             <ul>
                 {misiones.map(mision =>(

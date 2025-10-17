@@ -14,6 +14,8 @@ import CabinPage from "@components/Camper/MyCabin.jsx";
 //import Talleres from "../components/Talleres.jsx";
 import Misiones from "../components/Misiones.jsx";
 
+import DeidadesHandler from "../components/DeidadesHandler.jsx";
+
 import Eventos from "../components/EventosHandler.jsx";
 // import Eventos2 from "../components/Eventos2.jsx";
 // import EventosAdmin from "../components/EventosAdmin.jsx";
@@ -29,9 +31,9 @@ import Eventos from "../components/EventosHandler.jsx";
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin" element={<AdminHomePage />}>
-          <Route path="/admin/eventos" element={<Eventos />}/>
-          <Route path="/admin/misiones" element={<Misiones/>}/>
-
+          <Route path="eventos" element={<Eventos />}/>
+          <Route path="misiones" element={<Misiones/>}/>
+          <Route path="deidades" element={<DeidadesHandler/>}/>
           <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
           <Route path="cabanas" element={<MostrarCabanas />} />
           <Route path="cabanas/editar/:id" element={<EditarCabania />} />
