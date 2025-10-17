@@ -2,108 +2,112 @@ import { useState, useEffect } from 'react';
 import Evento from "./Evento";
 import { useEventos } from '../../hooks/useEventos.js';
 
-//Define las slides a mostrar 
-function shownSlides(eventos, currentIndex, maxEventsShown = 5) {
-    if (currentIndex + maxEventsShown > eventos.length) {
-        // If there are not enough events to fill the last slide, we can loop back to the start
-        const slides = eventos.slice(currentIndex).concat(eventos.slice(0, maxEventsShown - (eventos.length - currentIndex)));
-        return slides;
-    }
-
-    const slides = eventos.slice(currentIndex, currentIndex + maxEventsShown);
-    return slides;
+// 🔹 Devuelve los eventos visibles sin duplicar ni acumular
+function getVisibleSlides(eventos, currentIndex, count) {
+  if (!eventos || eventos.length === 0) return [];
+  const slides = [];
+  for (let i = 0; i < count; i++) {
+    const index = (currentIndex + i) % eventos.length;
+    slides.push(eventos[index]);
+  }
+  return slides;
 }
-
-//Tamaños predefinidos para el slider
-
-const heights = ['h-48', 'h-60', 'h-72', 'h-60', 'h-48'];
-const widths = ['w-48', 'w-60', 'w-72', 'w-60', 'w-48'];
-
-
-function desktopVersion(eventos, currentIndex){
-    return (
-        <>
-            {shownSlides(eventos, currentIndex).map((evento, index) => (
-                <li key={evento.id} className={`p-2 bg-[url(/src/assets/images/chb_lg.svg)] bg-no-repeat bg-center bg-gray-200/90 bg-blend-overlay border-2 border-gray-300
-                                                ${heights[index]} ${widths[index]} mx-10 hover:scale-110 transition-all ease-out duration-300 text-[#ffd700] text-sm overflow-clip`}>
-                    <Evento evento={evento} TitleTextSize={"text-lg"} IsGrid={false} textColor="text-blue-950" />
-                </li>
-            ))}
-        </>
-    );
-}
-
-function mobileVersion(eventos, currentIndex){
-    return (
-        <>
-            {shownSlides(eventos, currentIndex, 1).map((evento) => (
-                <li key={evento.id} className={`p-2 bg-[url(/src/assets/images/chb_lg.svg)] bg-no-repeat bg-center bg-gray-200/90 bg-blend-overlay border-2 border-gray-300
-                                                h-auto w-5/6 hover:scale-110 transition-all ease-out duration-300 text-[#ffd700] text-sm overflow-clip`}>
-                    <Evento evento={evento} TitleTextSize={"text-xs"} IsGrid={false} />
-                </li>
-            ))}
-        </>
-    );
-}
-
 
 export default function EventsSlider() {
-    const {eventos, fetchEventos} = useEventos()
+  const { eventos, fetchEventos } = useEventos();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
 
+  // 🔄 Cargar eventos y manejar resize
+  useEffect(() => {
+    fetchEventos();
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [fetchEventos]);
 
-    const [currentIndex, setCurrentIndex] = useState(0);
-    //currentIndex es el indice del primer evento que se muestra en el slider, el que esta mas a la izquierda
+  // ⚠️ Evitar overflow de índice si el largo cambia
+  useEffect(() => {
+    if (eventos.length > 0 && currentIndex >= eventos.length) {
+      setCurrentIndex(0);
+    }
+  }, [eventos, currentIndex]);
 
-      const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1280);
+  const nextSlide = () => {
+    if (eventos.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % eventos.length);
+  };
 
-    useEffect(() => {
-        fetchEventos();
+  const prevSlide = () => {
+    if (eventos.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + eventos.length) % eventos.length);
+  };
 
-        function handleResize() {
-        setIsDesktop(window.innerWidth >= 1280);
-        }
+  const visibleSlides = getVisibleSlides(eventos, currentIndex, isDesktop ? 5 : 1);
 
-        // Escuchamos el resize
-        window.addEventListener("resize", handleResize);
+  return (
+    <div className="flex flex-col items-center bg-amber-100 p-4 h-96 rounded-2xl shadow-md w-full">
+      <h2 className="text-amber-700 text-2xl font-semibold mb-4">Eventos del Campamento</h2>
 
-        // Limpieza al desmontar
-        return () => window.removeEventListener("resize", handleResize);
-    }, [fetchEventos]);
+      <div className="flex items-center justify-center w-full relative">
+        {/* Botón Izquierda */}
+        <button
+          onClick={prevSlide}
+          className="p-2 text-amber-600 hover:text-amber-800 transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
 
-    const nextSlide = () => {
-        setCurrentIndex((currentIndex) => (currentIndex + 1) % eventos.length);
-    };
-    const prevSlide = () => {
-        setCurrentIndex((currentIndex) => (currentIndex - 1 + eventos.length) % eventos.length);
-    };
-
-    return (
-        <ul className='flex justify-center items-center transition ease-out duration-0 text-xs h-auto
-                        lg:min-h-[26rem] mb-6 '>
-                            
-
-            {/* Botón para la izquierda */}
-            <button className='p-2' onClick={() => {prevSlide()}}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
-                </svg>
-            </button>
-
-            {/* Slides */}
-            {isDesktop ? (
-                desktopVersion(eventos, currentIndex)
-            ) : (
-                mobileVersion(eventos, currentIndex)
-            )}
-
-            {/* Botón para la derecha */}
-            <button className='p-2' onClick={() => {nextSlide()}}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-                </svg>
-            </button>
-
+        {/* Slides */}
+        <ul
+          key={currentIndex} // 🔹 clave única para forzar reemplazo visual
+          className={`flex justify-center items-center gap-6 transition-all duration-500 ease-out ${
+            isDesktop ? "flex-row" : "flex-col"
+          }`}
+        >
+          {visibleSlides.map((evento) => (
+            <li
+              key={evento.id}
+              className="bg-amber-200 hover:bg-amber-300 p-4 rounded-xl border border-amber-400 shadow-md hover:shadow-lg 
+                        transform hover:scale-105 transition-all duration-300 min-w-[12rem] max-w-[15rem]"
+            >
+              <Evento
+                evento={evento}
+                TitleTextSize={isDesktop ? "text-lg" : "text-sm"}
+                IsGrid={false}
+                textColor="text-amber-900"
+              />
+            </li>
+          ))}
         </ul>
-    );
-}
 
+        {/* Botón Derecha */}
+        <button
+          onClick={nextSlide}
+          className="p-2 text-amber-600 hover:text-amber-800 transition-colors"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Indicadores inferiores */}
+      <div className="flex gap-2 mt-4">
+        {eventos.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-3 h-3 rounded-full transition-all ${
+              index === currentIndex ? "bg-amber-500 scale-110" : "bg-amber-300"
+            }`}
+          ></button>
+        ))}
+      </div>
+    </div>
+  );
+}

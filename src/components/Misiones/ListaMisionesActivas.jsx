@@ -47,29 +47,29 @@ const ListaMisionesActivas = () =>{
             {open && (
                 <Modal onClose={ ()=> setOpen(false)}>
 
-                    
-                    {editing?
-                        <FormEditarMision mision={misionSelec} onSave={fetchMisiones} onClose={() => {setEditing(false); setOpen(false)}}/>
-                        :
-                        <div>
-                            <MissionCard mission={misionSelec}/> 
-                            <div className="flex justify-around mt-4">
-                                <button onClick={()=> setEditing(true)}>
-                                    Editar
-                                </button>
-                                <button 
-                                    onClick={
-                                        ()=> {
-                                            deleteMision(misionSelec.id); 
-                                            fetchMisiones();
-                                            setOpen(false);
-                                        }}>
-                                    Eliminar
-                                </button>
+                    <div className="p-6 bg-amber-50 rounded-md">
+                        {editing?
+                            <FormEditarMision mision={misionSelec} onSave={fetchMisiones} onClose={() => {setEditing(false); setOpen(false)}}/>
+                            :
+                            <div>
+                                <MissionCard mission={misionSelec}/> 
+                                <div className="flex justify-around mt-4">
+                                    <button onClick={()=> setEditing(true)}>
+                                        Editar
+                                    </button>
+                                    <button 
+                                        onClick={
+                                            ()=> {
+                                                deleteMision(misionSelec.id); 
+                                                fetchMisiones();
+                                                setOpen(false);
+                                            }}>
+                                        Eliminar
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    
+                        }
+                    </div>
                 </Modal>
             
             )}

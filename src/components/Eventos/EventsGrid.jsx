@@ -1,62 +1,86 @@
-import Evento from "./Evento";
 import { useState, useEffect } from "react";
+import Evento from "./Evento";
 import { useEventos } from "../../hooks/useEventos.js";
 
-const layout = [
-    "col-span-2 row-span-2", // evento 1 → 2x2
-    "col-span-2 row-span-1", // evento 2 → 2x1
-    "col-span-1 row-span-1", // evento 3 → 1x1
-    "col-span-1 row-span-1", // evento 4 → 1x1
-
-    "col-span-1 row-span-2", // evento 5 → 1x2
-    "col-span-1 row-span-1", // evento 6 → 1x1
-    "col-span-2 row-span-2", // evento 8 → 2x2
-    "col-span-1 row-span-1", // evento 7 → 1x1
-];
-
-
-
-
 export default function EventsGrid() {
-    const {eventos, fetchEventos} = useEventos();
-    const [visibleCount, setVisibleCount] = useState(8); // mostrar 8 eventos al inicio
+  const { eventos, fetchEventos } = useEventos();
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 8; // cantidad de eventos por página
 
-    useEffect(() =>{
-        fetchEventos();
-    }, [fetchEventos])
+  useEffect(() => {
+    fetchEventos();
+  }, [fetchEventos]);
 
-    const handleLoadMore = () => {
-        setVisibleCount((prev) => prev + 8); // sumar 8 eventos cada clic
-    };
+  const totalPages = Math.ceil(eventos.length / perPage);
+  const paginatedEventos = eventos.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
 
-    return (
-        <>
-            <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 auto-rows gap-8">
-                {eventos.slice(0, visibleCount).map((evento, i) => {
-                    return (
-                        <li
-                            key={evento.id}
-                            className={`p-5 bg-[#415a77] bg-[url(/src/assets/images/chb_lg.svg)] bg-no-repeat bg-center bg-gray-200/90 bg-blend-overlay
-                                hover:scale-105 transition-transform duration-300
-                                rounded-b-2xl shadow-gray-800 shadow-lg
-                                lg:${layout[i % layout.length]}`}
-                        >
-                            <Evento evento={evento} textColor="text-blue-950" />
-                        </li>
-                    );
-                })}
-            </ul>
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
 
-            {visibleCount < eventos.length && (
-                <div className="flex left-2 md:justify-center mt-8">
-                    <button
-                        onClick={handleLoadMore}
-                        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
-                    >
-                        Ver más
-                    </button>
-                </div>
-            )}
-        </>
-    );
+  return (
+    <section className="w-full bg-amber-100 py-10 px-4 md:px-8 rounded-2xl shadow-inner">
+      <h2 className="text-2xl md:text-3xl font-bold text-amber-800 text-center mb-10">
+        Próximos Eventos
+      </h2>
+
+      {/* GRID DE EVENTOS */}
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {paginatedEventos.map((evento) => (
+          <li
+            key={evento.id}
+            className="p-4 bg-amber-200/60 rounded-xl border border-amber-300 shadow-md hover:shadow-xl 
+                       hover:scale-105 transition-all duration-300 bg-[url(/src/assets/images/chb_lg.svg)]
+                       bg-no-repeat bg-center bg-blend-overlay"
+          >
+            <Evento
+              evento={evento}
+              TitleTextSize="text-lg"
+              IsGrid={true}
+              textColor="text-amber-900"
+            />
+          </li>
+        ))}
+      </ul>
+
+      {/* PAGINADOR */}
+      {eventos.length > perPage && (
+        <div className="flex justify-center items-center gap-4 mt-10">
+          <button
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentPage === 1
+                ? "bg-amber-300 text-amber-700 cursor-not-allowed"
+                : "bg-amber-500 hover:bg-amber-600 text-white"
+            }`}
+          >
+            Anterior
+          </button>
+
+          <span className="text-amber-800 font-medium">
+            Página {currentPage} de {totalPages}
+          </span>
+
+          <button
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+            className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+              currentPage === totalPages
+                ? "bg-amber-300 text-amber-700 cursor-not-allowed"
+                : "bg-amber-500 hover:bg-amber-600 text-white"
+            }`}
+          >
+            Siguiente
+          </button>
+        </div>
+      )}
+    </section>
+  );
 }

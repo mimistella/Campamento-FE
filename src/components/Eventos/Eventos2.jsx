@@ -11,7 +11,7 @@ const Eventos2 = () =>{
     console.log("hola desde eventos2")
 
     return(
-        <div id="eventos" style={{ fontFamily: 'Caesar Dressing, "Times New Roman", serif' }}>
+        <div id="eventos" className="bg-amber-50" style={{ fontFamily: 'Caesar Dressing, "Times New Roman", serif' }}>
             {/* Fonts */}
             <style>
                 {`@import url("https://fonts.googleapis.com/css2?family=Caesar+Dressing&display=swap");`}
@@ -27,11 +27,7 @@ const Eventos2 = () =>{
 
 
             { /* Todos los eventos */ }
-            <h2 className="flex justify-center text-4xl font-bold text-blue-950 mb-6"
-                style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
-                Eventos Disponibles
-            </h2>
-            <p className="flex justify-center italic text-lg text-blue-950 px-4">
+            <p className="flex justify-center italic text-lg text-amber-100 px-4 p-4 bg-amber-700">
                 "El oráculo predice grandes pruebas y celebraciones. Aquí están los próximos eventos que ningún semidiós debería perderse."
             </p>
 

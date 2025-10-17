@@ -11,7 +11,7 @@ const Misiones = () =>{
     if (loading) return (<LoadingScreen/>)
     return(
         <MisionesProvider>
-            <div id="Misiones">
+            <div id="Misiones" className="bg-amber-100 h-full">
                 {user.role == "admin" ? ( <MisionesAdmin/> ) : (<MisionesCampista/>)}
             </div>
         </MisionesProvider>

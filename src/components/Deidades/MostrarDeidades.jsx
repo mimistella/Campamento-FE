@@ -10,7 +10,6 @@ import ButtonBase from "@components/commonComp/ButtonBase";
 export default function MostrarDeidades() {
   const { deidades, fetchDeidades, loading } = useContext(DeidadesContext);
 
-  const [mostrarSoloActivas, setMostrarSoloActivas] = useState(false);
   const [openCrear, setOpenCrear] = useState(false);
   const [openEditar, setOpenEditar] = useState(false);
   const [deidadSeleccionada, setDeidadSeleccionada] = useState(null);
@@ -19,11 +18,11 @@ export default function MostrarDeidades() {
   useEffect(() => {
     loadDeidades();
   }, []);
-
   const loadDeidades = async () => {
     await fetchDeidades();
     setLastUpdated(new Date());
   };
+
 
   const handleEditar = (deidad) => {
     setDeidadSeleccionada(deidad);
@@ -38,10 +37,6 @@ export default function MostrarDeidades() {
   if (loading && !deidades.length) {
     return <p className="text-center py-8">Cargando deidades...</p>;
   }
-
-  const deidadesFiltradas = mostrarSoloActivas
-    ? deidades.filter(d => d.activo)
-    : deidades;
 
   return (
     <div className="min-h-screen p-6 bg-amber-50">
@@ -60,13 +55,6 @@ export default function MostrarDeidades() {
             {loading ? "Actualizando..." : "Actualizar"}
           </ButtonBase>
 
-          <ButtonBase
-            variant="outlined"
-            color="amber"
-            onClick={() => setMostrarSoloActivas(!mostrarSoloActivas)}
-          >
-            {mostrarSoloActivas ? "Mostrar todas" : "Solo activas"}
-          </ButtonBase>
 
           <ButtonBase color="amber" onClick={() => setOpenCrear(true)}>
             + Crear nueva deidad
@@ -74,19 +62,12 @@ export default function MostrarDeidades() {
         </div>
       </div>
 
-      {/* Estado vacío */}
-      {deidadesFiltradas.length === 0 && (
-        <p className="text-center py-8 text-gray-500">
-          {mostrarSoloActivas
-            ? "No hay deidades activas en este momento"
-            : "No hay deidades disponibles"}
-        </p>
-      )}
+
 
       {/* Lista con paginación */}
-      {deidadesFiltradas.length > 0 && (
+      {deidades.length > 0 && (
         <List
-          items={deidadesFiltradas}
+          items={deidades}
           itemsPerPage={6}
           renderItem={(deidad) => (
             <DeidadCard

@@ -18,8 +18,8 @@ const MisionesCampista = () => {
     },[fetchAsignadas])
     
     return(
-        <div>
-            <h1 className="w-fit py-6 px-8 mb-2 text-2xl font-bold text-gray-800 rounded-lg"> 
+        <div >
+            <h1 className="w-fit py-6 px-8 mb-2 text-2xl font-bold text-amber-800 rounded-lg"> 
                 Misiones Asignadas 
             </h1>
             
@@ -27,7 +27,7 @@ const MisionesCampista = () => {
 
             <ul>
                 {misiones.map(mision =>(
-                    <li key={mision.id} className="p-2 bg-gray-100">
+                    <li key={mision.id} className="p-2 ">
                         <MissionCard mission = {mision}/>
                     </li>    
 

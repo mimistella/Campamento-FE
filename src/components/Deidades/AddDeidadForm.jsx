@@ -8,10 +8,8 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
 
   const [formData, setFormData] = useState({
     nombre: "",
-    dominio: "",
     descripcion: "",
     simbolos: "",
-    activo: true,
   });
 
   const [loading, setLoading] = useState(false);
@@ -21,10 +19,8 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
     if (deidad && isEdit) {
       setFormData({
         nombre: deidad.nombre || "",
-        dominio: deidad.dominio || "",
         descripcion: deidad.descripcion || "",
         simbolos: deidad.simbolos || "",
-        activo: deidad.activo ?? true,
       });
     }
   }, [deidad, isEdit]);
@@ -89,20 +85,6 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Dominio
-        </label>
-        <input
-          type="text"
-          name="dominio"
-          value={formData.dominio}
-          onChange={handleChange}
-          placeholder="Ej: Dios del cielo y el trueno"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
           Descripción
         </label>
         <textarea
@@ -117,7 +99,7 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          Símbolos
+          Símbolo
         </label>
         <input
           type="text"
@@ -127,20 +109,6 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
           placeholder="Ej: Rayo, águila, roble"
           className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
         />
-      </div>
-
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          name="activo"
-          checked={formData.activo}
-          onChange={handleChange}
-          id="activo"
-          className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
-        />
-        <label htmlFor="activo" className="ml-2 text-sm text-gray-700">
-          Deidad activa
-        </label>
       </div>
 
       <ButtonBase

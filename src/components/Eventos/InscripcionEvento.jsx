@@ -1,27 +1,14 @@
 import { GetLoggedUser } from '../utilities/GetLoggedUser.js';
 import { useEventos } from '../../hooks/useEventos.js';
-import { useState, useEffect } from 'react';
+import { useState, useContext } from 'react';
+import {AuthContext} from '@context/AuthContext';
 
 export default function InscribirAEvento({ evento }) {
-  const [user, setUser] = useState(null);
+
   const [loading, setLoading] = useState(false);
   const { createSolicitud } = useEventos();
+  const {user} = useContext(AuthContext);
 
-  // ✅ Cargar usuario correctamente
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        console.log('loading user')
-        const userData = await GetLoggedUser();
-        setUser(userData);
-        console.log('loaded user')
-      } catch (error) {
-        console.error("Error al obtener usuario:", error);
-      }
-    };
-    
-    loadUser();
-  }, []);
 
   // ✅ Función async con manejo correcto
   const handleInscribir = async () => {

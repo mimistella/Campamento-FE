@@ -41,12 +41,16 @@ export function useEventos() {
     }
   }, [])
 
+    const refetchEventos = useCallback(() =>{
+    fetchEventos();
+  },[fetchEventos])
+
   const createEvento = useCallback(async (formData) => {
     setLoadingEventos(true);
     setErrorEventos(null);
     try {
       const { data } = await api.post("/eventos", formData);
-      fetchEventos()
+      refetchEventos()
       return data;
     } catch (err) {
       setErrorEventos(err?.response?.data?.message || "Error al crear evento");
@@ -55,7 +59,7 @@ export function useEventos() {
     } finally {
       setLoadingEventos(false);
     }
-  }, [fetchEventos]);
+  }, [refetchEventos]);
 
   const updateEvento = useCallback(async (id, formData) => {
     setLoadingEventos(true);
@@ -63,6 +67,7 @@ export function useEventos() {
     try {
       const { data } = await api.patch(`/eventos/${id}`, formData);
       setEventos(prev => prev.map(e => e.id === id ? data : e));
+      refetchEventos();
       return data;
     } catch (err) {
       setErrorEventos(err?.response?.data?.message || "Error al actualizar evento");
@@ -71,7 +76,7 @@ export function useEventos() {
     } finally {
       setLoadingEventos(false);
     }
-  }, []);
+  }, [refetchEventos]);
 
   const deleteEvento = useCallback(async (id) => {
     setLoadingEventos(true);

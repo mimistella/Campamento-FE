@@ -22,11 +22,10 @@ export default function EventosAdmin() {
 
             {eventToEdit && (
                 <div id="edit-event-modal" className="fixed z-20 inset-0 bg-white/90 flex justify-center items-center">
-                    <div className="bg-gray-200 p-6 rounded-xl shadow-lg text-center">
-                        <h2 className="text-xl font-bold mb-4">Editing Event</h2>
+                    <div className="rounded-xl shadow-lg text-center">
                         <EditEventForm
                             event={eventToEdit }
-                            onCancel={() => {setEventToEdit(null)}}
+                            onFinished={() => {setEventToEdit(null)}}
                         />
                     </div>
                 </div>
