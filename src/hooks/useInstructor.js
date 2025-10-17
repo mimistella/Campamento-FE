@@ -11,6 +11,9 @@ export function useInstructor() {
   const [periodo, setPeriodo] = useState(null);
   const { user } = useAuth();
 
+  const [trigger, setTrigger] = useState(0); 
+  const triggerRefresh = () => setTrigger(prev => prev + 1);
+
   const fetchTalleres = useCallback(async () => {
     const res = await api.get("/talleres");
     return Array.isArray(res.data?.data) ? res.data.data : [];
@@ -23,7 +26,6 @@ export function useInstructor() {
 
   const fetchPeriodoActual = useCallback(async () => {
     const res = await api.get("/periodo/current");
-
     return res.data?.date ?? null;
   }, []);
 
@@ -56,35 +58,10 @@ export function useInstructor() {
     }
   }, [fetchInstructorData]);
 
-  const reloadTalleres = useCallback(async () => {
-    try {
-      setLoading(true);
-      const t = await fetchTalleres();
-      setTalleres(t);
-      setLastUpdated(new Date().toISOString());
-    } catch (err) {
-      console.error("Error reloading talleres:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchTalleres]);
-
-  const reloadInscriptos = useCallback(async () => {
-    try {
-      setLoading(true);
-      const i = await fetchInscriptos();
-      setInscriptos(i);
-      setLastUpdated(new Date().toISOString());
-    } catch (err) {
-      console.error("Error reloading inscriptos:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [fetchInscriptos]);
-
+  // 🔹 refetch automático cuando cambia trigger
   useEffect(() => {
     refreshData();
-  }, [refreshData]);
+  }, [refreshData, trigger]);
 
   useEffect(() => {
     if (!periodo?.fechaInicioPer) {
@@ -97,7 +74,6 @@ export function useInstructor() {
     setDiasCampamento(diferencia);
   }, [periodo]);
 
-
   const misTalleres = (talleres || []).filter((t) => {
     if (!t?.instructor || !user?.id) return false;
     if (typeof t.instructor === "number") return t.instructor === user.id;
@@ -105,14 +81,11 @@ export function useInstructor() {
     return t.instructor?.id === user.id;
   });
 
-
-
   const getAllInscriptosDeMisTalleres = useCallback(() => {
     const ids = misTalleres.map((t) => t.id);
     if (!ids.length) return [];
     return inscriptos.filter((i) => ids.includes(i.taller?.id));
   }, [misTalleres, inscriptos]);
-
 
   return {
     diasCampamento,
@@ -122,8 +95,9 @@ export function useInstructor() {
     getAllInscriptosDeMisTalleres,
     // reloads / refresh
     refreshData,
-    reloadTalleres,
-    reloadInscriptos,
+    reloadTalleres: async () => { await fetchTalleres().then(setTalleres); triggerRefresh(); },
+    reloadInscriptos: async () => { await fetchInscriptos().then(setInscriptos); triggerRefresh(); },
+    triggerRefresh, 
     // estado
     loading,
     lastUpdated,

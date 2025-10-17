@@ -5,7 +5,7 @@ import AlumnoCard from "@components/Instructor/AlumnoCard";
 import List from "@components/commonComp/List";
 
 export default function MisAlumnos() {
-  const { misTalleres, inscriptos, loading } = useInstructor();
+  const { misTalleres, inscriptos, loading, reloadInscriptos } = useInstructor();
   const [searchParams] = useSearchParams();
   const tallerQuery = searchParams.get("taller");
 
@@ -79,7 +79,9 @@ export default function MisAlumnos() {
         items={alumnosFiltrados}
         itemsPerPage={6}
         renderItem={(inscripcion) => (
-          <AlumnoCard key={inscripcion.id} inscripcion={inscripcion} />
+          <AlumnoCard
+           key={inscripcion.id} inscripcion={inscripcion}
+           refreshData={reloadInscriptos}  />
         )}
       />
     </div>

@@ -5,7 +5,7 @@ import { useInscripcionPeriodo } from "@hooks/useInscripcionPeriodo.js";
 
 export default function MostrarPeriodos() {
   const { periodos, loading } = usePeriodo();
-  const { inscripciones } = useInscripcionPeriodo(); 
+  const { inscripciones, triggerRefresh } = useInscripcionPeriodo(); 
 
 
   if (loading) return <p className="text-gray-500">Cargando Períodos...</p>;
@@ -39,6 +39,9 @@ const periodosActivos = periodos;
               key={periodo.id}
               periodo={periodo}
               inscripcionesUsuario={inscripciones}
+               onRefetch={() => {
+                triggerRefresh(); 
+      }}
              
             />
           )}

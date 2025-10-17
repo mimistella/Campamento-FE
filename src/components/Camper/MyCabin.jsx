@@ -15,6 +15,7 @@ export default function MyCabin() {
     hasHospedajeActivo,
     deidades,
     crearHospedaje,
+    refetch
   } = useCabaniaCampista();
 
   const { user } = useAuth();
@@ -41,6 +42,7 @@ export default function MyCabin() {
       await crearHospedaje(seleccion);
       toast.dismiss(loadingToastId);
       toast.success("Hospedaje creado correctamente.");
+      refetch();
       setSeleccion(""); 
     } catch (err) {
       toast.dismiss(loadingToastId);
