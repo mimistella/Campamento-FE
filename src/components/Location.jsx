@@ -73,20 +73,6 @@ export function Location() {
                 Si ya formas parte del campamento, inicia sesión y por favor, no nos llames.
               
               </p>
-              <div className="flex space-x-4">
-                <button
-                  id="faq"
-                  className="bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-md font-medium transition-colors"
-                >
-                  FAQ
-                </button>
-                <button
-                  id="prices"
-                  className="bg-amber-600 hover:bg-amber-500 text-white px-4 py-2 rounded-md font-medium transition-colors"
-                >
-                  Precios y tarifas
-                </button>
-              </div>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden h-[400px] shadow-md bg-gradient-to-br from-amber-100 to-amber-200 flex flex-col items-center justify-center p-8">

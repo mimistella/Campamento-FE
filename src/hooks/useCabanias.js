@@ -1,23 +1,39 @@
-import { useState,useCallback } from "react";
+import { useState, useCallback } from "react";
 import api from "./useApi";
-
 
 export function useCabanias() {
   const [cabanias, setCabanias] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Crear cabaña
-  const crearCabania = async (form) => {
-    setError("");
+  // Refrescar todas las cabañas desde el backend
+  const fetchCabanias = useCallback(async () => {
     setLoading(true);
+    setError("");
+    try {
+      const res = await api.get("/cabanias");
+      setCabanias(Array.isArray(res.data?.data) ? res.data.data : []);
+      return res.data.data;
+    } catch (err) {
+      console.error("Error cargando cabañas:", err);
+      setError("No se pudieron cargar las cabañas");
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Crear cabaña
+  const crearCabania = useCallback(async (form) => {
+    setLoading(true);
+    setError("");
     try {
       const { data } = await api.post("/cabanias", {
         ...form,
         capacidad: Number(form.capacidad),
-        deidad:  Number(form.deidad),
+        deidad: Number(form.deidad),
       });
-      setCabanias((prev) => [...prev, data]); 
+      setCabanias((prev) => [...prev, data]);
       return data;
     } catch (err) {
       setError(err?.response?.data?.message || "Error al crear cabaña");
@@ -25,45 +41,73 @@ export function useCabanias() {
     } finally {
       setLoading(false);
     }
-  };
-
-
-  const updateCabania = useCallback(async (id, { descripcion, capacidad }) => {
-    const res = await api.patch(`cabanias/${id}`, {
-      descripcion,
-       capacidad: Number(capacidad),
-    });
-    return res.data;
   }, []);
 
-const deleteCabania = useCallback(async (id) => {
-  try {
-    const res = await api.delete(`cabanias/${id}`);
-    console.log("Cabaña desactivada:", res.data);
-    return res.data;
-  } catch (error) {
-    console.error("Error desactivando cabaña:", error);
-  }
-}, []);
+  // Actualizar cabaña
+  const updateCabania = useCallback(async (id, { descripcion, capacidad }) => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await api.patch(`cabanias/${id}`, {
+        descripcion,
+        capacidad: Number(capacidad),
+      });
+      // Actualizamos localmente
+      setCabanias((prev) =>
+        prev.map((c) => (c.id === id ? res.data : c))
+      );
+      return res.data;
+    } catch (err) {
+      setError(err?.response?.data?.message || "Error al actualizar cabaña");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  // Eliminar cabaña
+  const deleteCabania = useCallback(async (id) => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await api.delete(`cabanias/${id}`);
+      setCabanias((prev) => prev.filter((c) => c.id !== id));
+      return res.data;
+    } catch (err) {
+      setError(err?.response?.data?.message || "Error al eliminar cabaña");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Mover campista
   const moveCampista = useCallback(async (hospedajeId, nuevaCabaniaId) => {
-  console.log("Enviando:", { hospedajeId, nuevaCabaniaId });
-
-  const res = await api.patch(`/hospedaje/${hospedajeId}/move`, {
-    cabania: nuevaCabaniaId
-  });
-
-  console.log("Respuesta recibida:", res.data);
-  return res.data;
-}, []);
+    setLoading(true);
+    setError("");
+    try {
+      const res = await api.patch(`/hospedaje/${hospedajeId}/move`, {
+        cabania: nuevaCabaniaId,
+      });
+      // Opcional: podés refrescar cabañas si necesitas actualizar ocupación
+      await fetchCabanias();
+      return res.data;
+    } catch (err) {
+      setError(err?.response?.data?.message || "Error al mover campista");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchCabanias]);
 
   return {
     cabanias,
     loading,
     error,
+    fetchCabanias,
     crearCabania,
-    updateCabania, 
-    deleteCabania, 
-    moveCampista
+    updateCabania,
+    deleteCabania,
+    moveCampista,
   };
 }

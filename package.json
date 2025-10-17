@@ -22,10 +22,13 @@
     "@tanstack/react-query": "5.84.2",
     "axios": "1.11.0",
     "bcryptjs": "3.0.2",
+    "dayjs": "^1.11.18",
     "flag-icons": "7.5.0",
+    "js-cookie": "^3.0.5",
     "lucide-react": "0.363.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "5.5.0",
     "react-phone-input-2": "2.15.1",
     "react-router-dom": "7.8.0",
@@ -53,5 +56,6 @@
     "onlyBuiltDependencies": [
       "esbuild"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977"
 }

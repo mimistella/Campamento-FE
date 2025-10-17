@@ -38,22 +38,6 @@ export function Footer() {
                   Ubicación
                 </a>
               </li>
-              <li>
-                <a
-                  href="#faq"
-                  className="hover:text-amber-300 transition-colors"
-                >
-                  FAQ
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#prices"
-                  className="hover:text-amber-300 transition-colors"
-                >
-                  Precios y tarifas
-                </a>
-              </li>
             </ul>
           </div>
           <div>

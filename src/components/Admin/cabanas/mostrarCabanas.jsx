@@ -7,7 +7,7 @@ import CabaniaCard from "@components/Admin/cabanas/CabaniaCard";
 import ButtonBase from "@components/commonComp/ButtonBase";
 
 export default function MostrarCabanas() {
-  const { cabanias, cabaniasActivas, getOcupacion, refreshData, lastUpdated, loading } =
+  const { cabanias, cabaniasActivasPeriodo, getOcupacion, refreshData, lastUpdated, loading } =
     useContext(DashboardContext);
 
   const [mostrarSoloActivas, setMostrarSoloActivas] = useState(false);
@@ -15,7 +15,9 @@ export default function MostrarCabanas() {
 
   if (loading) return <p>Cargando cabañas...</p>;
 
-  const cabaniasFiltradas = mostrarSoloActivas ? cabaniasActivas : cabanias;
+  const cabaniasFiltradas = mostrarSoloActivas ? cabaniasActivasPeriodo : cabanias;
+  const handleCerrarForm = () => {
+    setOpenCrear(false);}
 
   return (
     <div className="min-h-screen p-6 bg-amber-50">
@@ -42,7 +44,7 @@ export default function MostrarCabanas() {
             {mostrarSoloActivas ? "Mostrar todas" : "Solo activas"}
           </ButtonBase>
 
-          <ButtonBase color="amber" onClick={() => setOpenCrear(true)}>
+          <ButtonBase color="amber" onClick={(e) =>{ setOpenCrear(true); e.currentTarget.blur();} }>
             + Crear nueva cabaña
           </ButtonBase>
         </div>
@@ -61,7 +63,7 @@ export default function MostrarCabanas() {
       {cabaniasFiltradas && cabaniasFiltradas.length > 0 && (
         <List
           items={cabaniasFiltradas}
-          itemsPerPage={3}
+          itemsPerPage={6}
           renderItem={(cabania) => (
             <CabaniaCard
               key={cabania.id}
@@ -73,12 +75,15 @@ export default function MostrarCabanas() {
       )}
 
       {/* Dialogo Crear */}
-      <Dialog open={openCrear} onClose={() => setOpenCrear(false)} maxWidth="sm" fullWidth>
+      <Dialog open={openCrear} onClose={handleCerrarForm} maxWidth="sm" fullWidth>
         <DialogTitle className="!font-caesar-dressing-regular text-white bg-amber-400">
           Crear nueva cabaña
         </DialogTitle>
         <DialogContent dividers>
-          <CabaniaForm />
+          <CabaniaForm onSuccess={() => { 
+            handleCerrarForm(); 
+            refreshData(); // refresca la lista de cabañas
+            }} />
         </DialogContent>
         <DialogActions>
           <ButtonBase variant="outlined" color="gray" onClick={() => setOpenCrear(false)}>

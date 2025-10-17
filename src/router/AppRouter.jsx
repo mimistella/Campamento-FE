@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {ScrollToTop} from '@components/ScrollToTop';
 import { LandingPage } from '@pages/LandingPage'
@@ -7,37 +6,90 @@ import LoginPage from '@pages/LoginPage'
 import SignUpPage from '@pages/SignUpPage'
 import ForgotPassword from '@pages/ForgotPassword';
 import CamperHomePage from '@pages/campista/Campista.jsx'
-import Talleres from "@components/Admin/Talleres.jsx";
+import Talleres from "@components/Admin/talleres/mostrarTalleres.jsx";
 import AdminHomePage from "@pages/Admin/AdminHomePage.jsx";
 import AdminDashboard from "@components/Admin/AdminDashboard.jsx";  
 import MostrarCabanas from "@components/Admin/cabanas/mostrarCabanas.jsx";
 import EditarCabania from "@components/Admin/cabanas/EditarCabanias.jsx";
 import CabinPage from "@components/Camper/MyCabin.jsx";
+import VerifyEmailPage from "@pages/VerifyEmailPage.jsx";
+import { PrivateRoute } from '@components/PrivateRoute';
+import EditarTaller from "@components/Admin/talleres/editarTaller.jsx";
+import CamperDashboard from "@components/Camper/CamperDashboard.jsx"
+import Mostrarperiodos from "@components/Camper/MostrarPeriodos.jsx";
+import MostrarTalleres from "@components/Camper/MostrarTalleres.jsx";
+import UserDataForm from "@forms/UserDataForm.jsx";
+import MostrarUsuarios from "@components/Admin/users/mostrarUsuarios.jsx";
+import VerPeriodos from "@components/Admin/periodos/Periodos.jsx";
+import InstructorHomePage from "@pages/Instructor/InstructorHomePage.jsx";
+import InstructorDashboard from "@components/Instructor/InstructorDashboard.jsx";
+import MostrarMisTalleres from "@components/Instructor/MisTalleres.jsx";
+import MisAlumnos from "@components/Instructor/InstructorStudents.jsx";
+import EditarUsuario from "@components/Admin/users/editarUsuario.jsx";
 
-  export function AppRouter() {
+import Eventos from "@components/EventosHandler.jsx";
+import Misiones from "@components/MisionesHandler.jsx";
+import DeidadesHandler from "@components/DeidadesHandler.jsx";
+
+import LoadingScreen from "../components/UICommons/loadingScreen.jsx";
+  
+export function AppRouter() {
     return (
       <BrowserRouter>
         <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="*" element={<PageNotFound />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-         <Route path="/admin" element={<AdminHomePage />}>
-              <Route path="dashboard" element={<AdminDashboard />} /> {/* /admin/dashboard */}
-              <Route path="cabanas" element={<MostrarCabanas />} />
-              <Route path="cabanas/editar/:id" element={<EditarCabania />} />
-              
-         <Route index element={<AdminDashboard />} /> {/* /admin */}
-    
-         </Route>
-          <Route path="/campista" element={<CamperHomePage />}>
-            <Route path="talleres" element={<Talleres />} />
-             <Route path= "cabanas" element={<CabinPage />} />
-            {/* otras rutas */}
-				  </Route>
-        </Routes>
+       <Routes>
+  <Route path="/" element={<LandingPage />} />
+  <Route path="*" element={<PageNotFound />} />
+  <Route path="/login" element={<LoginPage />} />
+  <Route path="/signup" element={<SignUpPage />} />
+  <Route path="/forgot-password" element={<ForgotPassword />} />
+  <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+
+
+  <Route path="/loading" element={<LoadingScreen />} />
+
+  {/* Rutas protegidas Admin */}
+  <Route element={<PrivateRoute adminOnly={true} />}>
+    <Route path="/admin" element={<AdminHomePage />}>
+      <Route index element={<AdminDashboard />} />       {/* /admin */}
+      <Route path="dashboard" element={<AdminDashboard />} /> 
+      <Route path="cabanas" element={<MostrarCabanas />} />
+      <Route path="talleres" element={<Talleres />} />
+      <Route path="eventos" element={<Eventos/>} />
+      <Route path="misiones" element={<Misiones/>} />
+      <Route path="deidades" element={<DeidadesHandler/>} />
+      <Route path="usuarios" element={<MostrarUsuarios />} />
+      <Route path="periodos" element={<VerPeriodos />} />
+      <Route path="cabanas/editar/:id" element={<EditarCabania />} />
+      <Route path="talleres/editar/:id" element={<EditarTaller />} />
+      <Route path="/admin/usuarios/editar/:id/:role" element={<EditarUsuario />} />
+    </Route>
+  </Route>
+
+  {/* Rutas protegidas Campista */}
+  <Route element={<PrivateRoute />}>
+    <Route path="/campista" element={<CamperHomePage />}>
+    <Route index element={<CamperDashboard />} />
+      <Route path="cabanas" element={<CabinPage />} />
+      <Route path="eventos" element={<Eventos />} />
+      <Route path="misiones" element={<Misiones />} />
+      <Route path="campamento" element={<Mostrarperiodos />} />
+      <Route path="talleres" element={<MostrarTalleres />} />
+      <Route path="perfil" element={<UserDataForm />} />
+    </Route>
+  </Route>
+   
+    {/* Rutas protegidas Instructor */}
+  <Route element={<PrivateRoute />}>
+    <Route path="/instructor" element={<InstructorHomePage />}>
+    <Route index element={<InstructorDashboard />} />
+      <Route path="perfil" element={<UserDataForm />} />
+      <Route path="talleres" element={<MostrarMisTalleres />} />
+      <Route path="alumnos" element={<MisAlumnos/>} />
+    </Route>
+  </Route>
+
+</Routes>
       </BrowserRouter>
     );
   }
