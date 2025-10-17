@@ -3,12 +3,13 @@ import api from "@hooks/useApi";
 import { useAuth } from "@hooks/useAuth.js";
 
 export function useInstructor() {
-  const [diasCampamento, setDiasCampamento] = useState(null);
+  const [diasCampamento, setDiasRestantes] = useState(null);
   const [inscriptos, setInscriptos] = useState([]);
   const [talleres, setTalleres] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [loading, setLoading] = useState(true);
   const [periodo, setPeriodo] = useState(null);
+   const [campamentoEnCurso, setCampamentoEnCurso] = useState(false);
   const { user } = useAuth();
 
   const [trigger, setTrigger] = useState(0); 
@@ -64,14 +65,35 @@ export function useInstructor() {
   }, [refreshData, trigger]);
 
   useEffect(() => {
-    if (!periodo?.fechaInicioPer) {
-      setDiasCampamento(null);
-      return;
-    }
-    const fechaInicio = new Date(periodo.fechaInicioPer);
-    const hoy = new Date();
-    const diferencia = Math.ceil((fechaInicio - hoy) / (1000 * 60 * 60 * 24));
-    setDiasCampamento(diferencia);
+    const calcularDias = () => {
+      if (!periodo?.fechaInicioPer || !periodo?.fechaFinPer) {
+        setDiasRestantes(null);
+        setCampamentoEnCurso(false);
+        return;
+      }
+
+      const inicio = new Date(periodo.fechaInicioPer);
+      const fin = new Date(periodo.fechaFinPer);
+      const hoy = new Date();
+
+      inicio.setHours(0, 0, 0, 0);
+      fin.setHours(0, 0, 0, 0);
+      hoy.setHours(0, 0, 0, 0);
+
+      const diffInicio = Math.ceil((inicio - hoy) / (1000 * 60 * 60 * 24));
+
+      if (diffInicio > 0) {
+        setDiasRestantes(diffInicio);
+        setCampamentoEnCurso(false);
+      } else {
+        const diffFin = Math.ceil((fin - hoy) / (1000 * 60 * 60 * 24));
+        setDiasRestantes(diffFin >= 0 ? diffFin : 0);
+        setCampamentoEnCurso(true);
+      }
+    };
+
+    calcularDias();
+     
   }, [periodo]);
 
   const misTalleres = (talleres || []).filter((t) => {
@@ -92,6 +114,7 @@ export function useInstructor() {
     inscriptos,
     talleres,
     misTalleres,
+    campamentoEnCurso,
     getAllInscriptosDeMisTalleres,
     // reloads / refresh
     refreshData,

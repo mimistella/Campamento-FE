@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from "react";
-import dayjs from "dayjs";
 import api from "@hooks/useApi";
 import { useAuth } from "@hooks/useAuth";
 import { usePeriodo } from "@hooks/usePeriodo";
@@ -14,13 +13,35 @@ export function useInscripcionPeriodo() {
   const [trigger, setTrigger] = useState(0); 
   const triggerRefresh = () => setTrigger(prev => prev + 1);
 
-  const calcularDiasRestantes = (fechaInicio) => {
-    if (!fechaInicio) return;
-    const hoy = dayjs().startOf("day");
-    const inicio = dayjs(fechaInicio).startOf("day");
-    const diff = inicio.diff(hoy, "day");
-    setDiasRestantes(diff >= 0 ? diff : 0);
-  };
+const calcularDiasRestantes = useCallback((fechaInicio, fechaFin) => {
+    if (!fechaInicio || !fechaFin) {
+      setDiasRestantes(null);
+      return;
+    }
+    
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+    const hoy = new Date();
+    
+    // Normalizar a medianoche para comparación precisa
+    inicio.setHours(0, 0, 0, 0);
+    fin.setHours(0, 0, 0, 0);
+    hoy.setHours(0, 0, 0, 0);
+    
+    const diffInicio = Math.ceil((inicio - hoy) / (1000 * 60 * 60 * 24));
+    
+    if (diffInicio > 0) {
+      setDiasRestantes(diffInicio);
+    } 
+    else {
+      const diffFin = Math.ceil((fin - hoy) / (1000 * 60 * 60 * 24));
+      setDiasRestantes(diffFin >= 0 ? diffFin : 0);
+    }
+  }, []);
+
+useEffect(() => {
+  calcularDiasRestantes();
+}, [calcularDiasRestantes]);
 
   const fetchInscripciones = useCallback(async () => {
     if (!user?.id || !periodoActual?.id) return;
@@ -37,7 +58,7 @@ export function useInscripcionPeriodo() {
       );
 
       if (inscripcionActual?.periodo?.fechaInicioPer) {
-        calcularDiasRestantes(inscripcionActual.periodo.fechaInicioPer);
+        calcularDiasRestantes(inscripcionActual.periodo.fechaInicioPer,inscripcionActual.periodo.fechaFinPer );
       } else {
         setDiasRestantes(null);
       }
@@ -49,6 +70,7 @@ export function useInscripcionPeriodo() {
     } finally {
       setLoading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id, periodoActual?.id]);
 
 
