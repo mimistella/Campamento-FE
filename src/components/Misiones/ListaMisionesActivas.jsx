@@ -12,7 +12,7 @@ const ListaMisionesActivas = () =>{
     const [open, setOpen] = useState(false);
     const [misionSelec, setMisionSelect] = useState(null);
     const [editing, setEditing] = useState(false);
-    const {misiones, fetchMisiones, deleteMision} = useContext(MisionesContext);
+    const {misiones, fetchMisiones} = useContext(MisionesContext);
 
     useEffect(()=>{
         fetchMisiones();
@@ -53,18 +53,9 @@ const ListaMisionesActivas = () =>{
                             :
                             <div>
                                 <MissionCard mission={misionSelec}/> 
-                                <div className="flex justify-around mt-4">
+                                <div className="mt-4 font-bold flex justify-center">
                                     <button onClick={()=> setEditing(true)}>
                                         Editar
-                                    </button>
-                                    <button 
-                                        onClick={
-                                            ()=> {
-                                                deleteMision(misionSelec.id); 
-                                                fetchMisiones();
-                                                setOpen(false);
-                                            }}>
-                                        Eliminar
                                     </button>
                                 </div>
                             </div>

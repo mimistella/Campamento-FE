@@ -50,7 +50,6 @@ export function useDeidades() {
       return data;
     } catch (err) {
       setError(err?.response?.data?.message || "Error al crear deidad");
-      console.error(err);
       throw err;
     } finally {
       setLoading(false);
