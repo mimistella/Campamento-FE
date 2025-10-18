@@ -52,6 +52,7 @@ export default function TallerCard({ taller, inscribir, misTalleres, inscribiend
                 <p><strong>Instructor:</strong> {realTaller.instructor.nombre ?? realTaller.instructor} {realTaller.instructor.apellido ?? ""}</p>
               )}
               <p><strong>Duración:</strong> {realTaller.duracionHoras} hora{realTaller.duracionHoras !== 1 ? "s" : ""}</p>
+              {yaInscripto &&  <p><strong>Nota: </strong>  {taller.nota} - {taller.comentario ? taller.comentario : "No calificado"}</p>}
             </div>
           )}
         </div>
