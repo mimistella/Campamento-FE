@@ -63,7 +63,6 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
       const {errorMessage, fieldErrors} = handleApiError(err, "guardando deidad")
       toastError(errorMessage)
       setFormErrors(fieldErrors);
-      console.log(fieldErrors);
 
     } finally {
       setLoading(false);
@@ -90,10 +89,10 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
           placeholder="Ej: Zeus"
           required
           className={`w-full px-3 py-2 border rounded-md outline-none focus:outline-none focus:ring-2 focus:ring-amber-400 ${
-            formErrors.nombre ? "ring-2 ring-red-400" : ""
+            formErrors?.nombre ? "ring-2 ring-red-400" : ""
           }`}
         />
-        {formErrors.nombre && (
+        {formErrors?.nombre && (
           <p className="text-sm text-red-600 mt-1">{formErrors.nombre}</p>
         )}
       </div>
@@ -109,10 +108,10 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
           placeholder="Descripción de la deidad..."
           rows="2"
           className={`w-full px-3 py-2 border rounded-md outline-none focus:outline-none focus:ring-2 focus:ring-amber-400 ${
-            formErrors.descripcion ? "ring-2 ring-red-400" : ""
+            formErrors?.descripcion ? "ring-2 ring-red-400" : ""
           }`}
         />
-        {formErrors.descripcion && (
+        {formErrors?.descripcion && (
           <p className="text-sm text-red-600 mt-1">{formErrors.descripcion}</p>
         )}
       </div>
@@ -128,10 +127,10 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
           onChange={handleChange}
           placeholder="Lema de la deidad..."
           className={`w-full px-3 py-2 border rounded-md outline-none focus:outline-none focus:ring-2 focus:ring-amber-400 ${
-            formErrors.lema ? "ring-2 ring-red-400" : ""
+            formErrors?.lema ? "ring-2 ring-red-400" : ""
           }`}
         />
-        {formErrors.lema && (
+        {formErrors?.lema && (
           <p className="text-sm text-red-600 mt-1">{formErrors.lema}</p>
         )}
       </div>
@@ -147,10 +146,10 @@ export default function DeidadForm({ deidad, isEdit = false, onSuccess }) {
           onChange={handleChange}
           placeholder="Ej: Rayo, águila, roble"
           className={`w-full px-3 py-2 border rounded-md outline-none focus:outline-none focus:ring-2 focus:ring-amber-400 ${
-            formErrors.simbolo ? "ring-2 ring-red-400" : ""
+            formErrors?.simbolo ? "ring-2 ring-red-400" : ""
           }`}
         />
-        {formErrors.simbolo && (
+        {formErrors?.simbolo && (
           <p className="text-sm text-red-600 mt-1">{formErrors.simbolo}</p>
         )}
       </div>

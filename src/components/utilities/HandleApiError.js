@@ -7,6 +7,7 @@
  */
 export function handleApiError(error, context = "Operación") {
   console.error(`${context} - Error completo:`, error);
+  let errorMessage;
 
   // Caso: respuesta del servidor (error HTTP)
   if (error.response) {
@@ -24,7 +25,6 @@ export function handleApiError(error, context = "Operación") {
 
     const backendMessage =
       data?.message || data?.error || "Error desconocido en el servidor";
-    let errorMessage;
 
     // 🧠 Personalizar según tipo de error
     switch (status) {
@@ -53,12 +53,12 @@ export function handleApiError(error, context = "Operación") {
 
   // Caso: no hay respuesta del servidor
   else if (error.request) {
-    return "No se recibió respuesta del servidor.";
+    return {errorMessage:"No se recibió respuesta del servidor."};
   }
 
   // Caso: error al crear la solicitud (frontend)
   else {
-    return `⚠️ ${context} falló: ${error.message}`;
+    return {errorMessage:`⚠️ ${context} falló: ${error.message}`};
   }
 }
 
