@@ -10,6 +10,7 @@ export default function TallerCard({ taller, inscribir, misTalleres, inscribiend
 
   const realTaller = taller.taller ? taller.taller : taller;
   const yaInscripto = misTalleres.some(t => t.taller?.id === realTaller.id || t.id === realTaller.id);
+  console.log(misTalleres)
 
   const handleInscribirse = async (e) => {
     e?.stopPropagation();
@@ -52,6 +53,7 @@ export default function TallerCard({ taller, inscribir, misTalleres, inscribiend
                 <p><strong>Instructor:</strong> {realTaller.instructor.nombre ?? realTaller.instructor} {realTaller.instructor.apellido ?? ""}</p>
               )}
               <p><strong>Duración:</strong> {realTaller.duracionHoras} hora{realTaller.duracionHoras !== 1 ? "s" : ""}</p>
+              {yaInscripto &&  <p><strong>Nota: </strong>  {taller.nota} - {taller.comentario ? taller.comentario : "No calificado"}</p>}
             </div>
           )}
         </div>
