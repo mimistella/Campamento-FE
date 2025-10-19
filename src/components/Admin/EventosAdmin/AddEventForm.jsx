@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
-import DashboardContext from "../../context/DashboardContext.js";
-import EventosContext from "../../context/EventosContext.js";
+import DashboardContext from "@context/DashboardContext.js";
+import EventosContext from "@context/EventosContext.js";
 
 export const AddEventForm = ({ onClose }) => {
   const [titulo, setTitulo] = useState("");

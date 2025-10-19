@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useContext } from "react";
-import EventosContext from "../../context/EventosContext.js";
+import EventosContext from "@context/EventosContext.js";
 
 const SolicitudesList = ({onClose}) => {
 	const {solicitudes, fetchSolicitudes, updateSolicitud} = useContext(EventosContext);

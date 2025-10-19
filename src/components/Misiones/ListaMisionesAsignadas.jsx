@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import MisionesContext from "../../context/MisionesContext.js";
+import MisionesContext from "@context/MisionesContext.js";
 
 const ListaMisionesAsignadas = () => {
   const { asignadas, fetchAsignadas, updateAsignada } =

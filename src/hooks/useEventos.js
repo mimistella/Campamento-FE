@@ -42,7 +42,7 @@ export function useEventos() {
   }, [])
 
     const refetchEventos = useCallback(() =>{
-    fetchEventos();
+      return fetchEventos();
   },[fetchEventos])
 
   const createEvento = useCallback(async (formData) => {

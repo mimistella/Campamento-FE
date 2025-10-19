@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useContext } from "react";
-import MisionesContext from "../../context/MisionesContext.js";
+import MisionesContext from "@context/MisionesContext.js";
 
 const FormEditarMision = ({mision, onClose, onSave }) => {
   const [formData, setFormData] = useState({

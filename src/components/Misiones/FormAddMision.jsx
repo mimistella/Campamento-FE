@@ -1,5 +1,7 @@
 import { useState, useContext } from "react";
-import MisionesContext from "../../context/MisionesContext.js";
+import MisionesContext from "@context/MisionesContext.js";
+import {useToaster} from "@hooks/useToaster";
+import {handleApiError} from "@components/utilities/HandleApiError";
 
 const AddMisionForm = ({ onClose }) => {
   const [titulo, setTitulo] = useState("");
@@ -10,6 +12,7 @@ const AddMisionForm = ({ onClose }) => {
   const [error, setError] = useState(null);
 
   const { createMision } = useContext(MisionesContext);
+  const {success: toastSuccess, error: toastError} = useToaster();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,17 +26,17 @@ const AddMisionForm = ({ onClose }) => {
         recompensa,
         pista,
       });
-
+      toastSuccess("Mision creada exitosamente")
       setTitulo("");
       setDescripcion("");
       setRecompensa("");
       setPista("");
       onClose();
     } catch (err) {
-      console.error("Error creando misión:", err);
-      setError("No se pudo crear la misión. Intenta de nuevo.");
+        console.error("Error creando misión:", err);
+        setError("No se pudo crear la misión. Intenta de nuevo.");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 

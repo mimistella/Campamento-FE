@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Modal from "../UICommons/Modal.jsx";
+import Modal from "@uicommons/Modal.jsx";
 import { MissionCard } from "./MissionsCard.jsx";
 import BotonEditarMision from "./BotonEditarMision.jsx";
 import FormEditarMision from "./FormEditarMision.jsx";
 import { useContext, useEffect } from "react";
-import MisionesContext from "../../context/MisionesContext.js";
+import MisionesContext from "@context/MisionesContext.js";
 
 
 const ListaMisionesActivas = () =>{

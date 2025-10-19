@@ -89,13 +89,7 @@ export function useDeidades() {
     }
   }, []);
 
-  // Toggle activo/inactivo
-  const toggleActivo = useCallback(async (id) => {
-    const deidad = deidades.find(d => d.id === id);
-    if (!deidad) return;
 
-    return updateDeidad(id, { activo: !deidad.activo });
-  }, [deidades, updateDeidad]);
 
   return {
     deidades,
@@ -106,6 +100,5 @@ export function useDeidades() {
     createDeidad,
     updateDeidad,
     deleteDeidad,
-    toggleActivo,
   };
 }

@@ -1,7 +1,7 @@
 import { useState, useContext } from "react";
-import MisionesContext from "../../context/MisionesContext.js";
-import useFetch from "../../hooks/useFetch.js";
-import DashboardContext from "../../context/DashboardContext.js";
+import MisionesContext from "@context/MisionesContext.js";
+import useFetch from "@hooks/useFetch.js";
+import DashboardContext from "@context/DashboardContext.js";
 
 const FormSeleccionarMision = ({ onClose }) => {
   const [misionSel, setMisionSel] = useState("");
