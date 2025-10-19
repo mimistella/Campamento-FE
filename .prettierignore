@@ -1,0 +1,7 @@
+dist
+node_modules
+eslint.config.js
+.eslintrc.js
+.prettierrc
+settings.json
+launch.json

@@ -33,7 +33,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Archivos de editor
-.vscode/
 .idea/
 *.swp
 *.swo
