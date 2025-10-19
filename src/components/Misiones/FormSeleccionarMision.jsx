@@ -2,29 +2,39 @@ import { useState, useContext } from "react";
 import MisionesContext from "@context/MisionesContext.js";
 import useFetch from "@hooks/useFetch.js";
 import DashboardContext from "@context/DashboardContext.js";
+import {handleApiError} from "@components/utilities/HandleApiError.js";
+import {useToaster} from "@hooks/useToaster";
 
 const FormSeleccionarMision = ({ onClose }) => {
   const [misionSel, setMisionSel] = useState("");
   const [campistaSel, setCampistaSel] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const { data: campistas } = useFetch("campista");
   const { misiones, createAsignada } = useContext(MisionesContext);
   const { periodo } = useContext(DashboardContext);
+  const { success: toastSuccess, error: toastError } = useToaster();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setSubmitted(true);
       await createAsignada({
         campista: Number(campistaSel),
         mision: Number(misionSel),
         estado: "asignada",
         periodo: periodo.id,
       });
-
+    
+      toastSuccess("Mision Asginada exitosamente");
       onClose();
       setMisionSel("");
       setCampistaSel("");
     } catch (err) {
+      const {errorMessage} = handleApiError(err, "asignando mision")
+      toastError(errorMessage);
       console.error("Error al asignar la misión:", err);
+      
     }
   };
 
@@ -44,6 +54,7 @@ const FormSeleccionarMision = ({ onClose }) => {
           value={misionSel}
           onChange={(e) => setMisionSel(e.target.value)}
           className="mt-2 block w-full p-3 border border-amber-300 rounded-lg bg-white focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+          
         >
           <option value="">-- Seleccionar misión --</option>
           {misiones.map((mision) => (
@@ -53,6 +64,7 @@ const FormSeleccionarMision = ({ onClose }) => {
           ))}
         </select>
       </label>
+      {(!misionSel && submitted) && <p className="text-sm text-red-600 mt-1">Opcion requerida</p> }
 
       {/* Select Campista */}
       <label className="block text-amber-900 font-semibold">
@@ -61,6 +73,7 @@ const FormSeleccionarMision = ({ onClose }) => {
           value={campistaSel}
           onChange={(e) => setCampistaSel(e.target.value)}
           className="mt-2 block w-full p-3 border border-amber-300 rounded-lg bg-white focus:ring-2 focus:ring-amber-600 focus:border-amber-600"
+          
         >
           <option value="">-- Seleccionar campista --</option>
           {campistas.map((campista) => (
@@ -70,6 +83,7 @@ const FormSeleccionarMision = ({ onClose }) => {
           ))}
         </select>
       </label>
+      {(!campistaSel && submitted) && <p className="text-sm text-red-600 mt-1">Opcion requerida</p> }
 
       {/* Botón Submit */}
       <button

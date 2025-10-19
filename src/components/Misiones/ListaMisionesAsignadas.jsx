@@ -44,7 +44,9 @@ const ListaMisionesAsignadas = () => {
                 className={`${
                   asigna.estado === "completada"
                     ? "text-green-700 font-bold"
-                    : "text-amber-800"
+                    : asigna.estado === "asignada" 
+                    ? "text-amber-800"
+                    : "text-red-700 font-bold"
                 }`}
               >
                 {asigna.estado}

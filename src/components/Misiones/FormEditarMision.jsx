@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useContext } from "react";
 import MisionesContext from "@context/MisionesContext.js";
+import { useToaster } from "@hooks/useToaster.js";
+import { handleApiError } from "@components/utilities/handleApiError.js";
 
 const FormEditarMision = ({mision, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -11,9 +13,9 @@ const FormEditarMision = ({mision, onClose, onSave }) => {
   });
 
   const { fetchMisiones, updateMision } = useContext(MisionesContext);
-
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { success: toastSuccess, error: toastError } = useToaster();
+  const [formErrors, setFormErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,16 +28,17 @@ const FormEditarMision = ({mision, onClose, onSave }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       await updateMision(mision.id, formData)
       if (onSave) onSave();
       fetchMisiones();
+      toastSuccess("Mision actualizada exitosamente");
       onClose();
     } catch (err) {
-      setError(err?.response?.data?.message || "Error al actualizar misión");
-      console.error("Error:", err);
+      const { errorMessage, fieldErrors } = handleApiError(err, "Creando misión");
+      toastError(errorMessage);
+      setFormErrors(fieldErrors);
     } finally {
       setLoading(false);
     }
@@ -44,12 +47,6 @@ const FormEditarMision = ({mision, onClose, onSave }) => {
   return (
     <form onSubmit={handleSubmit} className="p-6">
       <h2 className="text-2xl font-bold mb-4">Editar Misión</h2>
-      
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
 
       <div className="space-y-3">
         <div>
@@ -61,8 +58,12 @@ const FormEditarMision = ({mision, onClose, onSave }) => {
             onChange={handleChange}
             placeholder="Título"
             required
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400
+              ${formErrors?.titulo ? "ring-2 ring-red-400 border-red-400" : ""}`}
           />
+          {formErrors?.titulo && (
+              <p className="text-sm text-red-600 mt-1">{formErrors.titulo}</p>
+            )}
         </div>
 
         <div>
@@ -74,8 +75,12 @@ const FormEditarMision = ({mision, onClose, onSave }) => {
             placeholder="Descripción"
             rows="4"
             required
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+              ${formErrors?.descripcion ? "ring-2 ring-red-400 border-red-400" : ""}`}
           />
+          {formErrors?.descripcion && (
+            <p className="text-sm text-red-600 mt-1">{formErrors.descripcion}</p>
+          )}
         </div>
         
         <div>
@@ -86,8 +91,12 @@ const FormEditarMision = ({mision, onClose, onSave }) => {
             value={formData.pista}
             onChange={handleChange}
             placeholder="Pista"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400
+              ${formErrors?.pista ? "ring-2 ring-red-400 border-red-400" : ""}`}
           />
+          {formErrors?.pista && (
+            <p className="text-sm text-red-600 mt-1">{formErrors.pista}</p>
+          )}
         </div>
         
         <div>
@@ -98,9 +107,13 @@ const FormEditarMision = ({mision, onClose, onSave }) => {
             value={formData.recompensa}
             onChange={handleChange}
             placeholder="Recompensa"
-            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400"
+            className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-400
+              ${formErrors?.recompensa ? "ring-2 ring-red-400 border-red-400" : ""}`}
           />
         </div>
+        {formErrors?.recompensa && (
+          <p className="text-sm text-red-600 mt-1">{formErrors.recompensa}</p>
+        )}
       </div>
 
       {/* Botones */}
