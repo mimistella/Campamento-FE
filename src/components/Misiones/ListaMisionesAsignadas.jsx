@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import MisionesContext from "../../context/MisionesContext.js";
+import MisionesContext from "@context/MisionesContext.js";
 
 const ListaMisionesAsignadas = () => {
   const { asignadas, fetchAsignadas, updateAsignada } =
@@ -44,7 +44,9 @@ const ListaMisionesAsignadas = () => {
                 className={`${
                   asigna.estado === "completada"
                     ? "text-green-700 font-bold"
-                    : "text-amber-800"
+                    : asigna.estado === "asignada" 
+                    ? "text-amber-800"
+                    : "text-red-700 font-bold"
                 }`}
               >
                 {asigna.estado}

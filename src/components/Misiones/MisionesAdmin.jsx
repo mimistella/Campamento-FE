@@ -1,11 +1,11 @@
-import AddButton from "../UICommons/AddButton.jsx";
-import AddMisionForm from "./AddMisionForm.jsx";
+import AddButton from "@uicommons/AddButton.jsx";
+import Modal from "@uicommons/Modal.jsx";
+import AddMisionForm from "./FormAddMision.jsx";
 import FormSeleccionarMision from "./FormSeleccionarMision.jsx";
 import ListaMisionesActivas from "./ListaMisionesActivas.jsx";
 import ListaMisionesAsignadas from "./ListaMisionesAsignadas.jsx";
 
 import { useState } from "react";
-import Modal from "../UICommons/Modal.jsx";
 
 const MisionesAdmin = () =>{
     const [openAdd, setOpenAdd] = useState(null)

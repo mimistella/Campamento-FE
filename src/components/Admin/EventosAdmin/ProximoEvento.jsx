@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
-import EventosContext from '../../context/EventosContext.js';
-import Evento from '../Eventos/Evento.jsx';
+import EventosContext from '@context/EventosContext.js';
+import Evento from '@components/Camper/Eventos/Evento.jsx';
 import Countdown from './Countdown.jsx';
 import EditEventButton from './EditEventButton.jsx';
 

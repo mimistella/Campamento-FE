@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useEventos } from '../../hooks/useEventos.js';
+import { useEventos } from '@hooks/useEventos.js';
 
 export const ListaMisEventos = ({ onCancel }) => {
   const { solicitudes, fetchSolicitudes } = useEventos();

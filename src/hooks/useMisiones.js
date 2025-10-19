@@ -23,6 +23,7 @@ export function useMisiones() {
     } catch(err){
       setError(err?.response?.data?.message || "Error al cargar desde la base de datos");
       console.error(err);
+      throw err;
     } finally{
       setLoading(false);
     }
@@ -30,7 +31,7 @@ export function useMisiones() {
 
 
   const fetchMisiones = useCallback(() =>{
-    fetch('misiones',setMisiones);
+    return fetch('misiones',setMisiones);
   },[fetch]);
 
   const fetchAsignadas = useCallback(() =>{
@@ -39,7 +40,7 @@ export function useMisiones() {
   },[fetch]);
 
   const refetch = useCallback((ruta = 'misiones') =>{
-    ruta =='misiones' ? fetch(ruta, setMisiones) : fetch(ruta, setAsignadas)
+    return ruta =='misiones' ? fetch(ruta, setMisiones) : fetch(ruta, setAsignadas)
   },[fetch])
 
   const getMision = useCallback(async(id)=>{
@@ -49,6 +50,7 @@ export function useMisiones() {
     } catch(err){
       setError(err);
       console.error(err);
+      throw err;
     }
   },[])
 
@@ -68,11 +70,11 @@ export function useMisiones() {
 
 
     const createMision = useCallback((formData) =>{
-      create(formData, 'misiones', setMisiones)
+      return create(formData, 'misiones', setMisiones)
     },[create])
 
     const createAsignada = useCallback((formData) =>{
-      create(formData, 'asigna-mision', setAsignadas)
+      return create(formData, 'asigna-mision', setAsignadas)
     },[create])
 
 
@@ -89,11 +91,11 @@ export function useMisiones() {
     }, [refetch]);
 
     const updateMision = useCallback((id, formData)=>{
-      update(id, formData, 'misiones')
+      return update(id, formData, 'misiones')
     },[update])
 
     const updateAsignada = useCallback((id, formData)=>{
-        update(id, formData, 'asigna-mision')
+        return update(id, formData, 'asigna-mision')
       },[update])
 
     const deleteGen = useCallback(async (id, ruta, setter) => {
@@ -107,11 +109,11 @@ export function useMisiones() {
     }, []);
 
     const deleteMision = useCallback((id) =>{
-      deleteGen(id, 'misiones', setMisiones)
+      return deleteGen(id, 'misiones', setMisiones)
     },[deleteGen])
 
     const deleteAsignadas = useCallback((id) =>{
-      deleteGen(id, 'asigna-mision', setAsignadas)
+      return deleteGen(id, 'asigna-mision', setAsignadas)
     },[deleteGen])
 
 

@@ -1,5 +1,7 @@
 import { useState, useContext } from "react";
-import MisionesContext from "../../context/MisionesContext.js";
+import MisionesContext from "@context/MisionesContext.js";
+import { useToaster } from "@hooks/useToaster";
+import { handleApiError } from "@components/utilities/HandleApiError";
 
 const AddMisionForm = ({ onClose }) => {
   const [titulo, setTitulo] = useState("");
@@ -7,14 +9,14 @@ const AddMisionForm = ({ onClose }) => {
   const [recompensa, setRecompensa] = useState("");
   const [pista, setPista] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   const { createMision } = useContext(MisionesContext);
+  const { success: toastSuccess, error: toastError } = useToaster();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
       await createMision({
@@ -23,15 +25,17 @@ const AddMisionForm = ({ onClose }) => {
         recompensa,
         pista,
       });
-
+      toastSuccess("Misión creada exitosamente");
       setTitulo("");
       setDescripcion("");
       setRecompensa("");
       setPista("");
+      setFormErrors({});
       onClose();
     } catch (err) {
-      console.error("Error creando misión:", err);
-      setError("No se pudo crear la misión. Intenta de nuevo.");
+      const { errorMessage, fieldErrors } = handleApiError(err, "Creando misión");
+      toastError(errorMessage);
+      setFormErrors(fieldErrors);
     } finally {
       setLoading(false);
     }
@@ -55,13 +59,6 @@ const AddMisionForm = ({ onClose }) => {
           </h2>
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded mb-4 text-sm">
-            ⚠️ {error}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-3">
           {/* Título */}
           <div>
@@ -73,9 +70,14 @@ const AddMisionForm = ({ onClose }) => {
               placeholder="El Laberinto del Minotauro"
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
-              className="w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 placeholder-amber-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+              className={`w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 placeholder-amber-400 focus:outline-none
+                 focus:border-amber-500 focus:ring-1 focus:ring-amber-200 
+                 ${formErrors?.titulo ? "ring-2 ring-red-400 border-red-400" : ""}`}
               required
             />
+            {formErrors?.titulo && (
+              <p className="text-sm text-red-600 mt-1">{formErrors.titulo}</p>
+            )}
           </div>
 
           {/* Descripción */}
@@ -88,9 +90,14 @@ const AddMisionForm = ({ onClose }) => {
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
               rows="3"
-              className="w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 placeholder-amber-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 resize-none"
+              className={`w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 placeholder-amber-400 focus:outline-none 
+                focus:border-amber-500 focus:ring-1 focus:ring-amber-200 resize-none 
+                ${formErrors?.descripcion ? "ring-2 ring-red-400 border-red-400" : ""}`}
               required
             ></textarea>
+            {formErrors?.descripcion && (
+              <p className="text-sm text-red-600 mt-1">{formErrors.descripcion}</p>
+            )}
           </div>
 
           {/* Recompensa y Pista */}
@@ -104,9 +111,14 @@ const AddMisionForm = ({ onClose }) => {
                 placeholder="100 dracmas de oro"
                 value={recompensa}
                 onChange={(e) => setRecompensa(e.target.value)}
-                className="w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 placeholder-amber-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                className={`w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 placeholder-amber-400 focus:outline-none 
+                  focus:border-amber-500 focus:ring-1 focus:ring-amber-200 
+                  ${formErrors?.recompensa ? "ring-2 ring-red-400 border-red-400" : ""}`}
                 required
               />
+              {formErrors?.recompensa && (
+                <p className="text-sm text-red-600 mt-1">{formErrors.recompensa}</p>
+              )}
             </div>
 
             <div>
@@ -118,9 +130,14 @@ const AddMisionForm = ({ onClose }) => {
                 placeholder="Busca en el bosque de pinos"
                 value={pista}
                 onChange={(e) => setPista(e.target.value)}
-                className="w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 placeholder-amber-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                className={`w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 placeholder-amber-400 focus:outline-none 
+                  focus:border-amber-500 focus:ring-1 focus:ring-amber-200 
+                  ${formErrors?.pista ? "ring-2 ring-red-400 border-red-400" : ""}`}
                 required
               />
+              {formErrors?.pista && (
+                <p className="text-sm text-red-600 mt-1">{formErrors.pista}</p>
+              )}
             </div>
           </div>
 
