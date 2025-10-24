@@ -31,7 +31,7 @@ import Eventos from "@components/EventosHandler.jsx";
 import Misiones from "@components/MisionesHandler.jsx";
 import DeidadesHandler from "@components/DeidadesHandler.jsx";
 
-import LoadingScreen from "../components/UICommons/loadingScreen.jsx";
+import LoadingScreen from "@uicommons/loadingScreen.jsx"; 
   
 export function AppRouter() {
     return (

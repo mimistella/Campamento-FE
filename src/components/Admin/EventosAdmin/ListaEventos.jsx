@@ -1,8 +1,8 @@
 import { useState} from 'react';
-import Evento from '../Eventos/Evento.jsx';
+import Evento from '@components/Camper/Eventos/Evento.jsx';
 import EditEventButton from './EditEventButton.jsx';
 import { useContext } from 'react';
-import EventosContext from '../../context/EventosContext.js';
+import EventosContext from '@context/EventosContext.js';
 
 export default function ListaEventos({ onEdit }) {
 

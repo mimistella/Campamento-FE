@@ -1,5 +1,4 @@
-import { GetLoggedUser } from '../utilities/GetLoggedUser.js';
-import { useEventos } from '../../hooks/useEventos.js';
+import { useEventos } from '@hooks/useEventos.js';
 import { useState, useContext } from 'react';
 import {AuthContext} from '@context/AuthContext';
 

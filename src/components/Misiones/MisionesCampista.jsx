@@ -1,6 +1,6 @@
 import { MissionCard } from "./MissionsCard.jsx";
 import { useContext, useEffect } from "react";
-import MisionesContext from "../../context/MisionesContext.js";
+import MisionesContext from "@context/MisionesContext.js";
 
 const MisionesCampista = () => {
     const {fetchAsignadas, asignadas:misiones} = useContext(MisionesContext)

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Evento from "./Evento";
-import { useEventos } from '../../hooks/useEventos.js';
+import { useEventos } from '@hooks/useEventos.js';
 
 // 🔹 Devuelve los eventos visibles sin duplicar ni acumular
 function getVisibleSlides(eventos, currentIndex, count) {

@@ -1,90 +1,82 @@
-````markdown
-# 🚀 Guía de instalación del proyecto
+# 🏕️ Campamento-FE
 
-## 1️⃣ Clonar el repositorio
-```bash
-git clone https://github.com/mimistella/Campamento-FE.git
-````
----
-
-## 2️⃣ Entrar en la carpeta del proyecto
-
-```bash
-cd Campamento-FE
-```
+Este proyecto corresponde al **Frontend** del sistema **Campamento Mestizo**, una aplicación web desarrollada en **React + Vite**.  
+Permite gestionar un sistema de campamento temático.
 
 ---
 
-## 3️⃣ Instalar dependencias
+## 🚀 Tecnologías utilizadas
 
-Instala las dependencias:
-
-```bash
-pnpm install
-
-```
-
----
-
-## 4️⃣ Configurar variables de entorno
-
-Crea un archivo `.env` en la raíz del proyecto copiando el contenido de `.env.example`:
-
-```bash
-cp .env.example .env
-```
+- **React**
+- **Vite**
+- **JavaScript**
+- **pnpm** como gestor de paquetes
+- **Axios** para comunicación con el backend
+- **React Router** para el enrutado
+- **Context API y Hooks personalizados** para el manejo de estado global
 
 ---
 
-## 5️⃣ Comandos disponibles
+## 🧩 Requisitos previos
 
-```bash
-pnpm dev       # Modo desarrollo
-pnpm build     # Compilar para producción
-pnpm preview   # Servir build localmente
-pnpm lint      # Ejecutar ESLint
-```
+Antes de comenzar, asegurate de tener instalado:
 
----
-
-## 6️⃣ Iniciar el servidor de desarrollo
-
-```bash
-pnpm dev
-```
-
-Abre en tu navegador:
-
-```
-http://localhost:5173
-```
+| Herramienta | Versión recomendada | Comando para verificar |
+|-------------|---------------------|------------------------|
+| [Node.js](https://nodejs.org/) | 18 o superior | `node -v` |
+| [pnpm](https://pnpm.io/installation) | 8 o superior | `pnpm -v` |
 
 ---
 
-## 7️⃣ Compilar para producción (opcional)
+## ⚙️ Instalación del proyecto
 
-```bash
-pnpm build
-```
+1. **Cloná el repositorio**
+   ```bash
+   git clone https://github.com/tuusuario/campamento-mestizo-frontend.git
+   ```
 
-El resultado estará en la carpeta `dist/`.
+2. **Entrá a la carpeta del proyecto**
+   ```bash
+   cd ./Campamento-FE
+   ```
+
+3. **Instalá las dependencias**
+   ```bash
+   pnpm install
+   ```
+
+⚠️ **Asegurate de tener el backend ejecutándose antes de iniciar el frontend.**
 
 ---
 
-## 8️⃣ Servir la compilación (opcional)
+## Levantar el proyecto
+
+Para iniciar el servidor de desarrollo:
 
 ```bash
-pnpm preview
+pnpm run dev
 ```
 
+Luego abrí tu navegador en [http://localhost:5173](http://localhost:5173) para acceder al sistema.
 
-## 📝 Notas importantes
+---
 
-* El backend **Campamento-BE** debe estar corriendo antes de iniciar el frontend.
-* Usar **Core UI** y **FontAwesome** para mantener consistencia visual.
-* Centralizar las rutas de API en `src/constants` para facilitar el mantenimiento.
-* Utilizar **Axios** para las peticiones HTTP.
+## 🧠 Estructura principal del proyecto
 
-* Si hay cambios en `.env`, vuelve a iniciar el servidor (`Ctrl + C` para parar y `pnpm dev` para arrancar de nuevo).
-
+```
+campamento-FE/
+├── src/
+│   ├── assets/          → Imágenes, íconos y recursos estáticos
+│   ├── components/      → Componentes reutilizables
+│   ├── context/         → Contextos globales (Auth, UI, etc.)
+│   ├── constants/       → Constantes generales
+│   ├── forms/           → Formularios y validaciones
+│   ├── hooks/           → Hooks personalizados
+│   ├── pages/           → Páginas del sistema
+│   ├── providers/       → Providers globales
+│   ├── App.jsx          → Componente raíz
+│   └── main.jsx         → Punto de entrada
+├── vite.config.js
+├── package.json
+└── README.md
 ```

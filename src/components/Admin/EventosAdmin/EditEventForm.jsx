@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import EventosContext from "../../context/EventosContext.js";
+import EventosContext from "@context/EventosContext.js";
 
 export function EditEventForm({ event, onFinished }) {
   const [titulo, setTitulo] = useState(event.titulo);

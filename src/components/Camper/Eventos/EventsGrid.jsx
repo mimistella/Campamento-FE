@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Evento from "./Evento";
-import { useEventos } from "../../hooks/useEventos.js";
+import { useEventos } from "@hooks/useEventos.js";
 
 export default function EventsGrid() {
   const { eventos, fetchEventos } = useEventos();
