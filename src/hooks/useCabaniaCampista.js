@@ -31,13 +31,13 @@ export function useCabaniaCampista() {
 
       if (hospedajeActivo?.cabania?.id) {
         // 3a. Si ya tiene cabaña, obtenemos detalles
-        const cabRes = await api.get(`/cabanias/myCabin/${hospedajeActivo.cabania.id}`);
-        setCabaniaDetalle(cabRes.data?.data || cabRes.data || null);
+        const cabaniaRes=await api.get(`/cabanias/${hospedajeActivo.cabania.id}`)
+        setCabaniaDetalle(cabaniaRes.data.data);
         setDeidades(null);
       } else {
         // 3b. Si no tiene cabaña, obtener deidades disponibles
         const deidadesRes = await api.get("/deidades");
-        setDeidades(Array.isArray(deidadesRes.data?.data) ? deidadesRes.data.data : []);
+        setDeidades(Array.isArray(deidadesRes.data?.data) ? deidadesRes.data.data : null);
         setCabaniaDetalle(null);
       }
     } catch (err) {
