@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import api from "@hooks/useApi";
 
 export default function useVerifyEmail(token) {
   const [status, setStatus] = useState("verifying"); 
@@ -18,7 +18,7 @@ export default function useVerifyEmail(token) {
       }
 
       try {
-        const res = await axios.get(`http://localhost:3000/api/auth/verify-email/${token}`);
+        const res = await api.get(`/auth/verify-email/${token}`);
         setStatus("success");
         setMessage(res.data.message || "¡Correo verificado con éxito!");
       } catch (err) {
