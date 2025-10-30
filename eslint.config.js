@@ -2,13 +2,23 @@ import { defineConfig } from 'eslint/config';
 import importPlugin from 'eslint-plugin-import';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 import prettierPlugin from 'eslint-plugin-prettier';
-import reactPlugin from 'eslint-plugin-react';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import reactPlugin from 'eslint-plugin-react';
 import securityPlugin from 'eslint-plugin-security';
 import unusedImportsPlugin from 'eslint-plugin-unused-imports';
+import pluginReactRefresh from 'eslint-plugin-react-refresh';
+
+import userRules from './eslint_Rules/user.rules.js';
+import unusedImportRules from './eslint_Rules/unusedImport.rules.js';
+import airbnbRules from './eslint_Rules/airbnb.rules.js';
+import importRules from './eslint_Rules/import.rules.js';
 
 export default defineConfig([
+  //  reactHooksPlugin.configs.flat.recommended,
+  //  securityPlugin.configs.recommended,
   {
+    ignores: ['node_modules', 'eslint.config.js', '.vscode', 'eslint_Rules/*'],
     languageOptions: {
       globals: {
         window: 'readonly',
@@ -31,97 +41,15 @@ export default defineConfig([
       security: securityPlugin,
       import: importPlugin,
       'unused-imports': unusedImportsPlugin,
+      'react-refresh': pluginReactRefresh,
     },
     rules: {
-      // Reglas generales
-      'no-var': 'error',
-      'prefer-const': 'warn',
-      quotes: ['error', 'single', { avoidEscape: true }],
-      semi: ['error', 'always'],
-      // 'no-console': 'warn',
-      'no-debugger': 'error',
-      // 'no-alert': 'error',
-
-      // Reglas específicas de React
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
-      'react/display-name': 'off',
-      'react/jsx-uses-react': 'off',
-      'react/jsx-uses-vars': 'error',
-      'react/jsx-pascal-case': 'error',
-
-      // Reglas de React Hooks
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-
-      // Integración con Prettier
-      'prettier/prettier': 'error',
-      'camelcase': 'error',
-
-      // Reglas de importación
-      'import/no-unresolved': 'error',
-      'import/named': 'error',
-      'import/default': 'error',
-      'import/no-named-as-default': 'error',
-      'import/no-duplicates': 'error',
-      'import/order': [
-        'error',
-        {
-          groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
-          pathGroups: [
-            {
-              pattern: '@**', // todos los alias que empiezan con @
-              group: 'internal',
-              position: 'after', // va después de los externos
-            },
-          ],
-          'newlines-between': 'always',
-          alphabetize: { order: 'asc', caseInsensitive: true },
-        },
-      ],
-
-      // Accesibilidad
-      'jsx-a11y/anchor-is-valid': 'warn',
-      'jsx-a11y/click-events-have-key-events': 'warn',
-      // 'jsx-a11y/label-has-associated-control': 'warn',
-      'jsx-a11y/alt-text': 'warn',
-
-      // Seguridad
-      // 'security/detect-object-injection': 'error',
-      'security/detect-non-literal-fs-filename': 'error',
-
-      // Reglas para eliminar imports no usados
-      'unused-imports/no-unused-imports': 'error', // elimina imports completos
-      'unused-imports/no-unused-vars': [
-          'warn',
-          {
-            vars: 'all',
-            varsIgnorePattern: '^_',
-            args: 'after-used',
-            argsIgnorePattern: '^_',
-          },
-        ],
-
-      // Buenas prácticas
-      'no-unused-vars': 'off',
-      'no-duplicate-imports': 'error',
-      // 'no-magic-numbers': ['error', { ignoreArrayIndexes: true }],
-      'consistent-return': 'warn',
-      eqeqeq: ['error', 'always'],
-
-      // Optimización de rendimiento
-      'react/jsx-no-bind': [
-        'warn',
-        {
-          allowFunctions: false,
-          allowArrowFunctions: true,
-          ignoreRefs: true,
-        },
-      ],
-
-      // Reglas de seguridad
-      'no-eval': 'error',
-      'no-new-func': 'error',
+       ...airbnbRules,
+       ...userRules,
+       ...unusedImportRules,
+      'react-refresh/only-export-components': 'error',
+      'prettier/prettier': ['error'],
+      // ...importRules,
     },
     settings: {
       react: {
