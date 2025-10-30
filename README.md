@@ -21,28 +21,36 @@ Permite gestionar un sistema de campamento temático.
 
 Antes de comenzar, asegurate de tener instalado:
 
-| Herramienta | Versión recomendada | Comando para verificar |
-|-------------|---------------------|------------------------|
-| [Node.js](https://nodejs.org/) | 18 o superior | `node -v` |
-| [pnpm](https://pnpm.io/installation) | 8 o superior | `pnpm -v` |
+| Herramienta                          | Versión recomendada | Comando para verificar |
+| ------------------------------------ | ------------------- | ---------------------- |
+| [Node.js](https://nodejs.org/)       | 18 o superior       | `node -v`              |
+| [pnpm](https://pnpm.io/installation) | 8 o superior        | `pnpm -v`              |
 
 ---
 
 ## ⚙️ Instalación del proyecto
 
 1. **Cloná el repositorio**
+
    ```bash
    git clone https://github.com/tuusuario/campamento-mestizo-frontend.git
    ```
 
 2. **Entrá a la carpeta del proyecto**
+
    ```bash
    cd ./Campamento-FE
    ```
 
 3. **Instalá las dependencias**
+
    ```bash
    pnpm install
+   ```
+
+4. **Cambiá la variable de entorno de ejemplo ".env.example"**
+   ```bash
+   cp .env.example .env
    ```
 
 ⚠️ **Asegurate de tener el backend ejecutándose antes de iniciar el frontend.**
