@@ -26,7 +26,6 @@ export default function CabaniaCard({ cabania, getOcupacion }) {
           {/* Información expandible */}
           {isExpanded && (
             <div className="mt-3 space-y-2">
-              <p className="text-sm text-gray-600">{cabania.descripcion}</p>
               <div className="text-sm text-gray-500 space-y-1">
                 <p><strong>Capacidad:</strong> {cabania.capacidad}</p>
                 <p><strong>Ubicación:</strong> {cabania.ubicacion}</p>
