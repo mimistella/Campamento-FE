@@ -1,12 +1,12 @@
-import {usePeriodo} from "@hooks/usePeriodo"
+// import {usePeriodo} from "@hooks/usePeriodo"
 import List from "@components/commonComp/List";
 import PeriodoCard from "@components/Camper/PeriodoCard";
-import { useInscripcionPeriodo } from "@hooks/useInscripcionPeriodo.js";
+import { useContext } from "react";
+import PeriodosContext from "@context/PeriodosContext.js";
+// import { useInscripcionPeriodo } from "@hooks/useInscripcionPeriodo.js";
 
 export default function MostrarPeriodos() {
-  const { periodos, loading } = usePeriodo();
-  const { inscripciones, triggerRefresh } = useInscripcionPeriodo(); 
-
+  const { inscripciones, triggerRefresh, periodos, loading } = useContext(PeriodosContext)
 
   if (loading) return <p className="text-gray-500">Cargando Períodos...</p>;
 const periodosActivos = periodos;

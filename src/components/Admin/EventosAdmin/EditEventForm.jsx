@@ -89,8 +89,8 @@ export function EditEventForm({ event, onFinished }) {
             </label>
             <input
               type="datetime-local"
-              value={fechahora}
-              onChange={(e) => setFechahora(e.target.value)}
+              value={ formatDateTimeLocal( fechahora ) }
+              onChange={(e) => setFechahora( e.target.value)}
               className="w-full bg-white/70 border-2 border-amber-300 rounded-lg px-3 py-2 text-sm text-amber-900 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
               required
             />
@@ -159,3 +159,11 @@ export function EditEventForm({ event, onFinished }) {
     </div>
   );
 }
+
+const formatDateTimeLocal = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  const offset = date.getTimezoneOffset();
+  const local = new Date(date.getTime() - offset * 60000);
+  return local.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
+};

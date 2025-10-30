@@ -5,6 +5,8 @@ import BotonEditarMision from "./BotonEditarMision.jsx";
 import FormEditarMision from "./FormEditarMision.jsx";
 import { useContext, useEffect } from "react";
 import MisionesContext from "@context/MisionesContext.js";
+import { useToaster } from "@hooks/useToaster.js"
+import { handleApiError } from "@components/utilities/HandleApiError.js"
 
 
 const ListaMisionesActivas = () =>{
@@ -12,7 +14,8 @@ const ListaMisionesActivas = () =>{
     const [open, setOpen] = useState(false);
     const [misionSelec, setMisionSelect] = useState(null);
     const [editing, setEditing] = useState(false);
-    const {misiones, fetchMisiones} = useContext(MisionesContext);
+    const {misiones, fetchMisiones, deleteMision} = useContext(MisionesContext);
+    const { success:toastSuccess, error: toastError } = useToaster();
 
     useEffect(()=>{
         fetchMisiones();
@@ -21,6 +24,19 @@ const ListaMisionesActivas = () =>{
     const setOnClick = (mision) =>{
         setOpen(true);
         setMisionSelect(mision);
+    }
+
+    const handleDelete = async() =>{
+        try{
+            await deleteMision(misionSelec.id);
+            toastSuccess("Mision borrada exitosamente");
+        }catch(err){
+            const { errorMessage } = handleApiError(err, "Borrando mision")
+            toastError(errorMessage);
+        }finally{
+            setOpen(false);
+        }
+
     }
 
     return(
@@ -53,10 +69,14 @@ const ListaMisionesActivas = () =>{
                             :
                             <div>
                                 <MissionCard mission={misionSelec}/> 
-                                <div className="mt-4 font-bold flex justify-center">
+                                <div className="mt-4 font-bold flex justify-around">
                                     <button onClick={()=> setEditing(true)}>
                                         Editar
                                     </button>
+                                    <button onClick={ handleDelete }>
+                                        Eliminar
+                                    </button>
+
                                 </div>
                             </div>
                         }

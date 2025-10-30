@@ -1,10 +1,16 @@
 import { DashboardCard } from "./DashboardCard";
 import { useContext } from "react";
-import DashboardContext  from "../../context/DashboardContext";
+import DashboardContext  from "@context/DashboardContext";
+import PeriodosContext from "@context/PeriodosContext.js";
 
 export default function AdminDashboard() {
-const { diasCampamento, campamentoEnCurso, inscriptosPeriodo, instructores, cabaniasActivasPeriodo } =
+// const { diasCampamento, campamentoEnCurso, inscriptosPeriodo, instructores, cabaniasActivasPeriodo } =
+// useContext(DashboardContext);
+
+const { diasCampamento, campamentoEnCurso, instructores, cabaniasActivasPeriodo } =
 useContext(DashboardContext);
+const { cantidadInscriptosPeriodo } = useContext(PeriodosContext)
+
 
 const tituloDias = campamentoEnCurso
   ? "Días para que termine el campamento"
@@ -19,7 +25,7 @@ const tituloDias = campamentoEnCurso
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
         <DashboardCard title={tituloDias} value={diasCampamento !== null ? `${diasCampamento} días` : null}/>
-        <DashboardCard title="Cantidad de inscriptos" value={inscriptosPeriodo ? inscriptosPeriodo.length :0} />
+        <DashboardCard title="Cantidad de inscriptos" value={cantidadInscriptosPeriodo ? cantidadInscriptosPeriodo.length :0} />
         <DashboardCard title="Cantidad de instructores" value={instructores ? instructores.length : 0} />
         <DashboardCard title="Cabañas activas" value={cabaniasActivasPeriodo ? cabaniasActivasPeriodo.length : 0} />
       </div>
