@@ -1,10 +1,10 @@
 //import { useState, useEffect } from "react";
-import EventosAdmin from "./EventosAdmin/EventosAdmin.jsx";
-import Eventos2 from "./Eventos/Eventos2.jsx";
-import { EventosProvider } from "../providers/EventosProvider.jsx";
+import EventosAdmin from "@components/Admin/EventosAdmin/EventosAdmin.jsx";
+import Eventos2 from "@components/Camper/Eventos/Eventos2.jsx";
+import { EventosProvider } from "@providers/EventosProvider.jsx";
 import { useContext } from "react";
 import { AuthContext } from "@context/AuthContext.js";
-import LoadingScreen from "./UICommons/loadingScreen.jsx";
+import LoadingScreen from "@uicommons/loadingScreen.jsx";
 
 const Eventos = () =>{
     const {user, loading} = useContext(AuthContext);

@@ -1,9 +1,9 @@
 import MisionesAdmin from "./Misiones/MisionesAdmin.jsx";
 import MisionesCampista from "./Misiones/MisionesCampista.jsx";
-import { MisionesProvider } from "../providers/MisionesProvider.jsx";
+import { MisionesProvider } from "@providers/MisionesProvider.jsx";
 import { useContext } from "react";
 import { AuthContext } from "@context/AuthContext.js";
-import LoadingScreen from "./UICommons/loadingScreen.jsx";
+import LoadingScreen from "@uicommons/loadingScreen.jsx";
 
 const Misiones = () =>{
     const {user, loading} = useContext(AuthContext);

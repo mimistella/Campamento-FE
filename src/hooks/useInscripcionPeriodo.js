@@ -9,6 +9,7 @@ export function useInscripcionPeriodo() {
   const [diasRestantes, setDiasRestantes] = useState(null);
   const [loading, setLoading] = useState(true);
   const { periodoActual } = usePeriodo();
+  const [cantidadInscriptosPeriodo, setCantidadInscriptosPeriodo] = useState(null);
 
   const [trigger, setTrigger] = useState(0); 
   const triggerRefresh = () => setTrigger(prev => prev + 1);
@@ -78,10 +79,26 @@ useEffect(() => {
     fetchInscripciones();
   }, [fetchInscripciones, trigger]);
 
+
+  
+  const inscriptosPeriodo = useCallback(() => {
+    if (!periodoActual || !periodoActual.id) return [];
+    console.log("HOLAA");
+    setCantidadInscriptosPeriodo(inscripciones.filter((i) => i.periodo?.id === periodoActual.id));
+    console.log(inscripciones);
+  }, [inscripciones, periodoActual]);
+  
+  useEffect(() => {
+    inscriptosPeriodo()
+  }, [inscriptosPeriodo, trigger]);
+
+
   return {
     inscripciones,
     diasRestantes,
     loading,
     triggerRefresh,
+    cantidadInscriptosPeriodo,
+    inscriptosPeriodo
   };
 }

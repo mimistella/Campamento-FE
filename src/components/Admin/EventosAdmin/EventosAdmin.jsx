@@ -5,7 +5,7 @@ import ListaEventos from "./ListaEventos.jsx";
 import { EditEventForm } from "./EditEventForm.jsx";
 import { AddEventButton } from "./AddEventButton.jsx";
 import SolicitudesList from "./SolicitudesList.jsx";
-import AddButton from "../UICommons/AddButton.jsx";
+import AddButton from "@uicommons/AddButton.jsx";
 
 
 export default function EventosAdmin() {

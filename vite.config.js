@@ -25,7 +25,9 @@ export default defineConfig({
       '@forms': path.resolve('src/forms'),
       '@hooks': path.resolve('src/hooks'),
       '@pages': path.resolve('src/pages'),
-      '@providers': path.resolve('src/providers')
+      '@providers': path.resolve('src/providers'),
+      '@uicommons': path.resolve('src/uicommons'),
+      '@utilities': path.resolve('src/utilities'),
     },
   },
 });

@@ -26,12 +26,11 @@ import InstructorDashboard from "@components/Instructor/InstructorDashboard.jsx"
 import MostrarMisTalleres from "@components/Instructor/MisTalleres.jsx";
 import MisAlumnos from "@components/Instructor/InstructorStudents.jsx";
 import EditarUsuario from "@components/Admin/users/editarUsuario.jsx";
-
+import { ResetPasswordPage } from "@pages/ResetPasswordPage.jsx";
 import Eventos from "@components/EventosHandler.jsx";
 import Misiones from "@components/MisionesHandler.jsx";
 import DeidadesHandler from "@components/DeidadesHandler.jsx";
-
-import LoadingScreen from "../components/UICommons/loadingScreen.jsx";
+import LoadingScreen from "@uicommons/loadingScreen.jsx"; 
   
 export function AppRouter() {
     return (
@@ -44,6 +43,7 @@ export function AppRouter() {
   <Route path="/signup" element={<SignUpPage />} />
   <Route path="/forgot-password" element={<ForgotPassword />} />
   <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+  <Route path="/auth/reset-password" element={<ResetPasswordPage/>} />
 
 
   <Route path="/loading" element={<LoadingScreen />} />

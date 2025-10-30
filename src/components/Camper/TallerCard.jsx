@@ -10,6 +10,7 @@ export default function TallerCard({ taller, inscribir, misTalleres, inscribiend
 
   const realTaller = taller.taller ? taller.taller : taller;
   const yaInscripto = misTalleres.some(t => t.taller?.id === realTaller.id || t.id === realTaller.id);
+  console.log(misTalleres)
 
   const handleInscribirse = async (e) => {
     e?.stopPropagation();

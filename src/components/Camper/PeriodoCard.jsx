@@ -4,7 +4,7 @@ import ButtonBase from "@components/commonComp/ButtonBase";
 import { MousePointerIcon } from "lucide-react";
 import InscriptionForm from "@forms/InscriptionForm";
 
-export default function PeriodoCard({ periodo, inscripcionesUsuario = [],  onRefetch  }) {
+export default function PeriodoCard({ periodo, inscripcionesUsuario = [], onRefetch }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openForm, setOpenForm] = useState(false);
   const [selectedPeriodoId, setSelectedPeriodoId] = useState(null);
@@ -48,7 +48,14 @@ export default function PeriodoCard({ periodo, inscripcionesUsuario = [],  onRef
       >
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <h2 className="text-xl font-semibold text-gray-800 mb-1">{periodo.nombre}</h2>
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold text-gray-800 mb-1">
+                {periodo.nombre}
+              </h2>
+              <span className="ml-3 text-sm font-semibold bg-amber-100 text-amber-700 px-3 py-1 rounded-full shadow-sm border border-amber-300">
+                Precio: ${periodo.importe?.toLocaleString("es-AR")}
+              </span>
+            </div>
 
             {isExpanded && (
               <div className="mt-2 text-gray-600 text-sm space-y-1">
@@ -79,7 +86,7 @@ export default function PeriodoCard({ periodo, inscripcionesUsuario = [],  onRef
               variant="contained"
               color="amber"
               onClick={handleAbrirForm}
-              disabled={yaInscripto} 
+              disabled={yaInscripto}
             >
               {yaInscripto ? "Ya inscrito" : "Inscribirse"}
             </ButtonBase>
@@ -99,13 +106,13 @@ export default function PeriodoCard({ periodo, inscripcionesUsuario = [],  onRef
           Inscribirse al período: {periodo.nombre}
         </DialogTitle>
         <DialogContent dividers>
-             <InscriptionForm
-             periodoId={selectedPeriodoId}
-             onSuccess={() => {
+          <InscriptionForm
+            periodoId={selectedPeriodoId}
+            onSuccess={() => {
               handleCerrarForm();
-              if (onRefetch) onRefetch(); // <- refetch al cerrar el form
-              }}
-    />
+              if (onRefetch) onRefetch();
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <ButtonBase variant="outlined" color="gray" onClick={handleCerrarForm}>

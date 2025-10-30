@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AddEventForm } from "./AddEventForm.jsx";
-import AddButton from "../UICommons/AddButton.jsx";
+import AddButton from "@uicommons/AddButton.jsx";
 
 export const AddEventButton = () => {
   const [open, setOpen] = useState(false);
