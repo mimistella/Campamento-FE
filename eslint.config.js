@@ -49,7 +49,7 @@ export default defineConfig([
        ...unusedImportRules,
       'react-refresh/only-export-components': 'error',
       'prettier/prettier': ['error'],
-      // ...importRules,
+      ...importRules,
     },
     settings: {
       react: {
@@ -66,6 +66,7 @@ export default defineConfig([
             ['@hooks', './src/hooks'],
             ['@pages', './src/pages'],
             ['@providers', './src/providers'],
+            ['@uicommons', './src/uicommons'],
           ],
           extensions: ['.js', '.jsx'],
         },
