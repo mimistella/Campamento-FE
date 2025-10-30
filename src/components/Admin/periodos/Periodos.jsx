@@ -1,13 +1,15 @@
-import { usePeriodo } from "@hooks/usePeriodo";
+//import { usePeriodo } from "@hooks/usePeriodo";
 import { useState } from "react";
 import List from "@components/commonComp/List";
 import PeriodoCard from "@components/Admin/periodos/PeriodoAdminCard";
 import ButtonBase from "@components/commonComp/ButtonBase";
 import { Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import PeriodForm from "@forms/PeriodForm";
+import { useContext } from "react";
+import PeriodosContext from "@context/PeriodosContext.js";
 
 export default function VerPeriodos() {
-  const { periodos, refreshData, loading } = usePeriodo();
+  const { periodos, refreshData, loading } = useContext(PeriodosContext);
   const [openForm, setOpenForm] = useState(false);
   const [selectedPeriodoId, setSelectedPeriodoId] = useState(null);
 

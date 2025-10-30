@@ -102,6 +102,8 @@ export function useMisiones() {
         try {
             await api.delete(`/${ruta}/${id}`);
             setter(prev => prev.filter(m => m.id !== id));
+            fetchAsignadas();
+            fetchMisiones();
         } catch (err) {
             console.log(err)
             throw err;

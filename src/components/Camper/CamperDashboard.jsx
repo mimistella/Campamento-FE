@@ -1,9 +1,11 @@
-import { useInscripcionPeriodo } from "@hooks/useInscripcionPeriodo";
+//import { useInscripcionPeriodo } from "@hooks/useInscripcionPeriodo";
+import { useContext } from "react";
+import PeriodosContext from "@context/PeriodosContext.js";
 import { useAuth } from "@hooks/useAuth";
 
 export default function CampistaDashboard() {
   const { mydata } = useAuth();
-  const { inscripciones, diasRestantes, loading } = useInscripcionPeriodo();
+  const { inscripciones, diasRestantes, loading } = useContext(PeriodosContext);
 
   const tieneDatosCompletos = Boolean(
     mydata?.nombre && mydata?.apellido && mydata?.telefono && mydata?.grupoSanguineo
