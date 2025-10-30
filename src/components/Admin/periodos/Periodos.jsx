@@ -52,6 +52,7 @@ export default function VerPeriodos() {
               key={periodo.id}
               periodo={periodo}
               onEditar={() => handleAbrirForm(periodo.id)}
+              onDeleteSuccess={refreshData}
             />
           )}
         />

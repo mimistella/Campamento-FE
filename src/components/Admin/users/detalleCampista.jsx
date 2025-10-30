@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import api from "@hooks/useApi";
 import ButtonBase from "@components/commonComp/ButtonBase";
 import { useToaster } from "@hooks/useToaster";
@@ -8,19 +8,27 @@ export default function UserDetailCampista({ userData }) {
   const [userTalleres, setUserTalleres] = useState([]);
   const [userPeriodos, setUserPeriodos] = useState([]);
   const [hospedaje, setHospedaje] = useState(null);
+  const [misionesCampista, setMisionesCampista] = useState([]);
+  const [eventosCampista, setEventosCampista] = useState([]);
 
   const [loadingTalleres, setLoadingTalleres] = useState(true);
   const [loadingPeriodos, setLoadingPeriodos] = useState(true);
   const [loadingHospedaje, setLoadingHospedaje] = useState(true);
+  const [loadingMisiones, setLoadingMisiones] = useState(true);
+  const [loadingEventos, setLoadingEventos] = useState(true);
   const [activo, setActivo] = useState(true); // estado del campista
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const [inscripcionesResp, periodosResp, hospedajesResp] = await Promise.all([
+        const [inscripcionesResp, periodosResp, hospedajesResp,misionResp,eventoResp] = await Promise.all([
           api.get("/inscripcion-taller"),
           api.get("/inscripcion-periodo"),
-          api.get("/hospedaje")
+          api.get("/hospedaje"),
+          api.get("/asigna-mision"),
+          api.get("/solicitud-evento")
+
+          
         ]);
 
         setUserTalleres(
@@ -28,18 +36,24 @@ export default function UserDetailCampista({ userData }) {
         );
 
         setUserPeriodos(
-          (periodosResp.data.data || []).filter(i => i.campista === userData.id)
+          (periodosResp.data.data || []).filter(i => i.campista.id === userData.id)
         );
 
         setHospedaje(
           (hospedajesResp.data.data || []).find(h => h.campista?.id === userData.id) || null
         );
+
+        setMisionesCampista( (misionResp.data.data || []).filter(a=> a.campista?.id === userData.id) ||null);
+        setEventosCampista( (eventoResp.data.data || []).filter(s=> s.campista?.id === userData.id) ||null);
+
       } catch (err) {
         console.error("Error cargando datos del campista:", err);
       } finally {
         setLoadingTalleres(false);
         setLoadingPeriodos(false);
         setLoadingHospedaje(false);
+        setLoadingMisiones(false);
+        setLoadingEventos(false);
       }
     }
 
@@ -157,7 +171,49 @@ export default function UserDetailCampista({ userData }) {
         ) : (
           <p className="text-gray-500">No tiene periodos asignados.</p>
         )}
+      
       </section>
+      
+      {/* Misiones */}
+      <section className="bg-white text-orange-900 shadow-md rounded-lg p-6 md:p-8">
+        <h2 className="text-2xl md:text-3xl font-semibold text-orange-600 mb-4">Misiones asignadas</h2>
+        {loadingMisiones ? (
+          <p className="text-gray-500">Cargando...</p>
+        ) : misionesCampista.length ? (
+          <ul className="space-y-3">
+            {misionesCampista.map((m) => (
+              <li key={m.id} className="bg-amber-100 p-4 rounded-lg shadow-sm flex justify-between items-center">
+                <span className="font-medium text-gray-700">
+                  {m.mision?.titulo} — {m.mision?.descripcion}— {m.mision?.recompensa} — {m.mision.estado}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500">No tiene misiones asignadas.</p>
+        )}
+      </section>
+
+      {/* Eventos */}
+      <section className="bg-white text-orange-900 shadow-md rounded-lg p-6 md:p-8">
+        <h2 className="text-2xl md:text-3xl font-semibold text-orange-600 mb-4">Eventos</h2>
+        {loadingEventos ? (
+          <p className="text-gray-500">Cargando...</p>
+        ) : eventosCampista.length ? (
+          <ul className="space-y-3">
+            {eventosCampista.map((e) => (
+              <li key={e.id} className="bg-amber-100 p-4 rounded-lg shadow-sm flex justify-between items-center">
+                <span className="font-medium text-gray-700">
+                  {e.evento?.titulo} — {e.evento?.descripcion} 
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-500">El campista aún no tiene eventos.</p>
+        )}
+      </section>
+
     </div>
   );
 }
