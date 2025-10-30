@@ -6,6 +6,7 @@ const EditarTaller = () => {
     id,
     formData,
     taller,
+    setTaller,
     instructores,
     campistasInscriptos,
     handleChange,
@@ -31,6 +32,18 @@ const EditarTaller = () => {
         </button>
       </div>
     );
+
+  const estaCancelado = taller.estado?.toLowerCase() === "cancelado";
+
+  const handleReactivar = async () => {
+    try {
+      const actualizado = { ...formData, estado: "abierto" };
+      setTaller({ ...taller, estado: "abierto" });
+      await handleSave(actualizado); // reusa el mismo método que guarda
+    } catch (err) {
+      console.error("Error reactivando taller:", err);
+    }
+  };
 
   return (
     <div className="p-6">
@@ -61,7 +74,7 @@ const EditarTaller = () => {
                 <button
                   onClick={() => handleEliminarInscripto(i.id)}
                   className="px-3 py-1 bg-orange-500 text-white rounded"
-                  disabled={loading}
+                  disabled={loading || estaCancelado}
                 >
                   Eliminar inscripción
                 </button>
@@ -72,27 +85,53 @@ const EditarTaller = () => {
       </div>
 
       <div className="flex gap-4">
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 bg-amber-500 text-white rounded"
-          disabled={loading}
-        >
-          {loading ? "Guardando..." : "Guardar cambios"}
-        </button>
-        <button
-          onClick={handleDelete}
-          className="px-4 py-2 bg-orange-600 text-white rounded"
-          disabled={loading}
-        >
-          {loading ? "Eliminando..." : "Eliminar taller"}
-        </button>
-        <button
-          onClick={() => navigate("/admin/talleres")}
-          className="px-4 py-2 bg-amber-400 text-white rounded"
-          disabled={loading}
-        >
-          Cancelar
-        </button>
+        {estaCancelado ? (
+          <>
+            <button
+              className="px-4 py-2 bg-gray-400 text-white rounded cursor-not-allowed"
+              disabled
+            >
+              Taller cancelado
+            </button>
+            <button
+              className="px-4 py-2 bg-gray-500 text-white rounded cursor-not-allowed"
+              disabled
+            >
+              No editable
+            </button>
+            <button
+              onClick={handleReactivar}
+              className="px-3 py-1 bg-amber-500 text-white rounded"
+              disabled={loading}
+            >
+              Reactivar taller
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 bg-amber-500 text-white rounded"
+              disabled={loading}
+            >
+              {loading ? "Guardando..." : "Guardar cambios"}
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-orange-600 text-white rounded"
+              disabled={loading}
+            >
+              {loading ? "Eliminando..." : "Eliminar taller"}
+            </button>
+            <button
+              onClick={() => navigate("/admin/talleres")}
+              className="px-4 py-2 bg-amber-400 text-white rounded"
+              disabled={loading}
+            >
+              Cancelar
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

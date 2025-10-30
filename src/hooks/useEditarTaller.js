@@ -21,6 +21,9 @@ export const useEditarTaller = () => {
 
   const { instructores } = useDashboard();
 
+
+  const [taller, setTaller] = useState(null);
+
   const [formData, setFormData] = useState({
     titulo: "",
     descripcion: "",
@@ -34,13 +37,19 @@ export const useEditarTaller = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const taller = Array.isArray(talleres)
-    ? talleres.find((t) => t.id === parseInt(id))
-    : null;
+
+  useEffect(() => {
+    if (Array.isArray(talleres)) {
+      const encontrado = talleres.find((t) => t.id === parseInt(id));
+      if (encontrado) setTaller(encontrado);
+    }
+  }, [talleres, id]);
+
 
   const campistasInscriptos = Array.isArray(inscripciones)
     ? inscripciones.filter((i) => i?.taller?.id === parseInt(id))
     : [];
+
 
   useEffect(() => {
     if (taller) {
@@ -80,7 +89,7 @@ export const useEditarTaller = () => {
           ? Number(value)
           : value,
     }));
-    setErrors((prev) => ({ ...prev, [name]: undefined })); // limpia error al modificar
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
   const traducirMensaje = (msg) => {
@@ -94,8 +103,10 @@ export const useEditarTaller = () => {
       .replace("Invalid date", "Fecha inválida");
   };
 
-  const handleSave = async () => {
-    if (!formData.instructor) {
+  const handleSave = async (overrideData = null) => {
+    const dataParaEnviar = overrideData || formData;
+
+    if (!dataParaEnviar.instructor) {
       toast.error("Debe seleccionar un instructor");
       return;
     }
@@ -104,12 +115,14 @@ export const useEditarTaller = () => {
     setLoading(true);
 
     try {
-      const dataParaEnviar = {
-        ...formData,
-        fechaHora: formData.fechaHora ? `${formData.fechaHora}:00.000Z` : null,
+      const data = {
+        ...dataParaEnviar,
+        fechaHora: dataParaEnviar.fechaHora
+          ? `${dataParaEnviar.fechaHora}:00.000Z`
+          : null,
       };
 
-      await updateTaller(taller.id, dataParaEnviar);
+      await updateTaller(taller.id, data);
       await refreshData();
       toast.dismiss(toastId);
       toast.success("Taller actualizado correctamente.");
@@ -177,6 +190,7 @@ export const useEditarTaller = () => {
     id,
     formData,
     taller,
+    setTaller,
     instructores,
     campistasInscriptos,
     handleChange,
@@ -186,6 +200,6 @@ export const useEditarTaller = () => {
     loading,
     loadingTalleres,
     navigate,
-    errors, 
+    errors,
   };
 };
