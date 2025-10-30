@@ -46,7 +46,7 @@ const EditarTallerForm = ({ formData, onChange, instructores }) => (
       value={formData.duracionMin}
       onChange={onChange}
       className="border rounded p-2 w-full"
-      placeholder="Duración en horas"
+      placeholder="Duración en minutos"
       min={1}
     />
     <select

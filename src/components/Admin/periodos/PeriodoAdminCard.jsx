@@ -4,7 +4,7 @@ import ButtonBase from "@components/commonComp/ButtonBase";
 import { MousePointerIcon } from "lucide-react";
 import PeriodForm from "@forms/PeriodForm";
 
-export default function PeriodoAdminCard({ periodo }) {
+export default function PeriodoAdminCard({ periodo, onDeleteSuccess }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [openForm, setOpenForm] = useState(false);
 
@@ -42,6 +42,7 @@ export default function PeriodoAdminCard({ periodo }) {
               <div className="mt-2 text-gray-600 text-sm space-y-1">
                 <p>{periodo.descripcion}</p>
                 <p><strong>Estado:</strong> {periodo.estado}</p>
+                <p><strong>Importe:</strong> {periodo.importe}</p>
                 <p><strong>Inicio inscripción:</strong> {new Date(periodo.fechaInicioInsc).toLocaleDateString("es-AR")}</p>
                 <p><strong>Fin inscripción:</strong> {new Date(periodo.fechaFinInsc).toLocaleDateString("es-AR")}</p>
                 <p><strong>Inicio del campamento:</strong> {new Date(periodo.fechaInicioPer).toLocaleDateString("es-AR")}</p>
@@ -73,7 +74,8 @@ export default function PeriodoAdminCard({ periodo }) {
           Editar período: {periodo.nombre}
         </DialogTitle>
         <DialogContent dividers>
-          <PeriodForm periodoId={periodo.id} onSuccess={handleCerrarForm} />
+          <PeriodForm periodoId={periodo.id} onSuccess={() => {handleCerrarForm();
+            onDeleteSuccess?.();}}  />
         </DialogContent>
         <DialogActions>
           <ButtonBase variant="outlined" color="gray" onClick={handleCerrarForm}>
