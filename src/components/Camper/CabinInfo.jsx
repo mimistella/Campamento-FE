@@ -138,7 +138,7 @@ const CabinInfo = ({ cabin }) => {
 
           <div className="mb-4">
             <h3 className="font-bold text-gray-800 mb-2">Acerca de {cabin.deidad?.nombre}</h3>
-            <p className="text-gray-700 mb-4">{cabin.deidad?.lema || "No hay descripción disponible."}</p>
+            <p className="text-gray-700 mb-4">{cabin.deidad?.descripcion || "No hay descripción disponible."}</p>
           </div>
 
           {/* Texto formateado con secciones y lista con íconos */}
