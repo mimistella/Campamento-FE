@@ -6,7 +6,6 @@ const EditarTaller = () => {
     id,
     formData,
     taller,
-    setTaller,
     instructores,
     campistasInscriptos,
     handleChange,
@@ -35,15 +34,6 @@ const EditarTaller = () => {
 
   const estaCancelado = taller.estado?.toLowerCase() === "cancelado";
 
-  const handleReactivar = async () => {
-    try {
-      const actualizado = { ...formData, estado: "abierto" };
-      setTaller({ ...taller, estado: "abierto" });
-      await handleSave(actualizado); // reusa el mismo método que guarda
-    } catch (err) {
-      console.error("Error reactivando taller:", err);
-    }
-  };
 
   return (
     <div className="p-6">
@@ -98,13 +88,6 @@ const EditarTaller = () => {
               disabled
             >
               No editable
-            </button>
-            <button
-              onClick={handleReactivar}
-              className="px-3 py-1 bg-amber-500 text-white rounded"
-              disabled={loading}
-            >
-              Reactivar taller
             </button>
           </>
         ) : (

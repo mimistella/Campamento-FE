@@ -21,23 +21,20 @@ export const useEditarTaller = () => {
 
   const { instructores } = useDashboard();
 
-
   const [taller, setTaller] = useState(null);
-
   const [formData, setFormData] = useState({
     titulo: "",
     descripcion: "",
     fechaHora: "",
     lugar: "",
-    instructor: null,
+    instructor: "", // usar "" en vez de null
     cupo: 0,
     duracionMin: 0,
   });
-
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-
+  // --- cargar taller ---
   useEffect(() => {
     if (Array.isArray(talleres)) {
       const encontrado = talleres.find((t) => t.id === parseInt(id));
@@ -45,39 +42,29 @@ export const useEditarTaller = () => {
     }
   }, [talleres, id]);
 
-
+  // --- inscriptos ---
   const campistasInscriptos = Array.isArray(inscripciones)
     ? inscripciones.filter((i) => i?.taller?.id === parseInt(id))
     : [];
 
-
+  // --- cargar formData ---
   useEffect(() => {
     if (taller) {
       const fechaHoraCorregida = taller.fechaHora
         ? taller.fechaHora.replace("Z", "").slice(0, 16)
         : "";
 
-      let instructorId = null;
-      if (taller.instructor?.nombre && taller.instructor?.apellido) {
-        const instructorEncontrado = instructores.find(
-          (inst) =>
-            inst.nombre === taller.instructor.nombre &&
-            inst.apellido === taller.instructor.apellido
-        );
-        instructorId = instructorEncontrado?.id || null;
-      }
-
       setFormData({
         titulo: taller.titulo || "",
         descripcion: taller.descripcion || "",
         fechaHora: fechaHoraCorregida,
         lugar: taller.lugar || "",
-        instructor: instructorId,
+        instructor: taller.instructor?.id ?? "", // <--- usar directamente el id
         cupo: taller.cupo || 0,
         duracionMin: taller.duracionMin || 0,
       });
     }
-  }, [taller, instructores]);
+  }, [taller]);
 
   // --- handlers ---
   const handleChange = (e) => {
@@ -85,28 +72,15 @@ export const useEditarTaller = () => {
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name === "cupo" || name === "duracionMin" || name === "instructor"
-          ? Number(value)
+        name === "instructor" || name === "cupo" || name === "duracionMin"
+          ? value !== "" ? Number(value) : ""
           : value,
     }));
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  const traducirMensaje = (msg) => {
-    return msg
-      .replace("String must contain at least", "Debe tener al menos")
-      .replace("character(s)", "caracteres")
-      .replace("Number must be greater than or equal to", "Debe ser mayor o igual a")
-      .replace("Value must be greater than", "Debe ser mayor que")
-      .replace("Required", "Campo obligatorio")
-      .replace("Expected number, received string", "Debe ser un número")
-      .replace("Invalid date", "Fecha inválida");
-  };
-
-  const handleSave = async (overrideData = null) => {
-    const dataParaEnviar = overrideData || formData;
-
-    if (!dataParaEnviar.instructor) {
+  const handleSave = async () => {
+    if (!formData.instructor) {
       toast.error("Debe seleccionar un instructor");
       return;
     }
@@ -116,9 +90,9 @@ export const useEditarTaller = () => {
 
     try {
       const data = {
-        ...dataParaEnviar,
-        fechaHora: dataParaEnviar.fechaHora
-          ? `${dataParaEnviar.fechaHora}:00.000Z`
+        ...formData,
+        fechaHora: formData.fechaHora
+          ? `${formData.fechaHora}:00.000Z`
           : null,
       };
 
@@ -136,8 +110,7 @@ export const useEditarTaller = () => {
         const fieldErrors = {};
         details.forEach((d) => {
           const field = d.path?.[0];
-          const msg = traducirMensaje(d.message);
-          if (field) fieldErrors[field] = msg;
+          if (field) fieldErrors[field] = d.message;
         });
         setErrors(fieldErrors);
         toast.error("Revisá los campos con errores.");
@@ -199,7 +172,6 @@ export const useEditarTaller = () => {
     handleEliminarInscripto,
     loading,
     loadingTalleres,
-    navigate,
     errors,
   };
 };
