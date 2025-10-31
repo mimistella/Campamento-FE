@@ -92,10 +92,12 @@
         error("La fecha de inicio del período no puede ser mayor a la fecha de fin.");
         return;
       }
+
       if (inicioInsc > finInsc) {
         error("La fecha de inicio de inscripción no puede ser mayor a la fecha de fin.");
         return;
       }
+
       if (finPer <= inicioPer) {
         error("La fecha de fin del período debe ser posterior al inicio del período.");
         return;
@@ -119,6 +121,15 @@
         onSuccess?.();
       } catch (err) {
         console.error(err);
+
+   
+        if (err.response?.data?.error?.message) {
+          error(err.response.data.error.message);
+        } else if (err.response?.data?.message) {
+          error(err.response.data.message);
+        } else {
+          error("Error desconocido al guardar el período.");
+        }
       } finally {
         setLoading(false);
       }
