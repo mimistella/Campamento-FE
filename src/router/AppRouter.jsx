@@ -49,7 +49,7 @@ export function AppRouter() {
   <Route path="/loading" element={<LoadingScreen />} />
 
   {/* Rutas protegidas Admin */}
-  <Route element={<PrivateRoute adminOnly={true} />}>
+  <Route element={<PrivateRoute allowedRoles={["admin"]} />}>
     <Route path="/admin" element={<AdminHomePage />}>
       <Route index element={<AdminDashboard />} />       {/* /admin */}
       <Route path="dashboard" element={<AdminDashboard />} /> 
@@ -67,7 +67,7 @@ export function AppRouter() {
   </Route>
 
   {/* Rutas protegidas Campista */}
-  <Route element={<PrivateRoute />}>
+  <Route element={<PrivateRoute allowedRoles={["campista"]} />}>
     <Route path="/campista" element={<CamperHomePage />}>
     <Route index element={<CamperDashboard />} />
       <Route path="cabanas" element={<CabinPage />} />
@@ -80,7 +80,7 @@ export function AppRouter() {
   </Route>
    
     {/* Rutas protegidas Instructor */}
-  <Route element={<PrivateRoute />}>
+  <Route element={<PrivateRoute allowedRoles={["instructor"]} />}>
     <Route path="/instructor" element={<InstructorHomePage />}>
     <Route index element={<InstructorDashboard />} />
       <Route path="perfil" element={<UserDataForm />} />
