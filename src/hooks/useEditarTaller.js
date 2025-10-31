@@ -27,7 +27,7 @@ export const useEditarTaller = () => {
     descripcion: "",
     fechaHora: "",
     lugar: "",
-    instructor: "", // usar "" en vez de null
+    instructor: "", 
     cupo: 0,
     duracionMin: 0,
   });
@@ -59,7 +59,7 @@ export const useEditarTaller = () => {
         descripcion: taller.descripcion || "",
         fechaHora: fechaHoraCorregida,
         lugar: taller.lugar || "",
-        instructor: taller.instructor?.id ?? "", // <--- usar directamente el id
+        instructor: taller.instructor?.id ?? "", 
         cupo: taller.cupo || 0,
         duracionMin: taller.duracionMin || 0,
       });
@@ -122,6 +122,27 @@ export const useEditarTaller = () => {
     }
   };
 
+  const handleReactivar = async () => {
+    if (!confirm("¿Seguro que querés reactivar este taller?")) return;
+    
+    const toastId = toast.loading("Reactivando taller...");
+    setLoading(true);
+
+    try {
+  
+      await updateTaller(taller.id, { estado: "abierto" });
+      await refreshData();
+      toast.dismiss(toastId);
+      toast.success("Taller reactivado correctamente.");
+    } catch (err) {
+      console.error("Error reactivando taller:", err);
+      toast.dismiss(toastId);
+      toast.error(err.response?.data?.message || "No se pudo reactivar el taller.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (!confirm("¿Seguro que querés eliminar este taller?")) return;
     const toastId = toast.loading("Eliminando taller...");
@@ -168,6 +189,7 @@ export const useEditarTaller = () => {
     campistasInscriptos,
     handleChange,
     handleSave,
+    handleReactivar,
     handleDelete,
     handleEliminarInscripto,
     loading,
